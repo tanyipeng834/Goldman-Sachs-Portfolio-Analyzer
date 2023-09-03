@@ -1,13 +1,9 @@
-package com.trading.application.controller;
+package com.trading.application.customer.controller;
 
-import com.trading.application.beans.CustomerCreateResponse;
-import com.trading.application.entity.Customer;
-import com.trading.application.service.CustomerService;
+import com.trading.application.customer.entity.Customer;
+import com.trading.application.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
 
@@ -18,9 +14,25 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
+    // create new customer
     @PostMapping
     @RequestMapping("/")
-    public CustomerCreateResponse createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
+    public String createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.createCustomer(customer);
     }
+
+    // get customer by id
+    @GetMapping
+    @RequestMapping("/{id}")
+    public Customer getCustomerById(@PathVariable String id) throws ExecutionException, InterruptedException {
+        return customerService.getCustomer(id);
+    }
+
+    // update customer name
+    @PostMapping
+    @RequestMapping("/updatename")
+    public String customerUpdateName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
+        return customerService.customerUpdateName(customer.getId(), customer.getName());
+    }
+
 }

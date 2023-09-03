@@ -1,25 +1,19 @@
-package com.trading.application.service;
+package com.trading.application.customer.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.trading.application.beans.CustomerCreateResponse;
-import com.trading.application.entity.Customer;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.trading.application.customer.entity.Customer;
 import org.springframework.stereotype.Service;
-
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class CustomerService {
 
-    @Autowired
-    CustomerCreateResponse customerCreateResponse;
-    public CustomerCreateResponse createCustomer(Customer customer) throws ExecutionException, InterruptedException {
+    Firestore fireStore = FirestoreClient.getFirestore();
 
-        Firestore fireStore = FirestoreClient.getFirestore();
+    // create new customer
+    public String createCustomer(Customer customer) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = fireStore.collection("customer").document();
 
@@ -27,10 +21,41 @@ public class CustomerService {
 
         ApiFuture<WriteResult> apiFuture = docReference.set(customer);
 
-        customerCreateResponse.setUpdatedTime(apiFuture.get().getUpdateTime().toDate());
-        customerCreateResponse.setId(customer.getId());
+        return apiFuture.get().getUpdateTime().toDate().toString();
+    }
 
-        return customerCreateResponse;
+    // get customer by id
+    public Customer getCustomer(String id) throws  ExecutionException, InterruptedException {
+
+        DocumentReference docReference = fireStore.collection("customer").document(id);
+
+        ApiFuture<DocumentSnapshot> apiFuture = docReference.get();
+
+        DocumentSnapshot document = apiFuture.get();
+
+        Customer customer = null;
+
+        if(document.exists()){
+            customer = document.toObject(Customer.class);
+            return customer;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    // update customer name
+    public String customerUpdateName(String id, String name) throws ExecutionException, InterruptedException {
+
+        DocumentReference docReference = fireStore.collection("customer").document(id);
+
+        ApiFuture<WriteResult> apiFuture = docReference.update("name", name);
+
+        WriteResult result = apiFuture.get();
+
+        return "Result: " + result;
     }
 
 }

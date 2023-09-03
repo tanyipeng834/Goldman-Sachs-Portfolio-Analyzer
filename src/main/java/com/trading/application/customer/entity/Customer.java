@@ -1,4 +1,4 @@
-package com.trading.application.entity;
+package com.trading.application.customer.entity;
 
 import org.springframework.stereotype.Component;
 
