@@ -6,17 +6,27 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Maven Test on Push
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-    - name: Run Maven Tests
-      run: mvn test
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+
+    - name: Build and Test with Maven
+      run: |
+        mvn -B test
