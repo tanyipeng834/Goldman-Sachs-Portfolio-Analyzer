@@ -5,7 +5,6 @@ import com.trading.application.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -37,17 +36,23 @@ public class CustomerController {
     }
 
     // update customer Last Name
-    @PostMapping
+    @PutMapping
     @RequestMapping("/updatelastname")
     public String updateCustomerLastName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.updateCustomerLastName(customer.getId(), customer.getLastName());
     }
 
     // update customer email
-    @PostMapping
+    @PutMapping
     @RequestMapping("/updateemail")
     public String customerUpdateEmail(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.customerUpdateEmail(customer.getId(), customer.getEmail());
+    }
+
+    @DeleteMapping
+    @RequestMapping("/deletecustomer/{id}")
+    public String deleteCustomerAccount(@PathVariable String id) throws ExecutionException, InterruptedException {
+        return customerService.deleteCustomerAccount(id);
     }
 
 }

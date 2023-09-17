@@ -6,11 +6,9 @@ import org.springframework.stereotype.Component;
 public class Customer {
 
     private String firstName;
-
     private String lastName;
     private String email;
     private String id;
-
     private String dateJoined;
 
     private int totalCapitalAvailable;

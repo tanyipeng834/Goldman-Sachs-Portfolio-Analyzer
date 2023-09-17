@@ -42,4 +42,8 @@ public class CustomerService {
         return customerRepo.updateDocumentField(id, "email", email);
     }
 
+    public String deleteCustomerAccount(String id){
+        return customerRepo.deleteCustomerAccount(id);
+    }
+
 }

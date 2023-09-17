@@ -58,4 +58,14 @@ public class CustomerRepository {
         return "Result: " + writeResultApiFuture.get();
     }
 
+    public String deleteCustomerAccount(String documentId){
+        try {
+            writeResultApiFuture = getReferenceById(documentId).delete();
+            return "Successfully deleted " + documentId;
+        } catch (FirestoreException e) {
+            e.printStackTrace();
+            return "Error deleting " + documentId;
+        }
+    }
+
 }

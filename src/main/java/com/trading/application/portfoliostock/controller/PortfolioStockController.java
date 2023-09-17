@@ -3,10 +3,8 @@ package com.trading.application.portfoliostock.controller;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sound.sampled.Port;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -29,7 +27,7 @@ public class PortfolioStockController {
         return portfolioStockService.getAllStocks(portfolioId);
     }
 
-    @GetMapping
+    @DeleteMapping
     @RequestMapping("/delete")
     public String deleteStock(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
         return portfolioStockService.deleteStock(portfolioStock);
