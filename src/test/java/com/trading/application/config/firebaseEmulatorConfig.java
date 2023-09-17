@@ -4,23 +4,20 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.Firestore;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 @Configuration
-public class firebaseConfig {
-    @PostConstruct
+
+public class FirebaseEmulatorConfig {
+    @Bean
     public Firestore firestore() throws IOException {
         // Load the Firebase service account JSON from the classpath
         File file = ResourceUtils.getFile("classpath:config/testis442-348c1-firebase-adminsdk-wsyew-3201f63dd4.json");
