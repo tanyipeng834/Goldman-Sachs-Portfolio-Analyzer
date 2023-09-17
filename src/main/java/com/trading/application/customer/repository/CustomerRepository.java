@@ -1,10 +1,7 @@
 package com.trading.application.customer.repository;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.customer.entity.Customer;
 import org.springframework.stereotype.Repository;
@@ -13,9 +10,9 @@ import java.util.concurrent.ExecutionException;
 @Repository
 public class CustomerRepository {
 
-    Firestore firestore = FirestoreClient.getFirestore();
-    ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
-    ApiFuture<WriteResult> writeResultApiFuture;
+    private Firestore firestore = FirestoreClient.getFirestore();
+    private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
+    private ApiFuture<WriteResult> writeResultApiFuture;
 
     public DocumentReference getReferenceById(String documentId){
 
@@ -34,7 +31,7 @@ public class CustomerRepository {
     }
 
     // Get document by documentId
-    public Customer getById(String documentId, String collection) throws ExecutionException, InterruptedException {
+    public Customer getById(String documentId) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = getReferenceById(documentId);
         documentSnapshotApiFuture = docReference.get();
