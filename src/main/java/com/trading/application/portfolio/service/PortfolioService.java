@@ -2,6 +2,7 @@ package com.trading.application.portfolio.service;
 
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.repository.PortfolioRepository;
+import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.stereotype.Service;
 
 import javax.sound.sampled.Port;
@@ -16,6 +17,12 @@ public class PortfolioService {
     // Create Portfolio
     public String createPortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
         return portfolioRepo.createPortfolio(portfolio);
+    }
+
+    public String addStock(String portfolioStockId,String portfolioId) throws ExecutionException,InterruptedException{
+
+
+        return portfolioRepo.addStock(portfolioStockId,portfolioId);
     }
 
     // get a portfolio

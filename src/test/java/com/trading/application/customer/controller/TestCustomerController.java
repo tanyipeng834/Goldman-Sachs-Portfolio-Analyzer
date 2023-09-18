@@ -30,7 +30,9 @@ public class TestCustomerController {
 
         String userId = "5cJ0NI3WpPLi9hCQKZG0";
 
-        this.mockMvc.perform(get("/customer/" + userId)).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/customer/" + userId)).andDo(print()).andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("dooshik"));
+
 
     }
 }

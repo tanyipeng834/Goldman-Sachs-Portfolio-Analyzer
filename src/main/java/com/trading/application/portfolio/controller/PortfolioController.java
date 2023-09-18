@@ -1,7 +1,9 @@
 package com.trading.application.portfolio.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.service.PortfolioService;
+import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,6 +21,17 @@ public class PortfolioController {
     @RequestMapping("/create")
     public String createPortfolio(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
         return portfolioService.createPortfolio(portfolio);
+    }
+
+    @PostMapping
+    @RequestMapping("/add")
+    public String addStock(@RequestBody JsonNode portfolioStockData) throws ExecutionException,InterruptedException{
+
+       String portfolioId = portfolioStockData.get("portfolioId").asText();
+       String portfolioStockId = portfolioStockData.get("portfolioStockId").asText();
+        System.out.println(portfolioId);
+        System.out.println(portfolioStockId);
+        return portfolioService.addStock(portfolioStockId,portfolioId);
     }
 
     // get a portfolio

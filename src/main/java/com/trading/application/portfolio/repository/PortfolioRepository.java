@@ -4,7 +4,11 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
+import com.trading.application.portfoliostock.entity.PortfolioStock;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -29,6 +33,19 @@ public class PortfolioRepository {
         portfolio.setPortfolioId(docReference.getId());
         writeResultApiFuture = docReference.set(portfolio);
         return writeResultApiFuture.get().getUpdateTime().toDate().toString();
+
+    }
+
+    public String addStock(String portfolioStockId ,String portfolioId) throws ExecutionException,InterruptedException{
+        DocumentReference portfolioDocReference = firestore.collection("portfolio").document(portfolioId);
+        DocumentReference portfolioStockReference = firestore.collection("portfolioStock").document(portfolioStockId);
+        writeResultApiFuture = portfolioDocReference.update("portfolioStockArray",FieldValue.arrayUnion(portfolioStockReference));
+        System.out.println("Update time : " + portfolioStockReference.get());
+
+        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
+
+
+
 
     }
 

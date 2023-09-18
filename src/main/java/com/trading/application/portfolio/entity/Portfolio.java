@@ -1,6 +1,9 @@
 package com.trading.application.portfolio.entity;
 
+import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class Portfolio {
@@ -11,6 +14,17 @@ public class Portfolio {
     private float portfolioValue;
     private float unrealisedPnL;
     private String dateCreated;
+    private ArrayList<PortfolioStock> portfolioStockArray;
+
+    public ArrayList<PortfolioStock> getPortfolioStockArray() {
+        return portfolioStockArray;
+    }
+
+    public void setPortfolioStockArray(ArrayList<PortfolioStock> portfolioStockArray) {
+        this.portfolioStockArray = portfolioStockArray;
+    }
+
+
 
     private String userId;
 
@@ -20,6 +34,11 @@ public class Portfolio {
 
     public void setUserId(String userId){
         this.userId = userId;
+    }
+
+    public void addStock(PortfolioStock portfolioStock){
+        portfolioStockArray.add(portfolioStock);
+
     }
 
     public String getPortfolioId() {
