@@ -1,11 +1,24 @@
 package com.trading.application.stock.entity;
 
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+@RequiredArgsConstructor
+@Data
+
+@RedisHash("Stock")
 @Component
-public class Stock {
+
+public class Stock implements Serializable {
+
     private String stockTicker;
     private String stockName;
     private float stockCurrentPrice;

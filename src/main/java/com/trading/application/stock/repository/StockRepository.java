@@ -7,6 +7,9 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.stock.entity.Stock;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.ExecutionException;
@@ -18,6 +21,14 @@ public class StockRepository {
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     private ApiFuture<WriteResult> writeResultApiFuture;
 
+
+    public static final String HASH_KEY = "Stock";
+    @Autowired
+    private RedisTemplate<String,Object> template;
+
+
+
+
     public DocumentReference getReferenceById(String stockTicker) throws ExecutionException, InterruptedException {
 
         return firestore.collection("stock").document(stockTicker);
@@ -26,6 +37,8 @@ public class StockRepository {
 
     // create Stock, get from api
     public String createStock(Stock stock) throws ExecutionException, InterruptedException {
+
+        template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
 
         DocumentReference docReference = firestore.collection("stock").document();
         stock.setStockTicker(docReference.getId());

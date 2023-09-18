@@ -32,4 +32,6 @@ public class TestCustomerController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("moonsan@gmail.com"));
 
     }
+
+
 }
