@@ -21,7 +21,31 @@ public class StockController {
         return stockService.createStock(stock);
     }
 
-
+//    @GetMapping("/ibm-price")
+//    public String getIBMStockPrice() {
+//        System.out.println("Before making the API request");
+//        AlphaVantage.api()
+//                .timeSeries()
+//                .intraday()
+//                .forSymbol("IBM")
+//                .interval(Interval.FIVE_MIN)
+//                .outputSize(OutputSize.FULL)
+//                .onSuccess(e -> handleSuccess(e)
+//                )
+//                .onFailure(e -> handleFailure(e))
+//                .fetch();
+//
+//        return "Fetching IBM stock price data...";
+//    }
+//
+//    private void handleSuccess(Object data) {
+//        String jsonResponse = data.toString(); // Convert the response to JSON format
+//        System.out.println(jsonResponse);
+//    }
+//
+//    private void handleFailure(Exception e) {
+//        // Handle API request failure here
+//    }
 
 
     // get stock by stockticker
@@ -29,6 +53,24 @@ public class StockController {
     @RequestMapping("/{stockTicker}")
     public Mono<String> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
         return stockService.getStock(stockTicker);
+    }
+
+    @GetMapping
+    @RequestMapping("/daily-price/{stockTicker}")
+    public Mono<String> getStockDailyPriceById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
+        return stockService.getStockByDailyPrice(stockTicker);
+    }
+
+    @GetMapping
+    @RequestMapping("/weekly-price/{stockTicker}")
+    public Mono<String> getStockWeeklyPriceById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
+        return stockService.getStockByWeeklyPrice(stockTicker);
+    }
+
+    @GetMapping
+    @RequestMapping("/monthly-price/{stockTicker}")
+    public Mono<String> getStockMonthlyPriceById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
+        return stockService.getStockByMonthlyPrice(stockTicker);
     }
 
 }

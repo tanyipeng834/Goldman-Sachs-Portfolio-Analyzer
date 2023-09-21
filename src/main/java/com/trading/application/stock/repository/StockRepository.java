@@ -39,7 +39,6 @@ public class StockRepository {
     public String createStock(Stock stock) throws ExecutionException, InterruptedException {
 
         template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
-
         DocumentReference docReference = firestore.collection("stock").document();
         stock.setStockTicker(docReference.getId());
         writeResultApiFuture = docReference.set(stock);
