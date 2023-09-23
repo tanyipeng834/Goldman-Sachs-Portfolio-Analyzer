@@ -1,5 +1,6 @@
 package com.trading.application.stock.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,11 @@ public class StockController {
     private StockService stockService;
 
     // create new stock
-    @PostMapping
-    @RequestMapping("/create")
-    public String createStock(@RequestBody Stock stock) throws ExecutionException, InterruptedException {
-        return stockService.createStock(stock);
-    }
+//    @PostMapping
+//    @RequestMapping("/create")
+//    public String createStock(@RequestBody Stock stock) throws ExecutionException, InterruptedException {
+//        return stockService.createStock(stock);
+//    }
 
 //    @GetMapping("/ibm-price")
 //    public String getIBMStockPrice() {
@@ -51,7 +52,7 @@ public class StockController {
     // get stock by stockticker
     @GetMapping
     @RequestMapping("/{stockTicker}")
-    public Mono<String> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
+    public Mono<Object> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockService.getStock(stockTicker);
     }
 

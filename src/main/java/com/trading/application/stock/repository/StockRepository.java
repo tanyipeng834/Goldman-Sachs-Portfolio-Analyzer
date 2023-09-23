@@ -6,12 +6,16 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.gson.Gson;
 import com.trading.application.stock.entity.Stock;
+import com.trading.application.stock.entity.StockPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -36,12 +40,21 @@ public class StockRepository {
     }
 
     // create Stock, get from api
-    public String createStock(Stock stock) throws ExecutionException, InterruptedException {
+    public String createStock(Stock newStock) throws ExecutionException, InterruptedException {
 
-        template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
-        DocumentReference docReference = firestore.collection("stock").document();
-        stock.setStockTicker(docReference.getId());
-        writeResultApiFuture = docReference.set(stock);
+        //template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
+        DocumentReference docReference = firestore.collection("stock-test").document();
+        Gson gson  = new Gson();
+        ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
+        String stockPricesListJson = gson.toJson(stockPrices);
+        docReference.update("historicalStockPrice",stockPricesListJson);
+        docReference.update("lastRefresh",newStock.getLastRefreshed().toString());
+
+
+
+
+
+        writeResultApiFuture = docReference.set(newStock);
         return writeResultApiFuture.get().getUpdateTime().toDate().toString();
 
     }
