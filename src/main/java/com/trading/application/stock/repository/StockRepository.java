@@ -9,9 +9,12 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.google.gson.Gson;
 import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.entity.StockPrice;
+import org.json.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class StockRepository {
     }
 
     // create Stock, get from api
-    public String createStock(Stock newStock) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> createStock(Stock newStock) throws ExecutionException, InterruptedException {
 
         //template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
         DocumentReference docReference = firestore.collection("stock-test").document();
@@ -48,14 +51,24 @@ public class StockRepository {
         ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
         String stockPricesListJson = gson.toJson(stockPrices);
         docReference.update("historicalStockPrice",stockPricesListJson);
-        docReference.update("lastRefresh",newStock.getLastRefreshed().toString());
 
 
 
+        try{
+            // Check if there is no error in the database
+            writeResultApiFuture = docReference.set(newStock);
+            writeResultApiFuture.get();
+            return new ResponseEntity<>(newStock,HttpStatus.OK);
 
 
-        writeResultApiFuture = docReference.set(newStock);
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
+        }
+
+        catch(Exception e){
+            return new ResponseEntity<>("Error Updating the Database", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+
 
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -52,7 +53,7 @@ public class StockController {
     // get stock by stockticker
     @GetMapping
     @RequestMapping("/{stockTicker}")
-    public Mono<Object> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public Mono<ResponseEntity<Object>> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockService.getStock(stockTicker);
     }
 

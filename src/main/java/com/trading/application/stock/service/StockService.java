@@ -9,6 +9,8 @@ import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.entity.StockPrice;
 import com.trading.application.stock.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -43,9 +45,9 @@ public class StockService {
 //    }
 
     // get stock by id
-    public Mono<Object> getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+    public Mono<ResponseEntity<Object>>  getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-        Mono<Object> jsonNode= this.webClient.get()
+       return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/query")
                         .queryParam("function", "TIME_SERIES_DAILY")
@@ -66,8 +68,6 @@ public class StockService {
                             while(fieldNames.hasNext()){
 
                                 String date = fieldNames.next();
-
-
                                 System.out.println(date);
                                 StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(),StockPrice.class);
 
@@ -79,16 +79,6 @@ public class StockService {
 
                                 stockPrice.setStockDate(stockPriceDate);
                                 stockPriceList.add(stockPrice);
-
-
-
-
-
-
-
-
-
-
                             }
                             String EodDate =  dateNode.fieldNames().next();
                             String EodPrice = dateNode.get(EodDate).get("4. close").asText();
@@ -109,13 +99,14 @@ public class StockService {
                             return stockRepo.createStock(newStock);
                         }
                         catch(Exception e){
-                            return Mono.error(e);
+                            return new ResponseEntity<>("Stock Ticker does not Exists", HttpStatus.BAD_REQUEST);
+
                         }
 
 
                 });
 
-        return jsonNode;
+
 
         //return stockRepo.getStock(stockTicker);
     }
