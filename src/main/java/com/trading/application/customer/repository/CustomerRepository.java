@@ -51,7 +51,7 @@ public class CustomerRepository {
     }
 
     // Update a document's field
-    public String updateDocumentField(String documentId, String field, String fieldValue) throws ExecutionException, InterruptedException {
+    public String updateDocumentField(String documentId, String field, String fieldValue) throws InterruptedException, ExecutionException{
 
         DocumentReference docReference = getReferenceById(documentId);
         writeResultApiFuture = docReference.update(field, fieldValue);
