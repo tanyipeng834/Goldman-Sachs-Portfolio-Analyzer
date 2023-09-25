@@ -43,9 +43,9 @@ public class StockService {
 //    }
 
     // get stock by id
-    public Mono<ResponseEntity<Object>> getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+    public Stock getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-       return this.webClient.get()
+       String jsonString =this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/query")
                         .queryParam("function", "TIME_SERIES_DAILY")
@@ -53,7 +53,8 @@ public class StockService {
                         .queryParam("apikey", "K4UXKCTF5POS6YBS")
                         .build())
                 .retrieve()
-                .bodyToMono(String.class).map(jsonString->{
+                .bodyToMono(String.class).block();
+        System.out.println("Invoked API");
                         try {
                             JsonNode rootNode = objectMapper.readTree(jsonString);
                             JsonNode MetaNode = rootNode.get("Meta Data");
@@ -66,7 +67,7 @@ public class StockService {
                             while(fieldNames.hasNext()){
 
                                 String date = fieldNames.next();
-                                System.out.println(date);
+
                                 StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(),StockPrice.class);
 
                                 String pattern = "yyyy-MM-dd";
@@ -97,17 +98,19 @@ public class StockService {
                             return stockRepo.createStock(newStock);
                         }
                         catch(Exception e){
-                            return new ResponseEntity<>("Stock Ticker does not Exists", HttpStatus.BAD_REQUEST);
+                            e.printStackTrace();
+                            throw new RuntimeException("Stock Ticker does not exisit");
+
 
                         }
 
 
-                });
+                }
 
 
 
         //return stockRepo.getStock(stockTicker);
-    }
+
 
     //GET STOCK OVERVIEW
     public Mono<ResponseEntity<Object>> getStockOverview(String stockTicker) {

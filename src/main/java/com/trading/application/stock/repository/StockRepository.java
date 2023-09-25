@@ -18,12 +18,14 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+
 @Repository
 public class StockRepository {
 
     private Firestore firestore = FirestoreClient.getFirestore();
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     private ApiFuture<WriteResult> writeResultApiFuture;
+
 
 
     public static final String HASH_KEY = "Stock";
@@ -39,35 +41,21 @@ public class StockRepository {
 
     }
 
-    // create Stock, get from api   THIS IS USED FOR DAILY PRICE separate this from overview
-    public ResponseEntity<Object> createStock(Stock newStock) throws ExecutionException, InterruptedException {
+    // create Stock, get from api
+    public Stock createStock(Stock newStock) throws ExecutionException, InterruptedException {
 
-        String customisedDocumentId = newStock.getStockTicker();
-        //template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
-        DocumentReference docReference = firestore.collection("stock-test").document(customisedDocumentId);
-        Gson gson  = new Gson();
+        template.opsForHash().put(HASH_KEY, newStock.getStockTicker(), newStock);
+        DocumentReference docReference = firestore.collection("stock-test").document();
+        Gson gson = new Gson();
         ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
         String stockPricesListJson = gson.toJson(stockPrices);
-        docReference.update("historicalStockPrice",stockPricesListJson);
+        docReference.update("historicalStockPrice", stockPricesListJson);
 
 
-
-        try{
-            // Check if there is no error in the database
-            writeResultApiFuture = docReference.set(newStock);
-            writeResultApiFuture.get();
-            return new ResponseEntity<>(newStock,HttpStatus.OK);
-
-
-        }
-
-        catch(Exception e){
-            return new ResponseEntity<>("Error Updating the Database", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-
-
-
+        // Check if there is no error in the database
+        writeResultApiFuture = docReference.set(newStock);
+        writeResultApiFuture.get();
+        return newStock;
     }
 
     // create Stock with overview

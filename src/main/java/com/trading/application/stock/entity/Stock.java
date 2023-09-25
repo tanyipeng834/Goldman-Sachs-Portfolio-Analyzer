@@ -8,12 +8,12 @@ import java.util.Date;
 @RequiredArgsConstructor
 //@Data
 //
-//@RedisHash("Stock")
+@RedisHash("Stock")
 @Component
-public class Stock  {
+public class Stock implements Serializable  {
 
     private String stockTicker;
-    //private String stockName;
+
     private float stockCurrentPrice;
     private ArrayList<StockPrice> historicalStockPrice;
     private Date lastRefreshed;

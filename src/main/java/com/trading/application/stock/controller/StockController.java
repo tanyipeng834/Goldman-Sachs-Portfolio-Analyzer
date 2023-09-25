@@ -3,6 +3,8 @@ package com.trading.application.stock.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trading.application.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@EnableCaching
 @RequestMapping("/stock")
 public class StockController {
     @Autowired
@@ -52,10 +55,12 @@ public class StockController {
 //    }
 
 
-    // get stock daily price by stockticker
+    // get stock by stockticker
+    @Cacheable(key="#stockTicker",value = "stockCache")
     @GetMapping
     @RequestMapping("/{stockTicker}")
-    public Mono<ResponseEntity<Object>> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public Stock getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        System.out.println("Invoked cache");
         return stockService.getStock(stockTicker);
     }
 
