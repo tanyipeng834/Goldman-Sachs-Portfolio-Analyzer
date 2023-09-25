@@ -1,10 +1,12 @@
 package com.trading.application.customer.controller;
 
+import com.trading.application.CustomError;
 import com.trading.application.customer.entity.Customer;
 import com.trading.application.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -24,8 +26,18 @@ public class CustomerController {
     // get customer by id
     @GetMapping
     @RequestMapping("/{id}")
-    public Customer getCustomerById(@PathVariable String id) throws ExecutionException, InterruptedException {
-        return customerService.getCustomer(id);
+    public ResponseEntity<Object> getCustomerById(@PathVariable String id) throws ExecutionException, InterruptedException {
+//        return customerService.getCustomer(id);
+
+        try {
+            if (customerService.getCustomer(id) == null) {
+                return new ResponseEntity<>(new CustomError(404, "Customer not found"), HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>(customerService.getCustomer(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError(500, "Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // update customer First Name
