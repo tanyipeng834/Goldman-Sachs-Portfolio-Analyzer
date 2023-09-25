@@ -5,28 +5,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class Customer {
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private String email;
     private String id;
-    private String dateJoined;
+    private String picture;
+    private String updatedAt;
 
     private int totalCapitalAvailable;
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -45,13 +37,13 @@ public class Customer {
         this.id = id;
     }
 
-    public String getDateJoined() {
-        return dateJoined;
-    }
+    public String getPicture() { return picture; }
 
-    public void setDateJoined(String dateJoined) {
-        this.dateJoined = dateJoined;
-    }
+    public void setPicture(String picture) { this.picture = picture; }
+
+    public String getUpdatedAt() { return updatedAt; }
+
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
 
     public int getTotalCapitalAvailable() {
         return totalCapitalAvailable;
