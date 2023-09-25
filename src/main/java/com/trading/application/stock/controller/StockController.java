@@ -1,11 +1,13 @@
 package com.trading.application.stock.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.ExecutionException;
@@ -50,7 +52,7 @@ public class StockController {
 //    }
 
 
-    // get stock by stockticker
+    // get stock daily price by stockticker
     @GetMapping
     @RequestMapping("/{stockTicker}")
     public Mono<ResponseEntity<Object>> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
@@ -58,21 +60,10 @@ public class StockController {
     }
 
     @GetMapping
-    @RequestMapping("/daily-price/{stockTicker}")
-    public Mono<String> getStockDailyPriceById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
-        return stockService.getStockByDailyPrice(stockTicker);
+    @RequestMapping("/{stockTicker}/companyOverview")
+    public Mono<ResponseEntity<Object>>  getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockService.getStockOverview(stockTicker);
     }
 
-    @GetMapping
-    @RequestMapping("/weekly-price/{stockTicker}")
-    public Mono<String> getStockWeeklyPriceById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
-        return stockService.getStockByWeeklyPrice(stockTicker);
-    }
-
-    @GetMapping
-    @RequestMapping("/monthly-price/{stockTicker}")
-    public Mono<String> getStockMonthlyPriceById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
-        return stockService.getStockByMonthlyPrice(stockTicker);
-    }
 
 }

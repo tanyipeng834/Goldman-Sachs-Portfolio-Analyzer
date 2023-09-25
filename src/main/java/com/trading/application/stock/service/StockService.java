@@ -3,8 +3,6 @@ package com.trading.application.stock.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.json.Json;
-import com.google.gson.Gson;
 import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.entity.StockPrice;
 import com.trading.application.stock.repository.StockRepository;
@@ -45,7 +43,7 @@ public class StockService {
 //    }
 
     // get stock by id
-    public Mono<ResponseEntity<Object>>  getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+    public Mono<ResponseEntity<Object>> getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
        return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -111,47 +109,76 @@ public class StockService {
         //return stockRepo.getStock(stockTicker);
     }
 
-    // get stock daily price
-    public Mono<String> getStockByDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException {
+    //GET STOCK OVERVIEW
+    public Mono<ResponseEntity<Object>> getStockOverview(String stockTicker) {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/query")
-                        .queryParam("function", "TIME_SERIES_DAILY")
+                        .queryParam("function", "OVERVIEW")
                         .queryParam("symbol", stockTicker)
                         .queryParam("apikey", "K4UXKCTF5POS6YBS")
                         .build())
                 .retrieve()
-                .bodyToMono(String.class);
-        //return stockRepo.getStock(stockTicker);
+                .bodyToMono(String.class)
+                .flatMap(jsonString -> {
+                    try {
+                        JsonNode rootNode = objectMapper.readTree(jsonString);
+                        String description = rootNode.get("Description").asText();
+
+                        return Mono.just(ResponseEntity.ok(stockRepo.createStockWithOverview(description, stockTicker)));
+                    } catch (Exception e) {
+                        return Mono.just(new ResponseEntity<>("Stock Ticker does not Exist", HttpStatus.BAD_REQUEST));
+                    }
+                });
     }
 
-    // get stock weekly price
-    public Mono<String> getStockByWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException {
-        return this.webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/query")
 
-                        .queryParam("function", "TIME_SERIES_DAILY")
-                        .queryParam("symbol", stockTicker)
-                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class);
-        //return stockRepo.getStock(stockTicker);
-    }
-    // get stock monthly price
-    public Mono<String> getStockByMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException {
-        return this.webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/query")
-                        .queryParam("function", "TIME_SERIES_MONTHLY")
-                        .queryParam("symbol", stockTicker)
-                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class);
-        //return stockRepo.getStock(stockTicker);
-    }
+
+
+    //return stockRepo.getStock(stockTicker);
+
+
+//    // get stock daily price
+//    public Mono<String> getStockByDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException {
+//        return this.webClient.get()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/query")
+//                        .queryParam("function", "TIME_SERIES_DAILY")
+//                        .queryParam("symbol", stockTicker)
+//                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
+//                        .build())
+//                .retrieve()
+//                .bodyToMono(String.class);
+//        //return stockRepo.getStock(stockTicker);
+//    }
+//
+//    // get stock weekly price
+//    public Mono<String> getStockByWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException {
+//        return this.webClient.get()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/query")
+//
+//                        .queryParam("function", "TIME_SERIES_DAILY")
+//                        .queryParam("symbol", stockTicker)
+//                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
+//                        .build())
+//                .retrieve()
+//                .bodyToMono(String.class);
+//        //return stockRepo.getStock(stockTicker);
+//    }
+//    // get stock monthly price
+//    public Mono<String> getStockByMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException {
+//        return this.webClient.get()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/query")
+//                        .queryParam("function", "TIME_SERIES_MONTHLY")
+//                        .queryParam("symbol", stockTicker)
+//                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
+//                        .build())
+//                .retrieve()
+//                .bodyToMono(String.class);
+//        //return stockRepo.getStock(stockTicker);
+//    }
 
 
 }

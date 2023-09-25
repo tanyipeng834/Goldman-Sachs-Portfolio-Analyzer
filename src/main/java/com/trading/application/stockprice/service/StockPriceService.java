@@ -42,7 +42,6 @@ public class StockPriceService {
             return stockPriceRepo.createStock(stockPrice);
         }
         return null;
-
         //return stockRepo.getStock(stockTickZer);
     }
     private StockPrice parseApiResponse(String apiResponse) {
