@@ -2,9 +2,10 @@ package com.trading.application.stock.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class StockPrice {
+public class StockPrice implements Serializable {
     @JsonProperty("1. open")
     private float openPrice;
     @JsonProperty("2. high")

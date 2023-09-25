@@ -21,12 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
+
 @Repository
 public class StockRepository {
 
     private Firestore firestore = FirestoreClient.getFirestore();
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     private ApiFuture<WriteResult> writeResultApiFuture;
+
 
 
     public static final String HASH_KEY = "Stock";
@@ -43,34 +45,29 @@ public class StockRepository {
     }
 
     // create Stock, get from api
-    public ResponseEntity<Object> createStock(Stock newStock) throws ExecutionException, InterruptedException {
+    public Stock createStock(Stock newStock) throws ExecutionException, InterruptedException {
 
-        //template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
+        template.opsForHash().put(HASH_KEY, newStock.getStockTicker(), newStock);
         DocumentReference docReference = firestore.collection("stock-test").document();
-        Gson gson  = new Gson();
+        Gson gson = new Gson();
         ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
         String stockPricesListJson = gson.toJson(stockPrices);
-        docReference.update("historicalStockPrice",stockPricesListJson);
+        docReference.update("historicalStockPrice", stockPricesListJson);
 
 
-
-        try{
-            // Check if there is no error in the database
-            writeResultApiFuture = docReference.set(newStock);
-            writeResultApiFuture.get();
-            return new ResponseEntity<>(newStock,HttpStatus.OK);
-
-
-        }
-
-        catch(Exception e){
-            return new ResponseEntity<>("Error Updating the Database", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-
-
-
+        // Check if there is no error in the database
+        writeResultApiFuture = docReference.set(newStock);
+        writeResultApiFuture.get();
+        return newStock;
     }
+
+
+
+
+
+
+
+
 
     public Stock getStock(String stockTicker) throws ExecutionException, InterruptedException {
 
