@@ -1,7 +1,10 @@
 package com.trading.application.stock.entity;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -10,21 +13,29 @@ import java.util.Date;
 //
 @RedisHash("Stock")
 @Component
-public class Stock implements Serializable  {
+public class Stock implements Serializable {
 
     private String stockTicker;
-
     private float stockCurrentPrice;
     private ArrayList<StockPrice> historicalStockPrice;
     private Date lastRefreshed;
     private String description;
-    private String Exchange;
-    private String Currency;
-    private String Country;
-    private String Sector;
-    private String Industry;
-    private String MarketCapitalization;
+    private String exchange;
+    private String currency;
+    private String country;
+    private String sector;
+    private String industry;
+    private String marketCapitalization;
 
+    public Stock(String description, String exchange, String currency, String country, String sector, String industry, String marketCapitalization) {
+        this.description = description;
+        this.exchange = exchange;
+        this.currency = currency;
+        this.country = country;
+        this.sector = sector;
+        this.industry = industry;
+        this.marketCapitalization = marketCapitalization;
+    }
 
     public Stock(String stockTicker, float stockCurrentPrice, ArrayList<StockPrice> historicalStockPrice, Date lastRefreshed) {
         this.stockTicker = stockTicker;
@@ -68,14 +79,6 @@ public class Stock implements Serializable  {
         this.stockTicker = stockTicker;
     }
 
-//    public String getStockName() {
-//        return stockName;
-//    }
-
-//    public void setStockName(String stockName) {
-//        this.stockName = stockName;
-//    }
-
     public float getStockCurrentPrice() {
         return stockCurrentPrice;
     }
@@ -92,7 +95,55 @@ public class Stock implements Serializable  {
         this.description = description;
     }
 
-    //    private String Exchange;
+    public String getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(String exchange) {
+        this.exchange = exchange;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getMarketCapitalization() {
+        return marketCapitalization;
+    }
+
+    public void setMarketCapitalization(String marketCapitalization) {
+        this.marketCapitalization = marketCapitalization;
+    }
+
+//    private String Exchange;
 //    private String Currency;
 //    private String Country;
 //    private String Sector;

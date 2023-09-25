@@ -11,8 +11,6 @@ import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.entity.StockPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -27,11 +25,9 @@ public class StockRepository {
     private ApiFuture<WriteResult> writeResultApiFuture;
 
 
-
     public static final String HASH_KEY = "Stock";
     @Autowired
     private RedisTemplate<String,Object> template;
-
 
 
 
@@ -45,7 +41,7 @@ public class StockRepository {
     public Stock createStock(Stock newStock) throws ExecutionException, InterruptedException {
 
         template.opsForHash().put(HASH_KEY, newStock.getStockTicker(), newStock);
-        DocumentReference docReference = firestore.collection("stock-test").document();
+        DocumentReference docReference = firestore.collection("stockPrice").document();
         Gson gson = new Gson();
         ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
         String stockPricesListJson = gson.toJson(stockPrices);
@@ -59,12 +55,16 @@ public class StockRepository {
     }
 
     // create Stock with overview
-    public String createStockWithOverview(String description,String stockTicker ) throws ExecutionException, InterruptedException {
-        DocumentReference docReference = firestore.collection("stock").document(stockTicker);
+    public String createStockWithOverview(String stockTicker, String description, String exchange, String currency, String country, String sector, String industry, String marketCapitalization ) throws ExecutionException, InterruptedException {
+        DocumentReference docReference = firestore.collection("stock").document(stockTicker.toUpperCase());
 
-        Stock stock = new Stock();
+        Stock stock = new Stock( description, exchange, currency, country, sector, industry, marketCapitalization);
         stock.setStockTicker(stockTicker);
         stock.setDescription(description);
+        stock.setExchange(exchange);
+        stock.setCurrency(currency);
+        stock.setCountry(country);
+        stock.setSector(sector);
 
         stock.setStockTicker(docReference.getId());
         writeResultApiFuture = docReference.set(stock);

@@ -1,16 +1,15 @@
 package com.trading.application.stock.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 import java.util.concurrent.ExecutionException;
 
@@ -28,33 +27,6 @@ public class StockController {
 //        return stockService.createStock(stock);
 //    }
 
-//    @GetMapping("/ibm-price")
-//    public String getIBMStockPrice() {
-//        System.out.println("Before making the API request");
-//        AlphaVantage.api()
-//                .timeSeries()
-//                .intraday()
-//                .forSymbol("IBM")
-//                .interval(Interval.FIVE_MIN)
-//                .outputSize(OutputSize.FULL)
-//                .onSuccess(e -> handleSuccess(e)
-//                )
-//                .onFailure(e -> handleFailure(e))
-//                .fetch();
-//
-//        return "Fetching IBM stock price data...";
-//    }
-//
-//    private void handleSuccess(Object data) {
-//        String jsonResponse = data.toString(); // Convert the response to JSON format
-//        System.out.println(jsonResponse);
-//    }
-//
-//    private void handleFailure(Exception e) {
-//        // Handle API request failure here
-//    }
-
-
     // get stock by stockticker
     @Cacheable(key="#stockTicker",value = "stockCache")
     @GetMapping
@@ -66,8 +38,9 @@ public class StockController {
 
     @GetMapping
     @RequestMapping("/{stockTicker}/companyOverview")
-    public Mono<ResponseEntity<Object>>  getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-        return stockService.getStockOverview(stockTicker);
+    public String  getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        stockService.getStockOverview(stockTicker);
+        return "Stock overview retrieved successfully";
     }
 
 
