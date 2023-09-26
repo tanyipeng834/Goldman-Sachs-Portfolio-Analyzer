@@ -54,6 +54,24 @@ public class StockRepository {
         return newStock;
     }
 
+    // get stock with overview if already created in firebase
+    public Stock getStockOverview(String stockTicker) throws ExecutionException, InterruptedException {
+
+        ApiFuture<DocumentSnapshot> future = firestore.collection("stock").document(stockTicker).get();
+        DocumentSnapshot document = future.get();
+
+        Stock stock = null;
+        if(document.exists()){
+            stock = document.toObject(Stock.class);
+            return stock;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
     // create Stock with overview
     public String createStockWithOverview(String stockTicker, String description, String exchange, String currency, String country, String sector, String industry, String marketCapitalization ) throws ExecutionException, InterruptedException {
         DocumentReference docReference = firestore.collection("stock").document(stockTicker.toUpperCase());
@@ -68,7 +86,7 @@ public class StockRepository {
 
         stock.setStockTicker(docReference.getId());
         writeResultApiFuture = docReference.set(stock);
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
+        return "Added stock overview to firebase";
 
     }
 
