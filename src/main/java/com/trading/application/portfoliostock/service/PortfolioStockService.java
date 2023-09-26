@@ -40,7 +40,7 @@ public class PortfolioStockService {
 //        }
 //        return "Portfolio stock created";
 //        return "Stock already exists!";
-    }
+//    }
 
     // get all stocks
     public List<PortfolioStock> getAllStocks(String portfolioId) throws ExecutionException, InterruptedException {
