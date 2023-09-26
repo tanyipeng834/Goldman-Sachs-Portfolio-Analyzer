@@ -17,7 +17,9 @@ public class PortfolioStockController {
 
     @PostMapping
     @RequestMapping("/create")
+//    public String createPortfolioStock(@RequestBody List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
     public String createPortfolioStock(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+
         return portfolioStockService.createPortfolioStock(portfolioStock);
     }
 
@@ -33,10 +35,14 @@ public class PortfolioStockController {
         return portfolioStockService.deleteStock(portfolioStock);
     }
 
+
     @PostMapping
     @RequestMapping("/update")
     public String updateStockQuantity(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+
+//    public String updateStockQuantity(@RequestBody List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
         return portfolioStockService.updatePortfolioStock(portfolioStock.getPortfolioId(), portfolioStock.getStockTicker(), portfolioStock.getQuantity());
+//        return portfolioStockService.updatePortfolioStocks(portfolioStocks);
     }
 
 }
