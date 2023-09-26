@@ -6,11 +6,15 @@ import com.trading.application.portfolio.service.PortfolioService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/portfolio")
+@CrossOrigin(origins = "http://localhost:8080")
 public class PortfolioController {
 
     @Autowired
@@ -60,6 +64,13 @@ public class PortfolioController {
     @RequestMapping("/updatedescription")
     public String updatePortfolioDescription(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
         return portfolioService.updatePortfolioDescription(portfolio.getPortfolioId(), portfolio.getPortfolioDescription());
+    }
+
+    @PutMapping
+    @RequestMapping("/updateportfoliostocks/{portfolioId}")
+    public String updatePortfolioStocks(@PathVariable String portfolioId,@RequestBody ArrayList<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
+        return portfolioService.updatePortfolioStocks(portfolioId, portfolioStocks);
+//        return "test";
     }
 
     // get all portfolios of a customer

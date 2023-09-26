@@ -5,10 +5,8 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -69,6 +67,30 @@ public class PortfolioRepository {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
         return "Result: " + writeResultApiFuture.get();
+    }
+
+//    updating all portfoliostocks here.
+    public String updatePortfolioStocks(String portfolioId, ArrayList<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
+
+//        writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(portfolioStocks, portfolioStocks);
+//        return "Result: " + writeResultApiFuture.get();
+        // Assuming you have a Firestore document reference
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+            Portfolio portfolio = document.toObject(Portfolio.class);
+            portfolio.setPortfolioStockArray(portfolioStocks);
+
+            docRef.set(portfolio).get();
+
+            System.out.println("cuz got dependency, now will ask portfoliostocks to update also");
+            return "Result: Portfolio stocks updated successfully";
+        } else {
+            return "Document not found";
+        }
+
     }
 
     // get a portfolio

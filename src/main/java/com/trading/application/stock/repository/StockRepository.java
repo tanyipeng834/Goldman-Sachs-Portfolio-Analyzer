@@ -9,17 +9,13 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.google.gson.Gson;
 import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.entity.StockPrice;
-import org.json.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
+
 
 @Repository
 public class StockRepository {
@@ -35,7 +31,6 @@ public class StockRepository {
 
 
 
-
     public DocumentReference getReferenceById(String stockTicker) throws ExecutionException, InterruptedException {
 
         return firestore.collection("stock").document(stockTicker);
@@ -43,34 +38,60 @@ public class StockRepository {
     }
 
     // create Stock, get from api
-    public ResponseEntity<Object> createStock(Stock newStock) throws ExecutionException, InterruptedException {
+    public Stock createStock(Stock newStock) throws ExecutionException, InterruptedException {
 
-        //template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
-        DocumentReference docReference = firestore.collection("stock-test").document();
-        Gson gson  = new Gson();
+        template.opsForHash().put(HASH_KEY, newStock.getStockTicker(), newStock);
+        DocumentReference docReference = firestore.collection("stockPrice").document();
+        Gson gson = new Gson();
         ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
         String stockPricesListJson = gson.toJson(stockPrices);
-        docReference.update("historicalStockPrice",stockPricesListJson);
+        docReference.update("historicalStockPrice", stockPricesListJson);
 
 
+        // Check if there is no error in the database
+        writeResultApiFuture = docReference.set(newStock);
+        writeResultApiFuture.get();
+        return newStock;
+    }
 
-        try{
-            // Check if there is no error in the database
-            writeResultApiFuture = docReference.set(newStock);
-            writeResultApiFuture.get();
-            return new ResponseEntity<>(newStock,HttpStatus.OK);
+    // create Stock with overview
+    public String createStockWithOverview(String stockTicker, String description, String exchange, String currency, String country, String sector, String industry, String marketCapitalization ) throws ExecutionException, InterruptedException {
+        DocumentReference docReference = firestore.collection("stock").document(stockTicker.toUpperCase());
 
+        Stock stock = new Stock( description, exchange, currency, country, sector, industry, marketCapitalization);
+        stock.setStockTicker(stockTicker);
+        stock.setDescription(description);
+        stock.setExchange(exchange);
+        stock.setCurrency(currency);
+        stock.setCountry(country);
+        stock.setSector(sector);
 
-        }
-
-        catch(Exception e){
-            return new ResponseEntity<>("Error Updating the Database", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-
-
+        stock.setStockTicker(docReference.getId());
+        writeResultApiFuture = docReference.set(stock);
+        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
 
     }
+
+//    public ResponseEntity<Object> createStockOverview(StockCompanyOverview stockCompanyOverview) throws ExecutionException, InterruptedException {
+//
+//        String customisedDocumentId = stockCompanyOverview.getStockTicker();
+//        //template.opsForHash().put(HASH_KEY,stock.getStockTicker(),stock);
+////        DocumentReference docReference = firestore.collection("stockOverview").document(customisedDocumentId);
+//        Gson gson  = new Gson();
+//
+//        try{
+//            // Check if there is no error in the database
+//            writeResultApiFuture = docReference.set(stockCompanyOverview);
+//            writeResultApiFuture.get();
+//            return new ResponseEntity<>(stockCompanyOverview,HttpStatus.OK);
+//
+//
+//        }
+//
+//        catch(Exception e){
+//            return new ResponseEntity<>("Error Updating the Database", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     public Stock getStock(String stockTicker) throws ExecutionException, InterruptedException {
 

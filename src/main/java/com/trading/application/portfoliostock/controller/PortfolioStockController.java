@@ -4,12 +4,14 @@ import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/portfoliostock")
+@CrossOrigin(origins = "http://localhost:8080")
 public class PortfolioStockController {
 
     @Autowired
@@ -17,7 +19,9 @@ public class PortfolioStockController {
 
     @PostMapping
     @RequestMapping("/create")
+//    public String createPortfolioStock(@RequestBody List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
     public String createPortfolioStock(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+
         return portfolioStockService.createPortfolioStock(portfolioStock);
     }
 
@@ -33,10 +37,14 @@ public class PortfolioStockController {
         return portfolioStockService.deleteStock(portfolioStock);
     }
 
+
     @PostMapping
     @RequestMapping("/update")
     public String updateStockQuantity(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+
+//    public String updateStockQuantity(@RequestBody List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
         return portfolioStockService.updatePortfolioStock(portfolioStock.getPortfolioId(), portfolioStock.getStockTicker(), portfolioStock.getQuantity());
+//        return portfolioStockService.updatePortfolioStocks(portfolioStocks);
     }
 
 }

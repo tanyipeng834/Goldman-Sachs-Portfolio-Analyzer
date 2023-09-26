@@ -24,16 +24,10 @@ public class CustomerService {
 
     }
 
-    // update customer First Name
-    public String updateCustomerFirstName(String id, String firstName) throws ExecutionException, InterruptedException {
+    // update customer name
+    public String updateCustomerName(String id, String name) throws ExecutionException, InterruptedException {
 
-        return customerRepo.updateDocumentField(id, "firstName", firstName);
-    }
-
-    // update customer Last Name
-    public String updateCustomerLastName(String id, String lastName) throws ExecutionException, InterruptedException {
-
-        return customerRepo.updateDocumentField(id, "lastName", lastName);
+        return customerRepo.updateDocumentField(id, "name", name);
     }
 
     // customer update email

@@ -1,7 +1,5 @@
 package com.trading.application.portfoliostock.service;
 
-import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfolio.service.PortfolioService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
@@ -22,12 +20,26 @@ public class PortfolioStockService {
 
     // Create PortfolioStock
     // Checks if Stock exists in portfolio. If false, create new stock.
+    // verification will be done at dropdown so here create 1 stock
+
     public String createPortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-        if(!portfolioStockRepository.checkStockExists(portfolioStock)){
-            portfolioService.incrementPortfolioValue(portfolioStock.getPortfolioId(), portfolioStock.getQuantity() * portfolioStock.getStockPrice());
-            return portfolioStockRepository.createPortfolioStock(portfolioStock);
-        }
-        return "Stock already exists!";
+            if(!portfolioStockRepository.checkStockExists(portfolioStock)){
+                portfolioService.incrementPortfolioValue(portfolioStock.getPortfolioId(), portfolioStock.getQuantity() * portfolioStock.getStockPrice());
+                return portfolioStockRepository.createPortfolioStock(portfolioStock);
+            }
+        return "Portfolio stock created";
+    }
+
+    // if want to create multiple stocks
+//    public String createPortfolioStocks(List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
+//        for(PortfolioStock portfolioStock : portfolioStocks){
+////            if(!portfolioStockRepository.checkStockExists(portfolioStock)){
+//                portfolioService.incrementPortfolioValue(portfolioStock.getPortfolioId(), portfolioStock.getQuantity() * portfolioStock.getStockPrice());
+//                return portfolioStockRepository.createPortfolioStock(portfolioStock);
+////            }
+//        }
+//        return "Portfolio stock created";
+//        return "Stock already exists!";
     }
 
     // get all stocks
@@ -48,5 +60,22 @@ public class PortfolioStockService {
     public String updatePortfolioStock(String portfolioId, String stockTicker, int quantity) throws  ExecutionException, InterruptedException {
         return portfolioStockRepository.updatePortfolioStockField(portfolioId, stockTicker, "quantity", quantity);
     }
+
+    // will do for loop in portfolio
+//    public String updatePortfolioStocks(List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
+//
+//        for(PortfolioStock portfolioStock : portfolioStocks){
+//
+//            String portfolioId = portfolioStock.getPortfolioId();
+//            String stockTicker = portfolioStock.getStockTicker();
+//            int quantity = portfolioStock.getQuantity();
+//
+//            portfolioStockRepository.updatePortfolioStockField(portfolioId, stockTicker, "quantity", quantity);
+////        portfolioService.incrementPortfolioValue(portfolioStock.getPortfolioId(), portfolioStock.getQuantity() * portfolioStock.getStockPrice());
+////            return portfolioStockRepository.createPortfolioStock(portfolioStock);
+////            }
+//        }
+//        return "Portfolio stock updated";
+//    }
 
 }
