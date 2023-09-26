@@ -23,8 +23,7 @@ public class CustomerRepository {
     // add new customer
     public String addCustomer(Customer customer) throws ExecutionException, InterruptedException {
 
-        DocumentReference docReference = firestore.collection("customer").document();
-        customer.setId(docReference.getId());
+        DocumentReference docReference = firestore.collection("customer").document(customer.getId());
         writeResultApiFuture = docReference.set(customer);
         return writeResultApiFuture.get().getUpdateTime().toDate().toString();
 
