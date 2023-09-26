@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ExecutionException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin(origins = "http://localhost:8080")
 public class CustomerController {
 
     @Autowired
@@ -40,18 +42,11 @@ public class CustomerController {
         }
     }
 
-    // update customer First Name
+    // update customer name
     @PostMapping
-    @RequestMapping("/updatefirstname")
-    public String updateCustomerFirstName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
-        return customerService.updateCustomerFirstName(customer.getId(), customer.getFirstName());
-    }
-
-    // update customer Last Name
-    @PutMapping
-    @RequestMapping("/updatelastname")
-    public String updateCustomerLastName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
-        return customerService.updateCustomerLastName(customer.getId(), customer.getLastName());
+    @RequestMapping("/updatename")
+    public String updateCustomerName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
+        return customerService.updateCustomerName(customer.getId(), customer.getName());
     }
 
     // update customer email
