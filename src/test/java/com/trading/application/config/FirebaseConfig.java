@@ -17,7 +17,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void configureFirebaseConnection() throws IOException {
 
-        File file = ResourceUtils.getFile("classpath:config/is442-testenv-firebase-adminsdk-43sft-e5dd600a49.json");
+        File file = ResourceUtils.getFile("classpath:config/is442-testenv-firebase-adminsdk-43sft-4b3841b2c3.json");
         FileInputStream serviceAccount =
                 new FileInputStream(file);
 
