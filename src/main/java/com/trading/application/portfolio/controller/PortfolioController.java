@@ -83,27 +83,5 @@ public class PortfolioController {
         return portfolioService.getAllPortfolios(userId);
     }
 
-    // get sectors of all stocks in a portfolio
-    @GetMapping
-    @RequestMapping("/getsectorsofportfolio/{portfolioId}")
-    public ResponseEntity<Map<String, Integer>> getSectorsByPortfolioId(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> sectorCounts = portfolioService.getSectorsByPortfolioId(portfolioId);
-        if (sectorCounts != null) {
-            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping
-    @RequestMapping("/getsectorsofallportfolios/{userId}")
-    public ResponseEntity<Map<String, Integer>> getSectorsByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> allSectorCounts = portfolioService.getSectorsByUserId(userId);
-        if (allSectorCounts != null) {
-            return new ResponseEntity<>(allSectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
 }

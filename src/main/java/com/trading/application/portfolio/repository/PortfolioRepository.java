@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
+import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
 import com.trading.application.stock.entity.Stock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -129,64 +130,5 @@ public class PortfolioRepository {
         return allportfolios;
 
     }
-
-    // get sectors of all stocks in a portfolio
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-
-        Portfolio portfolio = getPortfolio(portfolioId);
-
-        CollectionReference stockColRef = firestore.collection("stock");
-
-        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
-
-        if (portfolio != null) {
-            ArrayList<PortfolioStock> myStocks = portfolio.getPortfolioStockArray();
-            if (!myStocks.isEmpty()) {
-                for (PortfolioStock myStock : myStocks) {
-                    String stockTicker = myStock.getStockTicker();
-                    ApiFuture<DocumentSnapshot> stocksInfo = stockColRef.document(stockTicker).get();
-                    DocumentSnapshot stocksInfoDoc = stocksInfo.get();
-
-                    if (stocksInfoDoc.exists()) {
-                        Stock stock = stocksInfoDoc.toObject(Stock.class);
-                        String sector = stock.getSector();
-
-                        // Update the sector counts in the map
-                        sectorCounts.put(sector, sectorCounts.getOrDefault(sector, 0) + 1);
-                    }
-                }
-                return sectorCounts;
-            }
-        }
-        return null;
-    }
-
-    // get all sectors of portfolios that a user owns
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-
-        List<Portfolio> allPortfolios = getAllPortfolios(userId);
-
-        Map<String, Integer> allSectorCounts = new HashMap<>(); // Map to store all sector counts
-
-        if (allPortfolios != null) {
-
-            for (Portfolio portfolio : allPortfolios) {
-                String portfolioId = portfolio.getPortfolioId();
-                Map<String, Integer> sectorCounts = getSectorsByPortfolioId(portfolioId);
-                if (sectorCounts != null) {
-                    // Update allSectorCounts with sectorCounts
-                    for (Map.Entry<String, Integer> entry : sectorCounts.entrySet()) {
-                        String sector = entry.getKey();
-                        int count = entry.getValue();
-                        allSectorCounts.put(sector, allSectorCounts.getOrDefault(sector, 0) + count);
-                    }
-                }
-            }
-            return allSectorCounts;
-        }
-        return null;
-    }
-
-
 
 }

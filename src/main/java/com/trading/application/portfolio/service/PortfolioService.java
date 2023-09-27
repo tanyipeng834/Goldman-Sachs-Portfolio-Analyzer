@@ -86,13 +86,5 @@ public class PortfolioService {
         return portfolioRepo.getAllPortfolios(userId);
     }
 
-    // get sectors of all stocks in a portfolio
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.getSectorsByPortfolioId(portfolioId);
-    }
-
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.getSectorsByUserId(userId);
-    }
 
 }
