@@ -86,8 +86,8 @@ public class PortfolioStockRepository {
         String docId = querySnapshot.get().getDocuments().get(0).getId();
 
         writeResultApiFuture = firestore.collection("portfolioStock").document(docId).update(field, fieldValue);
-        return writeResultApiFuture.get().getUpdateTime().toString();
-
+//        return writeResultApiFuture.get().getUpdateTime().toString();
+        return "portfolio stock successfully updated";
     }
 
     // Overloading

@@ -85,7 +85,7 @@ public class PortfolioRepository {
 
             docRef.set(portfolio).get();
 
-            System.out.println("cuz got dependency, now will ask portfoliostocks to update also");
+//            System.out.println("cuz got dependency, now will ask portfoliostocks to update also");
             return "Result: Portfolio stocks updated successfully";
         } else {
             return "Document not found";
