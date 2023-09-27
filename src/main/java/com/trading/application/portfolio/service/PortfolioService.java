@@ -6,9 +6,9 @@ import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -85,7 +85,9 @@ public class PortfolioService {
     }
 
     // get all portfolios of a customer
-    public List getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
+    public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
     }
+
+
 }

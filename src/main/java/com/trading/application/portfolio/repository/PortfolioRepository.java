@@ -5,10 +5,14 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
+import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
+import com.trading.application.stock.entity.Stock;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -112,14 +116,15 @@ public class PortfolioRepository {
     }
 
     // Get all Portfolios of a customer
-    public List getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
+    public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
 
         ApiFuture<QuerySnapshot> future = firestore.collection("portfolio").whereEqualTo("userId", userId).get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         List<Portfolio> allportfolios = new ArrayList<Portfolio>();
         for (QueryDocumentSnapshot document : documents) {
-            allportfolios.add(document.toObject(Portfolio.class));
+            Portfolio portfolio = document.toObject(Portfolio.class);
+            allportfolios.add(portfolio);
 //            return document.toObject(Portfolio.class));
         }
         return allportfolios;
