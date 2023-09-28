@@ -4,6 +4,9 @@ import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class Portfolio {
@@ -15,16 +18,24 @@ public class Portfolio {
     private float unrealisedPnL;
     private String dateCreated;
     private ArrayList<PortfolioStock> portfolioStockArray;
-
     public ArrayList<PortfolioStock> getPortfolioStockArray() {
         return portfolioStockArray;
+    }
+    private int capital;
+
+    private Map<String, List<PortfolioStock>> portStock;
+
+    public Map<String, List<PortfolioStock>> getPortStock() {
+        return portStock;
+    }
+
+    public void setPortStock(Map<String, List<PortfolioStock>> portStock) {
+        this.portStock = portStock;
     }
 
     public void setPortfolioStockArray(ArrayList<PortfolioStock> portfolioStockArray) {
         this.portfolioStockArray = portfolioStockArray;
     }
-
-
 
     private String userId;
 
@@ -38,7 +49,6 @@ public class Portfolio {
 
     public void addStock(PortfolioStock portfolioStock){
         portfolioStockArray.add(portfolioStock);
-
     }
 
     public String getPortfolioId() {
@@ -89,7 +99,11 @@ public class Portfolio {
         this.dateCreated = dateCreated;
     }
 
+    public int getCapital() {
+        return capital;
+    }
 
-
-
+    public void setCapital(int capital) {
+        this.capital = capital;
+    }
 }

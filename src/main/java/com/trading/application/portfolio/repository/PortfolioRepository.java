@@ -45,10 +45,6 @@ public class PortfolioRepository {
         System.out.println("Update time : " + portfolioStockReference.get());
 
         return writeResultApiFuture.get().getUpdateTime().toDate().toString();
-
-
-
-
     }
 
     // delete a portfolio
