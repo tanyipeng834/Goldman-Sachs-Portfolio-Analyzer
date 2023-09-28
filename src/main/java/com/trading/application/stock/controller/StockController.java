@@ -38,9 +38,8 @@ public class StockController {
 
     @GetMapping
     @RequestMapping("/{stockTicker}/companyOverview")
-    public String  getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-        stockService.getStockOverview(stockTicker);
-        return "Stock overview retrieved successfully";
+    public Stock getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockService.getStockOverview(stockTicker);
     }
 
 

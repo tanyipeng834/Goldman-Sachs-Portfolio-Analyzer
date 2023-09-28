@@ -4,16 +4,19 @@ import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class PortfolioService {
 
     private PortfolioRepository portfolioRepo = new PortfolioRepository();
+    @Autowired
+    private PortfolioStockService portfolioStockService = new PortfolioStockService();
 
     // Create Portfolio
     public String createPortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
@@ -53,14 +56,14 @@ public class PortfolioService {
 
         for(PortfolioStock portfolioStock : portfolioStocks) {
 
-            PortfolioStockService portfolioStockService;
+//            PortfolioStockService portfolioStockService;
 //            String portfolioId = portfolioStock.getPortfolioId();
             String stockTicker = portfolioStock.getStockTicker();
             int quantity = portfolioStock.getQuantity();
 //            float stockPrice = portfolioStock.getStockPrice();
 
             //assume oni quantity is being updated first
-//            portfolioStockService.updatePortfolioStock(portfolioId,  stockTicker, quantity);
+            String result = portfolioStockService.updatePortfolioStock(portfolioId,  stockTicker, quantity);
 
         }
         // sending to portfolio
@@ -82,7 +85,9 @@ public class PortfolioService {
     }
 
     // get all portfolios of a customer
-    public List getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
+    public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
     }
+
+
 }

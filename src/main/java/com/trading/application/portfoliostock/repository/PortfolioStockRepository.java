@@ -3,11 +3,18 @@ package com.trading.application.portfoliostock.repository;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.trading.application.portfolio.entity.Portfolio;
+import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
+import com.trading.application.stock.entity.Stock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.sound.sampled.Port;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -20,6 +27,22 @@ public class PortfolioStockRepository {
     private ApiFuture<QuerySnapshot> querySnapshot;
 
     private CollectionReference colRef = firestore.collection("portfolioStock");
+
+    private static void sectorCountLoop(CollectionReference stockColRef, Map<String, Integer> sectorCounts, List<PortfolioStock> myStocks) throws InterruptedException, ExecutionException {
+        for (PortfolioStock myStock : myStocks) {
+            String stockTicker = myStock.getStockTicker();
+            ApiFuture<DocumentSnapshot> stocksInfo = stockColRef.document(stockTicker).get();
+            DocumentSnapshot stocksInfoDoc = stocksInfo.get();
+
+            if (stocksInfoDoc.exists()) {
+                Stock stock = stocksInfoDoc.toObject(Stock.class);
+                String sector = stock.getSector();
+
+                // Update the sector counts in the map
+                sectorCounts.put(sector, sectorCounts.getOrDefault(sector, 0) + 1);
+            }
+        }
+    }
 
 
     // create individual PortfolioStock
@@ -45,7 +68,7 @@ public class PortfolioStockRepository {
     }
 
     // get all stocks by portfolioId
-    public List<PortfolioStock> getALlStocks(String portfolioId) throws ExecutionException, InterruptedException {
+    public List<PortfolioStock> getAllStocksbyPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
 
         List<PortfolioStock> stocks = new ArrayList<>();
 
@@ -86,8 +109,8 @@ public class PortfolioStockRepository {
         String docId = querySnapshot.get().getDocuments().get(0).getId();
 
         writeResultApiFuture = firestore.collection("portfolioStock").document(docId).update(field, fieldValue);
-        return writeResultApiFuture.get().getUpdateTime().toString();
-
+//        return writeResultApiFuture.get().getUpdateTime().toString();
+        return "portfolio stock successfully updated";
     }
 
     // Overloading
@@ -118,5 +141,47 @@ public class PortfolioStockRepository {
     }
 
 
+    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
+
+        CollectionReference stockColRef = firestore.collection("stock");
+
+        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+
+        List<PortfolioStock> myStocks = getAllStocksbyPortfolioId(portfolioId);
+        if (!myStocks.isEmpty()) {
+            sectorCountLoop(stockColRef, sectorCounts, myStocks);
+            return sectorCounts;
+        }
+        return null;
+    }
+
+    // get all stocks by userId
+    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {
+
+        List<PortfolioStock> stocks = new ArrayList<>();
+
+        querySnapshot = colRef.whereEqualTo("userId", userId).get();
+        for(DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            stocks.add(document.toObject(PortfolioStock.class));
+        }
+
+        return stocks;
+
+    }
+
+//     get all sectors of portfolios that a user owns
+    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
+
+        CollectionReference stockColRef = firestore.collection("stock");
+
+        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+
+        List<PortfolioStock> myStocks = getAllStocksbyUserId(userId);
+
+        if (!myStocks.isEmpty()) {
+            sectorCountLoop(stockColRef, sectorCounts, myStocks);
+        }
+        return sectorCounts;
+    }
 
 }

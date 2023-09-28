@@ -5,10 +5,13 @@ import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.service.PortfolioService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -76,7 +79,9 @@ public class PortfolioController {
     // get all portfolios of a customer
     @GetMapping
     @RequestMapping("/getportfolios/{userId}")
-    public List getAllPortfolios(@PathVariable String userId) throws ExecutionException, InterruptedException {
+    public List<Portfolio> getAllPortfolios(@PathVariable String userId) throws ExecutionException, InterruptedException {
         return portfolioService.getAllPortfolios(userId);
     }
+
+
 }
