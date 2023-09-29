@@ -32,7 +32,7 @@ public class PortfolioRepository {
         DocumentReference docReference = firestore.collection("portfolio").document();
         portfolio.setPortfolioId(docReference.getId());
         writeResultApiFuture = docReference.set(portfolio);
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
+        return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
     public String addStock(String portfolioStockId ,String portfolioId) throws ExecutionException,InterruptedException{
