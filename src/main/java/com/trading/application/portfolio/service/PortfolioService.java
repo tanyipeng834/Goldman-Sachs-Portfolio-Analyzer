@@ -140,6 +140,15 @@ public class PortfolioService {
             }
         }
 
+        if (portfolioStocks.getUpdated() != null && !portfolioStocks.getUpdated().isEmpty()) {
+            System.out.println("updated some stock");
+            List<PortfolioStock> updated = portfolioStocks.getUpdated();
+            for(PortfolioStock portfolioStock : updated){
+                String result = portfolioStockService.updatePortfolioStock(portfolioId, portfolioStock.getStockTicker(), portfolioStock.getQuantity());
+                System.out.println(result);
+            }
+        }
+
             return "All stocks are updated";
     }
 
