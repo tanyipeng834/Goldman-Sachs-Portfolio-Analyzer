@@ -141,47 +141,47 @@ public class PortfolioStockRepository {
     }
 
 
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-
-        CollectionReference stockColRef = firestore.collection("stock");
-
-        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
-
-        List<PortfolioStock> myStocks = getAllStocksbyPortfolioId(portfolioId);
-        if (!myStocks.isEmpty()) {
-            sectorCountLoop(stockColRef, sectorCounts, myStocks);
-            return sectorCounts;
-        }
-        return null;
-    }
-
-    // get all stocks by userId
-    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {
-
-        List<PortfolioStock> stocks = new ArrayList<>();
-
-        querySnapshot = colRef.whereEqualTo("userId", userId).get();
-        for(DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-            stocks.add(document.toObject(PortfolioStock.class));
-        }
-
-        return stocks;
-
-    }
-
-//     get all sectors of portfolios that a user owns
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-
-        CollectionReference stockColRef = firestore.collection("stock");
-
-        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
-
-        List<PortfolioStock> myStocks = getAllStocksbyUserId(userId);
-
-        if (!myStocks.isEmpty()) {
-            sectorCountLoop(stockColRef, sectorCounts, myStocks);
-        }
-        return sectorCounts;
-    }
+//    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
+//
+//        CollectionReference stockColRef = firestore.collection("stock");
+//
+//        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+//
+//        List<PortfolioStock> myStocks = getAllStocksbyPortfolioId(portfolioId);
+//        if (!myStocks.isEmpty()) {
+//            sectorCountLoop(stockColRef, sectorCounts, myStocks);
+//            return sectorCounts;
+//        }
+//        return null;
+//    }
+//
+//    // get all stocks by userId
+//    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {
+//
+//        List<PortfolioStock> stocks = new ArrayList<>();
+//
+//        querySnapshot = colRef.whereEqualTo("userId", userId).get();
+//        for(DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+//            stocks.add(document.toObject(PortfolioStock.class));
+//        }
+//
+//        return stocks;
+//
+//    }
+//
+////     get all sectors of portfolios that a user owns
+//    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
+//
+//        CollectionReference stockColRef = firestore.collection("stock");
+//
+//        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+//
+//        List<PortfolioStock> myStocks = getAllStocksbyUserId(userId);
+//
+//        if (!myStocks.isEmpty()) {
+//            sectorCountLoop(stockColRef, sectorCounts, myStocks);
+//        }
+//        return sectorCounts;
+//    }
 
 }

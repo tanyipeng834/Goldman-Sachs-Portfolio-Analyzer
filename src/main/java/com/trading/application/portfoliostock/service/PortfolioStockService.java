@@ -79,14 +79,14 @@ public class PortfolioStockService {
 //    }
 
     // get sectors of all stocks in a portfolio
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.getSectorsByPortfolioId(portfolioId);
-    }
-
-    // get sectors of all stocks by userId
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.getSectorsByUserId(userId);
-    }
+//    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
+//        return portfolioStockRepository.getSectorsByPortfolioId(portfolioId);
+//    }
+//
+//    // get sectors of all stocks by userId
+//    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
+//        return portfolioStockRepository.getSectorsByUserId(userId);
+//    }
 
     // get all stocks by userId
 //    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {

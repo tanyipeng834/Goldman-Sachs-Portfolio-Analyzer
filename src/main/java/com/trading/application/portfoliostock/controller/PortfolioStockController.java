@@ -50,16 +50,16 @@ public class PortfolioStockController {
 //        return portfolioStockService.updatePortfolioStocks(portfolioStocks);
     }
 
-    @GetMapping
-    @RequestMapping("/getsectorsbyportfolio/{portfolioId}")
-    public ResponseEntity<Map<String, Integer>> getSectorsByPortfolioId(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByPortfolioId(portfolioId);
-        if (sectorCounts != null) {
-            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping
+//    @RequestMapping("/getsectorsbyportfolio/{portfolioId}")
+//    public ResponseEntity<Map<String, Integer>> getSectorsByPortfolioId(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
+//        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByPortfolioId(portfolioId);
+//        if (sectorCounts != null) {
+//            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 //    @GetMapping
 //    @RequestMapping("/getAllStocksbyuserid/{userId}")
@@ -67,15 +67,15 @@ public class PortfolioStockController {
 //        return portfolioStockService.getAllStocksbyUserId(userId);
 //    }
 
-    @GetMapping
-    @RequestMapping("/getsectorsbyuser/{userId}")
-    public ResponseEntity<Map<String, Integer>> getSectorsByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByUserId(userId);
-        if (sectorCounts != null) {
-            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping
+//    @RequestMapping("/getsectorsbyuser/{userId}")
+//    public ResponseEntity<Map<String, Integer>> getSectorsByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
+//        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByUserId(userId);
+//        if (sectorCounts != null) {
+//            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 }
