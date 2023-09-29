@@ -25,10 +25,9 @@ public class PortfolioController {
     @Autowired
     private PortfolioService portfolioService;
 
-    // create new portfolio
     @PostMapping
     @RequestMapping("/create")
-    public String createPortfolio(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
         return portfolioService.createPortfolio(portfolio);
     }
 

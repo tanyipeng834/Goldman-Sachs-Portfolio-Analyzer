@@ -33,7 +33,6 @@ public class PortfolioRepository {
         portfolio.setPortfolioId(docReference.getId());
         writeResultApiFuture = docReference.set(portfolio);
         return writeResultApiFuture.get().getUpdateTime().toDate().toString();
-
     }
 
     public String addStock(String portfolioStockId ,String portfolioId) throws ExecutionException,InterruptedException{
