@@ -2,6 +2,8 @@ package com.trading.application.portfoliostock.entity;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class PortfolioStock {
 

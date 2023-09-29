@@ -162,20 +162,20 @@ public class PortfolioStockRepository {
                 if (portStockMap.containsKey(stockTicker)) {
                     List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
 
-                    newItem.put("price", portfolioStock.getStockBoughtPrice());
+                    newItem.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
                     newItem.put("quantity", portfolioStock.getQuantity());
                     newItem.put("dateBought", portfolioStock.getDateBought());
-                    newItem.put("stockBoughtPrice", portfolioStock.getStockPrice());
+                    newItem.put("stockPrice", portfolioStock.getStockPrice());
                     stockList.add(newItem);
 
                     portStockMap.put(stockTicker, stockList);
                 } else {
                     // If stock doesnt exist, add to array
                     List<Map<String, Object>> stockList = new ArrayList<>();
-                    newItem.put("price", portfolioStock.getStockBoughtPrice());
+                    newItem.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
                     newItem.put("quantity", portfolioStock.getQuantity());
                     newItem.put("dateBought", portfolioStock.getDateBought());
-                    newItem.put("stockBoughtPrice", portfolioStock.getStockPrice());
+                    newItem.put("stockPrice", portfolioStock.getStockPrice());
                     stockList.add(newItem);
 
                     portStockMap.put(stockTicker, stockList);

@@ -158,11 +158,11 @@ public class PortfolioService {
         Map<String, List<PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
         Map<String, List<PortfolioStock>> stocksToDelete = portfolioStocksRequest.getDeletednew();
 
-        for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue());
-            for (PortfolioStock stock : entry.getValue()){
-                portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock);
+        if(stocksToAdd != null) {
+            for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
+                for (PortfolioStock stock : entry.getValue()){
+                    portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock);
+                }
             }
         }
         return "works!!!";
