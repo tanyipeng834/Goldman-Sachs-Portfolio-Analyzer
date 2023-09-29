@@ -156,11 +156,12 @@ public class PortfolioStockRepository {
                     portStockMap = new HashMap<>();
                 }
 
+                Map<String, Object> newItem = new HashMap<>();
+
                 // Check if stockTicker exists in portStock
                 if (portStockMap.containsKey(stockTicker)) {
                     List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
 
-                    Map<String, Object> newItem = new HashMap<>();
                     newItem.put("price", portfolioStock.getStockBoughtPrice());
                     newItem.put("quantity", portfolioStock.getQuantity());
                     newItem.put("dateBought", portfolioStock.getDateBought());
@@ -171,7 +172,6 @@ public class PortfolioStockRepository {
                 } else {
                     // If stock doesnt exist, add to array
                     List<Map<String, Object>> stockList = new ArrayList<>();
-                    Map<String, Object> newItem = new HashMap<>();
                     newItem.put("price", portfolioStock.getStockBoughtPrice());
                     newItem.put("quantity", portfolioStock.getQuantity());
                     newItem.put("dateBought", portfolioStock.getDateBought());
