@@ -60,8 +60,8 @@ public class PortfolioStockService {
 
     // NEW
     // add new stock to portStock
-    public String addNewStock(String portfolioId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.addNewStock(portfolioId, stockTicker, portfolioStock);
+    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock);
     }
 
     // will do for loop in portfolio

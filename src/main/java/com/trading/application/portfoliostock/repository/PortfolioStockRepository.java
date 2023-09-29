@@ -3,11 +3,15 @@ package com.trading.application.portfoliostock.repository;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.trading.application.logs.entity.AccessLog;
+import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,9 @@ public class PortfolioStockRepository {
     private ApiFuture<QuerySnapshot> querySnapshot;
 
     private CollectionReference colRef = firestore.collection("portfolioStock");
+
+    @Autowired
+    private AccessLogService accessLogService = new AccessLogService();
 
     private static void sectorCountLoop(CollectionReference stockColRef, Map<String, Integer> sectorCounts, List<PortfolioStock> myStocks) throws InterruptedException, ExecutionException {
         for (PortfolioStock myStock : myStocks) {
@@ -128,7 +135,7 @@ public class PortfolioStockRepository {
 
     // NEW
     // add new stock to portStock
-    public String addNewStock(String portfolioId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
 
@@ -176,6 +183,9 @@ public class PortfolioStockRepository {
 
                 ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                 updateFuture.get();
+
+                AccessLog accessLog = new AccessLog(userId,"ADD", "192.168.1.1", "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                accessLogService.addLog(accessLog);
 
                 return "Added to " + stockTicker + " array";
             } else {

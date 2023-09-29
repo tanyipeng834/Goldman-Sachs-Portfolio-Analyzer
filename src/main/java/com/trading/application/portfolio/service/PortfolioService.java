@@ -162,7 +162,7 @@ public class PortfolioService {
             System.out.println(entry.getKey());
             System.out.println(entry.getValue());
             for (PortfolioStock stock : entry.getValue()){
-                portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), entry.getKey(), stock);
+                portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock);
             }
         }
         return "works!!!";
