@@ -87,13 +87,14 @@ public class PortfolioStockRepository {
     }
 
     // delete a stock from portfolio
-    public String deleteStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+    public String deletePortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
 
         querySnapshot = colRef.whereEqualTo("portfolioId", portfolioStock.getPortfolioId()).whereEqualTo("stockTicker", portfolioStock.getStockTicker()).get();
 
         String docId = querySnapshot.get().getDocuments().get(0).getId();
 
         writeResultApiFuture = firestore.collection("portfolioStock").document(docId).delete();
+
         return "Stock successfully deleted";
     }
 

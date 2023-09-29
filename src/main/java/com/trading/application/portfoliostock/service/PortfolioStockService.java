@@ -46,11 +46,10 @@ public class PortfolioStockService {
     }
 
     // delete Stock from portfolio
-    public String deleteStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+    public String deletePortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
         int quantity = portfolioStockRepository.getPortfolioStock(portfolioStock).getQuantity();
         float price = portfolioStockRepository.getPortfolioStock(portfolioStock).getStockPrice();
-//        portfolioService.decrementPortfolioValue(portfolioStock.getPortfolioId(), quantity * price);
-        return portfolioStockRepository.deleteStock(portfolioStock);
+        return portfolioStockRepository.deletePortfolioStock(portfolioStock);
     }
 
     // update Stock quantity

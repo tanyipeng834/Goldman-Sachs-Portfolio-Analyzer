@@ -3,13 +3,9 @@ package com.trading.application.portfoliostock.controller;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -37,7 +33,7 @@ public class PortfolioStockController {
     @DeleteMapping
     @RequestMapping("/delete")
     public String deleteStock(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-        return portfolioStockService.deleteStock(portfolioStock);
+        return portfolioStockService.deletePortfolioStock(portfolioStock);
     }
 
 

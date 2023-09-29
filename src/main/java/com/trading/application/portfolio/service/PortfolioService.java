@@ -131,7 +131,16 @@ public class PortfolioService {
             }
         }
 
-        return "All stocks are updated";
+        if (portfolioStocks.getDeleted() != null && !portfolioStocks.getDeleted().isEmpty()) {
+            System.out.println("deleted some stock");
+            List<PortfolioStock> deleted = portfolioStocks.getDeleted();
+            for(PortfolioStock portfolioStock : deleted){
+                String result = portfolioStockService.deletePortfolioStock(portfolioStock);
+                System.out.println(result);
+            }
+        }
+
+            return "All stocks are updated";
     }
 
     // Increment a portfolio's Value
