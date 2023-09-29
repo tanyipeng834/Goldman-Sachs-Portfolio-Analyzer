@@ -32,8 +32,7 @@ public class PortfolioRepository {
         DocumentReference docReference = firestore.collection("portfolio").document();
         portfolio.setPortfolioId(docReference.getId());
         writeResultApiFuture = docReference.set(portfolio);
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
-
+        return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
     public String addStock(String portfolioStockId ,String portfolioId) throws ExecutionException,InterruptedException{
@@ -49,7 +48,7 @@ public class PortfolioRepository {
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).delete();
-        return writeResultApiFuture.get().getUpdateTime().toString();
+        return "Portfolio successfully deleted on: " + writeResultApiFuture.get().getUpdateTime();
     }
 
     // Update a portfolio's field

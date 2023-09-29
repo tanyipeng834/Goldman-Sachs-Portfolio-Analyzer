@@ -22,10 +22,9 @@ public class PortfolioController {
     @Autowired
     private PortfolioService portfolioService;
 
-    // create new portfolio
     @PostMapping
     @RequestMapping("/create")
-    public String createPortfolio(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio) {
         return portfolioService.createPortfolio(portfolio);
     }
 
@@ -50,7 +49,7 @@ public class PortfolioController {
     // delete a portfolio
     @DeleteMapping
     @RequestMapping("delete/{portfolioId}")
-    public String deletePortfolio( @PathVariable String portfolioId) throws  ExecutionException, InterruptedException {
+    public ResponseEntity<String> deletePortfolio(@PathVariable String portfolioId) {
         return portfolioService.deletePortfolio(portfolioId);
     }
 
