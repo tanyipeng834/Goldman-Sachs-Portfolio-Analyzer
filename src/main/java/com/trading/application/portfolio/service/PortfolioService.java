@@ -152,6 +152,22 @@ public class PortfolioService {
             return "All stocks are updated";
     }
 
+    public String updatePort(PortfolioStocksRequest portfolioStocksRequest) throws ExecutionException, InterruptedException {
+
+        Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAddednew();
+        Map<String, List<PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
+        Map<String, List<PortfolioStock>> stocksToDelete = portfolioStocksRequest.getDeletednew();
+
+        for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
+            for (PortfolioStock stock : entry.getValue()){
+                portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), entry.getKey(), stock);
+            }
+        }
+        return "works!!!";
+    }
+
     // Increment a portfolio's Value
     public void incrementPortfolioValue(String portfolioId, float totalStockPrice) throws ExecutionException, InterruptedException {
         float portfolioVal = portfolioRepo.getPortfolio(portfolioId).getPortfolioValue();

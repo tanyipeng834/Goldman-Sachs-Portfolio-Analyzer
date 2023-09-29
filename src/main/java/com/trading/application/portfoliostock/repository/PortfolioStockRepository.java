@@ -3,11 +3,13 @@ package com.trading.application.portfoliostock.repository;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -123,6 +125,67 @@ public class PortfolioStockRepository {
         return "portfolio stock successfully updated";
 
     }
+
+    // NEW
+    // add new stock to portStock
+    public String addNewStock(String portfolioId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+
+        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+
+            Map<String, Object> data = document.getData();
+
+            if (data != null) {
+                Map<String, Object> portStockMap;
+
+                if (data.containsKey("portStock")) {
+                    portStockMap = (Map<String, Object>) data.get("portStock");
+                } else {
+                    // If "portStock" doesn't exist, create a new map
+                    portStockMap = new HashMap<>();
+                }
+
+                // Check if stockTicker exists in portStock
+                if (portStockMap.containsKey(stockTicker)) {
+                    List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
+
+                    Map<String, Object> newItem = new HashMap<>();
+                    newItem.put("price", portfolioStock.getStockBoughtPrice());
+                    newItem.put("quantity", portfolioStock.getQuantity());
+                    newItem.put("dateBought", portfolioStock.getDateBought());
+                    newItem.put("stockBoughtPrice", portfolioStock.getStockPrice());
+                    stockList.add(newItem);
+
+                    portStockMap.put(stockTicker, stockList);
+                } else {
+                    // If stock doesnt exist, add to array
+                    List<Map<String, Object>> stockList = new ArrayList<>();
+                    Map<String, Object> newItem = new HashMap<>();
+                    newItem.put("price", portfolioStock.getStockBoughtPrice());
+                    newItem.put("quantity", portfolioStock.getQuantity());
+                    newItem.put("dateBought", portfolioStock.getDateBought());
+                    newItem.put("stockBoughtPrice", portfolioStock.getStockPrice());
+                    stockList.add(newItem);
+
+                    portStockMap.put(stockTicker, stockList);
+                }
+
+                ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                updateFuture.get();
+
+                return "Added to " + stockTicker + " array";
+            } else {
+                return "Document data is null";
+            }
+        } else {
+            return "Document does not exist";
+        }
+    }
+
 
     // to update stockprice. if person manually changes the price. kiv.
     public String updatePortfolioStockField(String portfolioId, String stockTicker, String field, float fieldValue) throws ExecutionException, InterruptedException {

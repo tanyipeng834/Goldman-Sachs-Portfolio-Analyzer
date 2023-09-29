@@ -81,6 +81,12 @@ public class PortfolioController {
 //        return "test";
     }
 
+    @PutMapping
+    @RequestMapping("/updateport/")
+    public String updatePort(@RequestBody PortfolioStocksRequest portfolioStocksRequest) throws ExecutionException, InterruptedException {
+        return portfolioService.updatePort(portfolioStocksRequest);
+    }
+
     // get all portfolios of a customer
     @GetMapping
     @RequestMapping("/getportfolios/{userId}")
