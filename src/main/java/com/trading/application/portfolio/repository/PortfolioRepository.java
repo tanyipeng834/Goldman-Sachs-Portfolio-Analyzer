@@ -48,7 +48,7 @@ public class PortfolioRepository {
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).delete();
-        return writeResultApiFuture.get().getUpdateTime().toString();
+        return "Portfolio successfully deleted on: " + writeResultApiFuture.get().getUpdateTime();
     }
 
     // Update a portfolio's field

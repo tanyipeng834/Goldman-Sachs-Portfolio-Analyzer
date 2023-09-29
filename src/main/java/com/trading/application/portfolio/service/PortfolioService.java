@@ -49,8 +49,14 @@ public class PortfolioService {
     }
 
     // delete a portfolio
-    public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.deletePortfolio(portfolioId);
+    public ResponseEntity<String> deletePortfolio(String portfolioId) {
+//        return portfolioRepo.deletePortfolio(portfolioId);
+        try {
+            String result = portfolioRepo.deletePortfolio(portfolioId);
+            return ResponseEntity.ok(result);
+        } catch (InterruptedException | ExecutionException | FirestoreException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
+        }
     }
 
     // update a portfolio's Name
