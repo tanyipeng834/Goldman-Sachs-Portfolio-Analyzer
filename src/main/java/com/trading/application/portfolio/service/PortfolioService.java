@@ -1,14 +1,18 @@
 package com.trading.application.portfolio.service;
 
+import com.trading.application.logs.entity.AccessLog;
+import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -17,6 +21,9 @@ public class PortfolioService {
     private PortfolioRepository portfolioRepo = new PortfolioRepository();
     @Autowired
     private PortfolioStockService portfolioStockService = new PortfolioStockService();
+
+    @Autowired
+    private AccessLogService accessLogService = new AccessLogService();
 
     // Create Portfolio
     public String createPortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
@@ -87,6 +94,16 @@ public class PortfolioService {
     // get all portfolios of a customer
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
+    }
+
+    // get sectors of all stocks in a portfolio
+    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.getSectorsByPortfolioId(portfolioId);
+    }
+
+    // get sectors of all stocks a user has
+    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.getSectorsByUserId(userId);
     }
 
 
