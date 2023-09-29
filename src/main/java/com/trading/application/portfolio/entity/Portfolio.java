@@ -23,6 +23,8 @@ public class Portfolio {
     }
     private int capital;
 
+    private boolean isPublic;
+
     private Map<String, List<PortfolioStock>> portStock;
 
     public Map<String, List<PortfolioStock>> getPortStock() {
@@ -105,5 +107,13 @@ public class Portfolio {
 
     public void setCapital(int capital) {
         this.capital = capital;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 }
