@@ -1,18 +1,17 @@
 package com.trading.application.portfolio.service;
 
-import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
+import com.trading.application.portfolio.entity.PortfolioRequest;
+import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -45,6 +44,40 @@ public class PortfolioService {
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.deletePortfolio(portfolioId);
     }
+    // update entire portfolio. frontend will call this.
+    public String updatePortfolio(PortfolioRequest portfolio, String portfolioId) throws ExecutionException, InterruptedException {
+
+//        System.out.println(portfolio.getPortfolioStocks());
+//        check if name changed
+        if(portfolio.getPortfolioName()!=null){
+            System.out.println("update name");
+            updatePortfolioName(portfolioId, portfolio.getPortfolioName());
+
+//            handle error
+        }
+
+//        check if description changed
+        if(portfolio.getPortfolioDescription()!=null){
+            System.out.println("update description");
+            updatePortfolioDescription(portfolioId, portfolio.getPortfolioDescription());
+
+//            handle error
+        }
+
+//        check if stocks changed
+        if(portfolio.getPortfolioStocks()!=null){
+            PortfolioStocksRequest portfolioStocks = portfolio.getPortfolioStocks();
+            //gives a list of stocks in map string
+            // there is a stock being updated/created/deleted
+            System.out.println("update stocks");
+            updatePortfolioStocks(portfolioId, portfolioStocks);
+
+
+//            handle error
+        }
+        return "nondone";
+//        return portfolioRepo.updatePortfolio(portfolioId, "portfolioName", portfolioName);
+    }
 
     // update a portfolio's Name
     public String updatePortfolioName(String portfolioId, String portfolioName) throws ExecutionException, InterruptedException {
@@ -57,25 +90,32 @@ public class PortfolioService {
     }
 
     // update all portfolio stocks. calling the portfoliostock service n then repo bef calling port repo
-    public String updatePortfolioStocks(String portfolioId, ArrayList<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
-//        return portfolioRepo.updatePortfolioField(portfolioId, "portfolioDescription", portfolioDescription);
+    public String updatePortfolioStocks(String portfolioId, PortfolioStocksRequest portfolioStocks) throws ExecutionException, InterruptedException {
 
+        if (portfolioStocks.getAdded() != null && !portfolioStocks.getAdded().isEmpty()) {
+            System.out.println("added some stock");
+            List<PortfolioStock> added = portfolioStocks.getAdded();
+//            Map<String, List<PortfolioStock>> added = portfolioStocks.getAdded();
+//            List<PortfolioStock> allPortfolioStocks = new ArrayList<>();
 
-        for(PortfolioStock portfolioStock : portfolioStocks) {
-
-//            PortfolioStockService portfolioStockService;
-//            String portfolioId = portfolioStock.getPortfolioId();
-            String stockTicker = portfolioStock.getStockTicker();
-            int quantity = portfolioStock.getQuantity();
-//            float stockPrice = portfolioStock.getStockPrice();
-
-            //assume oni quantity is being updated first
-            String result = portfolioStockService.updatePortfolioStock(portfolioId,  stockTicker, quantity);
-
+//            // Iterate through the map to collect PortfolioStock objects
+//            for (Map.Entry<String, List<PortfolioStock>> entry : added.entrySet()) {
+//                List<PortfolioStock> portfolioStockList = entry.getValue();
+//                allPortfolioStocks.addAll(portfolioStockList);
+//            }
+//
+//            // Now, allPortfolioStocks contains all individual PortfolioStock objects
+//            for (PortfolioStock portfolioStock : allPortfolioStocks) {
+//                System.out.println(portfolioStock);
+//                String result = portfolioStockService.createPortfolioStock(portfolioStock);
+//                System.out.println(result);
+//            }
+            for(PortfolioStock portfolioStock : added){
+                String result = portfolioStockService.createPortfolioStock(portfolioStock);
+                System.out.println(result);
+            }
         }
-        // sending to portfolio
-        portfolioRepo.updatePortfolioStocks(portfolioId, portfolioStocks);
-        System.out.println("all stocks updated");
+
         return "All stocks are updated";
     }
 

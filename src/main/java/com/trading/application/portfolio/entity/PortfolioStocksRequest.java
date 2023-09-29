@@ -5,9 +5,13 @@ import com.trading.application.portfoliostock.entity.PortfolioStock;
 import java.util.List;
 
 public class PortfolioStocksRequest {
+    //    private Map<String, List<PortfolioStock>> added;
+//    private Map<String, List<PortfolioStock>> deleted;
+//    private Map<String, List<PortfolioStock>> updated;
     private List<PortfolioStock> added;
     private List<PortfolioStock> deleted;
     private List<PortfolioStock> updated;
+
     public List<PortfolioStock> getAdded() {
         return added;
     }

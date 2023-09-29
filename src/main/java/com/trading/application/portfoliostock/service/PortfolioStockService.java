@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -19,14 +18,13 @@ public class PortfolioStockService {
 //    private PortfolioService portfolioService;
 
     // Create PortfolioStock
-    // Checks if Stock exists in portfolio. If false, create new stock.
-    // verification will be done at dropdown so here create 1 stock
-
+    // even if created. user can still add stock. called under update too.
     public String createPortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-            if(!portfolioStockRepository.checkStockExists(portfolioStock)){
+//            if(!portfolioStockRepository.checkStockExists(portfolioStock)){
 //                portfolioService.incrementPortfolioValue(portfolioStock.getPortfolioId(), portfolioStock.getQuantity() * portfolioStock.getStockPrice());
-                return portfolioStockRepository.createPortfolioStock(portfolioStock);
-            }
+        System.out.println("creating a port stock");
+        portfolioStockRepository.createPortfolioStock(portfolioStock);
+//            }
         return "Portfolio stock created";
     }
 

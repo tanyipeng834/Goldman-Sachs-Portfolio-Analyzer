@@ -3,16 +3,11 @@ package com.trading.application.portfoliostock.repository;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -48,6 +43,7 @@ public class PortfolioStockRepository {
     // create individual PortfolioStock
     public String createPortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
 
+        System.out.println("inside portstockrepo createportstock");
         DocumentReference docReference = firestore.collection("portfolioStock").document();
         writeResultApiFuture = docReference.set(portfolioStock);
         return "Each Portfolio Stock successfully created";
