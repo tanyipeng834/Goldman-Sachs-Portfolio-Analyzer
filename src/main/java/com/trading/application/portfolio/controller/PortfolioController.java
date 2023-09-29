@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.service.PortfolioService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
