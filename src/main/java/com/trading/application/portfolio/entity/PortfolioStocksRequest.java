@@ -23,7 +23,7 @@ public class PortfolioStocksRequest {
 
     private Map<String, List<PortfolioStock>> addednew;
     private Map<String, List<PortfolioStock>> updatednew;
-    private Map<String, List<PortfolioStock>> deletednew;
+    private List<String> deletednew;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -73,11 +73,11 @@ public class PortfolioStocksRequest {
         this.updatednew = updatednew;
     }
 
-    public Map<String, List<PortfolioStock>> getDeletednew() {
+    public List<String> getDeletednew() {
         return deletednew;
     }
 
-    public void setDeletednew(Map<String, List<PortfolioStock>> deletednew) {
+    public void setDeletednew(List<String> deletednew) {
         this.deletednew = deletednew;
     }
 

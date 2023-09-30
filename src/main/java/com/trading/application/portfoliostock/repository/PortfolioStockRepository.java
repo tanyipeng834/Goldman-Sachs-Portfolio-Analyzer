@@ -225,6 +225,9 @@ public class PortfolioStockRepository {
                     ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                     updateFuture.get();
 
+                    AccessLog accessLog = new AccessLog(userId,"DELETE", "192.168.1.1", "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString());
+                    accessLogService.addLog(accessLog);
+
                     return "Deleted " + stockTicker + " from the portfolio";
                 } else {
                     return stockTicker + " does not exist in the portfolio";
