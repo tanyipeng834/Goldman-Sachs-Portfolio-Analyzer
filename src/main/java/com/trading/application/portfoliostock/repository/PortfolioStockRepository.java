@@ -5,7 +5,6 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
-import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
 import jakarta.servlet.http.HttpServletRequest;
@@ -233,6 +232,66 @@ public class PortfolioStockRepository {
                 } else {
                     return stockTicker + " does not exist in the portfolio";
                 }
+            } else {
+                return "Document data is null";
+            }
+        } else {
+            return "Document does not exist";
+        }
+    }
+
+    // NEW
+    public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+
+            Map<String, Object> data = document.getData();
+
+            if (data != null) {
+                Map<String, Object> portStockMap;
+
+                if (data.containsKey("portStock")) {
+                    portStockMap = (Map<String, Object>) data.get("portStock");
+                    Map<String, Object> updatedStock = new HashMap<>();
+
+                    // Check if stockTicker exists in portStock
+                    if (portStockMap.containsKey(stockTicker)) {
+                        List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
+                        System.out.println(stockList);
+
+                        // If stock exists, update
+                        updatedStock.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
+                        updatedStock.put("quantity", portfolioStock.getQuantity());
+                        updatedStock.put("dateBought", portfolioStock.getDateBought());
+                        updatedStock.put("stockPrice", portfolioStock.getStockPrice());
+
+                        if (indexToUpdate >= 0 && indexToUpdate < stockList.size()) {
+                            stockList.remove(indexToUpdate);
+                            stockList.add(indexToUpdate, updatedStock);
+                        } else {
+                            System.out.println("Index is out of bounds.");
+                        }
+
+                        ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                        updateFuture.get();
+
+                        AccessLog accessLog = new AccessLog(userId,"UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                        accessLogService.addLog(accessLog);
+
+                        return "Added to " + stockTicker + " array";
+                    } else {
+                        // If stock doesnt exist, add to array
+                        // throw error
+                        return stockTicker + " does not exist in the portfolio";
+                    }
+                } else {
+                    // portstock has to exist. or not throw error cuz nth to update!
+                    return "Port stock does not exist";
+                }
+
             } else {
                 return "Document data is null";
             }

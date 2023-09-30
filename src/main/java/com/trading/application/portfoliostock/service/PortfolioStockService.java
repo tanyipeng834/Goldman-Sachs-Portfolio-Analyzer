@@ -71,6 +71,12 @@ public class PortfolioStockService {
         return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker, request);
     }
 
+
+    //NEW
+    public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.updateStock( indexToUpdate, portfolioId, userId, stockTicker, portfolioStock, request);
+    }
+
     // will do for loop in portfolio
 //    public String updatePortfolioStocks(List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
 //

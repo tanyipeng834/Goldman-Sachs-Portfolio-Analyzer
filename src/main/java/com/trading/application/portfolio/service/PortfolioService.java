@@ -173,6 +173,16 @@ public class PortfolioService {
             }
         }
 
+        if(stocksToUpdate != null) {
+            for(Map.Entry<String, List<PortfolioStock>> entry : stocksToUpdate.entrySet()) {
+                // set default 0 first
+                int indexToUpdate = 0;
+                for (PortfolioStock stock : entry.getValue()){
+                    portfolioStockService.updateStock(indexToUpdate, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
+                }
+            }
+        }
+
         return "works!!!";
     }
 
