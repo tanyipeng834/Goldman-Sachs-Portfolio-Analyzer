@@ -2,6 +2,8 @@ package com.trading.application.portfoliostock.entity;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class PortfolioStock {
 
@@ -11,6 +13,7 @@ public class PortfolioStock {
     private String portfolioId;
     private String userId;
     private int quantity;
+    private String dateBought;
     private float stockBoughtPrice;
     public int getQuantity() {
         return quantity;
@@ -58,5 +61,13 @@ public class PortfolioStock {
 
     public void setStockBoughtPrice(float stockBoughtPrice) {
         this.stockBoughtPrice = stockBoughtPrice;
+    }
+
+    public String getDateBought() {
+        return dateBought;
+    }
+
+    public void setDateBought(String dateBought) {
+        this.dateBought = dateBought;
     }
 }

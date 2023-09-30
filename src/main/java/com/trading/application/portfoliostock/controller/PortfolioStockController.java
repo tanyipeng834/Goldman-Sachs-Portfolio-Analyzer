@@ -3,13 +3,9 @@ package com.trading.application.portfoliostock.controller;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -37,7 +33,7 @@ public class PortfolioStockController {
     @DeleteMapping
     @RequestMapping("/delete")
     public String deleteStock(@RequestBody PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-        return portfolioStockService.deleteStock(portfolioStock);
+        return portfolioStockService.deletePortfolioStock(portfolioStock);
     }
 
 
@@ -50,16 +46,16 @@ public class PortfolioStockController {
 //        return portfolioStockService.updatePortfolioStocks(portfolioStocks);
     }
 
-    @GetMapping
-    @RequestMapping("/getsectorsbyportfolio/{portfolioId}")
-    public ResponseEntity<Map<String, Integer>> getSectorsByPortfolioId(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByPortfolioId(portfolioId);
-        if (sectorCounts != null) {
-            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping
+//    @RequestMapping("/getsectorsbyportfolio/{portfolioId}")
+//    public ResponseEntity<Map<String, Integer>> getSectorsByPortfolioId(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
+//        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByPortfolioId(portfolioId);
+//        if (sectorCounts != null) {
+//            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 //    @GetMapping
 //    @RequestMapping("/getAllStocksbyuserid/{userId}")
@@ -67,15 +63,15 @@ public class PortfolioStockController {
 //        return portfolioStockService.getAllStocksbyUserId(userId);
 //    }
 
-    @GetMapping
-    @RequestMapping("/getsectorsbyuser/{userId}")
-    public ResponseEntity<Map<String, Integer>> getSectorsByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByUserId(userId);
-        if (sectorCounts != null) {
-            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping
+//    @RequestMapping("/getsectorsbyuser/{userId}")
+//    public ResponseEntity<Map<String, Integer>> getSectorsByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
+//        Map<String, Integer> sectorCounts = portfolioStockService.getSectorsByUserId(userId);
+//        if (sectorCounts != null) {
+//            return new ResponseEntity<>(sectorCounts, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 }
