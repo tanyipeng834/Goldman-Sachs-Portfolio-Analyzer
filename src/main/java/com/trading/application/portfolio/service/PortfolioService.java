@@ -165,6 +165,15 @@ public class PortfolioService {
                 }
             }
         }
+
+        if(stocksToDelete != null) {
+            for (Map.Entry<String, List<PortfolioStock>> entry : stocksToDelete.entrySet()) {
+                for (PortfolioStock stock : entry.getValue()){
+                    portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey());
+                }
+            }
+        }
+
         return "works!!!";
     }
 

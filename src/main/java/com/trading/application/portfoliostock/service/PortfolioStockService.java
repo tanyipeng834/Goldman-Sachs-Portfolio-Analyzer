@@ -64,11 +64,11 @@ public class PortfolioStockService {
         return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock);
     }
 
-    // NEW
-    // delete stock from portStock
-//    public String deleteStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-//        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker, portfolioStock);
-//    }
+     // NEW
+     // delete stock from portStock
+    public String deleteStock(String portfolioId, String userId, String stockTicker) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker);
+    }
 
     // will do for loop in portfolio
 //    public String updatePortfolioStocks(List<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {

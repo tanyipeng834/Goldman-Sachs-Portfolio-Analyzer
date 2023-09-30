@@ -196,6 +196,47 @@ public class PortfolioStockRepository {
         }
     }
 
+    // NEW
+    // delete stock from portstock in portfolio
+    public String deleteStock(String portfolioId, String userId, String stockTicker) throws ExecutionException, InterruptedException {
+
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+
+            Map<String, Object> data = document.getData();
+
+            if (data != null) {
+                Map<String, Object> portStockMap;
+
+                if (data.containsKey("portStock")) {
+                    portStockMap = (Map<String, Object>) data.get("portStock");
+                } else {
+                    // If "portStock" doesn't exist, create a new map
+                    portStockMap = new HashMap<>();
+                }
+
+                if (portStockMap.containsKey(stockTicker)) {
+                    portStockMap.remove(stockTicker);
+
+                    ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                    updateFuture.get();
+
+                    return "Deleted " + stockTicker + " from the portfolio";
+                } else {
+                    return stockTicker + " does not exist in the portfolio";
+                }
+            } else {
+                return "Document data is null";
+            }
+        } else {
+            return "Document does not exist";
+        }
+    }
+
 
     // to update stockprice. if person manually changes the price. kiv.
     public String updatePortfolioStockField(String portfolioId, String stockTicker, String field, float fieldValue) throws ExecutionException, InterruptedException {
