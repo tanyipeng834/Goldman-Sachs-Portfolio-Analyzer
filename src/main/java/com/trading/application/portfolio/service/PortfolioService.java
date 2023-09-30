@@ -9,6 +9,7 @@ import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -152,7 +153,7 @@ public class PortfolioService {
             return "All stocks are updated";
     }
 
-    public String updatePort(PortfolioStocksRequest portfolioStocksRequest) throws ExecutionException, InterruptedException {
+    public String updatePort(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAddednew();
         Map<String, List<PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
@@ -161,14 +162,14 @@ public class PortfolioService {
         if(stocksToAdd != null) {
             for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
                 for (PortfolioStock stock : entry.getValue()){
-                    portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock);
+                    portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
                 }
             }
         }
 
         if(stocksToDelete != null) {
             for (String stockTicker: stocksToDelete) {
-                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stockTicker);
+                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stockTicker, request);
             }
         }
 

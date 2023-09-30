@@ -5,6 +5,7 @@ import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.entity.PortfolioRequest;
 import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.service.PortfolioService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,8 +84,8 @@ public class PortfolioController {
 
     @PutMapping
     @RequestMapping("/updateport/")
-    public String updatePort(@RequestBody PortfolioStocksRequest portfolioStocksRequest) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePort(portfolioStocksRequest);
+    public String updatePort(@RequestBody PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioService.updatePort(portfolioStocksRequest, request);
     }
 
     // get all portfolios of a customer

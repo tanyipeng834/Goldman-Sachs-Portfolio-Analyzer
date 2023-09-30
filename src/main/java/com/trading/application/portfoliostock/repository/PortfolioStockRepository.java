@@ -8,6 +8,7 @@ import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -135,7 +136,7 @@ public class PortfolioStockRepository {
 
     // NEW
     // add new stock to portStock
-    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
 
@@ -184,7 +185,7 @@ public class PortfolioStockRepository {
                 ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                 updateFuture.get();
 
-                AccessLog accessLog = new AccessLog(userId,"ADD", "192.168.1.1", "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
                 accessLogService.addLog(accessLog);
 
                 return "Added to " + stockTicker + " array";
@@ -198,7 +199,7 @@ public class PortfolioStockRepository {
 
     // NEW
     // delete stock from portstock in portfolio
-    public String deleteStock(String portfolioId, String userId, String stockTicker) throws ExecutionException, InterruptedException {
+    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
 
@@ -225,7 +226,7 @@ public class PortfolioStockRepository {
                     ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                     updateFuture.get();
 
-                    AccessLog accessLog = new AccessLog(userId,"DELETE", "192.168.1.1", "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString());
+                    AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString());
                     accessLogService.addLog(accessLog);
 
                     return "Deleted " + stockTicker + " from the portfolio";

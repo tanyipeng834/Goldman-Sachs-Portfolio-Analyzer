@@ -2,6 +2,7 @@ package com.trading.application.portfoliostock.service;
 
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,14 +61,14 @@ public class PortfolioStockService {
 
     // NEW
     // add new stock to portStock
-    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock);
+    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock, request);
     }
 
      // NEW
      // delete stock from portStock
-    public String deleteStock(String portfolioId, String userId, String stockTicker) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker);
+    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker, request);
     }
 
     // will do for loop in portfolio
