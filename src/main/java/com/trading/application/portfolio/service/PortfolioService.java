@@ -4,7 +4,6 @@ import com.google.cloud.firestore.FirestoreException;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.entity.PortfolioRequest;
 import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;

@@ -6,7 +6,6 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import com.trading.application.stock.entity.Stock;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -157,27 +156,45 @@ public class PortfolioStockRepository {
                     // Check if stockTicker exists in portStock
                     if (portStockMap.containsKey(stockTicker)) {
                         List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
-                        System.out.println(stockList);
 
                         // If stock exists, update
-                        updatedStock.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
-                        updatedStock.put("quantity", portfolioStock.getQuantity());
-                        updatedStock.put("dateBought", portfolioStock.getDateBought());
+                        int quantity = portfolioStock.getQuantity();
 
-                        if (indexToUpdate >= 0 && indexToUpdate < stockList.size()) {
+                        if (quantity == 0) {
+                            // delete specific stock based on the index
                             stockList.remove(indexToUpdate);
-                            stockList.add(indexToUpdate, updatedStock);
+
+                            if (stockList.size() == 0) {
+                                portStockMap.remove(stockTicker);
+                            }
+
+                            ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                            updateFuture.get();
+
+                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated" + stockTicker + " to 0" + portfolioId, LocalDateTime.now().toString());
+                            accessLogService.addLog(accessLog);
+
+                            return "Updated " + stockTicker + " array";
                         } else {
-                            System.out.println("Index is out of bounds.");
+                            updatedStock.put("quantity", portfolioStock.getQuantity());
+                            updatedStock.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
+                            updatedStock.put("dateBought", portfolioStock.getDateBought());
+
+                            if (indexToUpdate >= 0 && indexToUpdate < stockList.size()) {
+                                stockList.remove(indexToUpdate);
+                                stockList.add(indexToUpdate, updatedStock);
+                            } else {
+                                System.out.println("Index is out of bounds.");
+                            }
+
+                            ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                            updateFuture.get();
+
+                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                            accessLogService.addLog(accessLog);
+
+                            return "Updated " + stockTicker + " array";
                         }
-
-                        ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
-                        updateFuture.get();
-
-                        AccessLog accessLog = new AccessLog(userId,"UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
-                        accessLogService.addLog(accessLog);
-
-                        return "Added to " + stockTicker + " array";
                     } else {
                         // If stock doesnt exist, add to array
                         // throw error
@@ -238,5 +255,4 @@ public class PortfolioStockRepository {
 //        }
 //        return sectorCounts;
 //    }
-
 }
