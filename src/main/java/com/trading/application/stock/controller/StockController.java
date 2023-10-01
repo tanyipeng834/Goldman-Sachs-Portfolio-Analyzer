@@ -28,13 +28,13 @@ public class StockController {
 //    }
 
     // get stock by stockticker
-    @Cacheable(key="#stockTicker",value = "stockCache")
-    @GetMapping
-    @RequestMapping("/{stockTicker}")
-    public Stock getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-        System.out.println("Invoked cache");
-        return stockService.getStock(stockTicker);
-    }
+//    @Cacheable(key="#stockTicker",value = "stockCache")
+//    @GetMapping
+//    @RequestMapping("/{stockTicker}")
+//    public Stock getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+//        System.out.println("Invoked cache");
+//        return stockService.(stockTicker);
+//    }
 
     @GetMapping
     @RequestMapping("/{stockTicker}/companyOverview")

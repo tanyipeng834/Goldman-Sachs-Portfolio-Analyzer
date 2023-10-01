@@ -1,72 +1,209 @@
 package com.trading.application.stockprice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trading.application.stockprice.entity.StockPrice;
+import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.repository.StockPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class StockPriceService {
-    private final WebClient webClient;
-
-    public StockPriceService(WebClient.Builder webClientBuilder){
-        this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
-    }
+    private final ObjectMapper objectMapper;
     @Autowired
     private StockPriceRepository stockPriceRepo;
-    public String createStockPrice(StockPrice stockPrice) throws ExecutionException, InterruptedException {
-        return stockPriceRepo.createStock(stockPrice);
+    @Autowired
+    private RedisTemplate<String,Object> template;
+
+    private final WebClient webClient;
+    @Value("${api.key}")
+    private  String apiKey;
+    @Autowired
+    public StockPriceService(WebClient.Builder webClientBuilder ,ObjectMapper objectMapper){
+        this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
+        this.objectMapper = objectMapper;
     }
+
+
 
     // from api
-    public String getStockByDailyPrice(String stockTicker) throws ExecutionException, InterruptedException {
-        String apiResponse =  this.webClient.get()
+
+    public StockPrices getStockDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+       String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_DAILY");
+        System.out.println("Invoked API");
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            JsonNode MetaNode = rootNode.get("Meta Data");
+            LocalDate currentDate = LocalDate.now();
+            String stockSymbol =  MetaNode.get("2. Symbol").asText();
+
+            JsonNode dateNode = rootNode.get("Time Series (Daily)");
+            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+            Iterator<String> fieldNames = dateNode.fieldNames();
+            while(fieldNames.hasNext()){
+
+                String date = fieldNames.next();
+
+                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(), StockPrice.class);
+
+                String pattern = "yyyy-MM-dd";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date stockPriceDate = dateFormat.parse(date);
+
+
+                stockPrice.setStockDate(stockPriceDate);
+                stockPriceList.add(stockPrice);
+            }
+           StockPrices stockPrices = new StockPrices(stockPriceList);
+
+
+            // Convert LocalDate to Date
+
+
+
+
+            return stockPriceRepo.saveStockDailyPrice(stockPrices,stockTicker);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+
+
+        }
+
+
+    }
+    public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            JsonNode MetaNode = rootNode.get("Meta Data");
+            LocalDate currentDate = LocalDate.now();
+            String stockSymbol =  MetaNode.get("2. Symbol").asText();
+
+            JsonNode dateNode = rootNode.get("Weekly Time Series");
+            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+            Iterator<String> fieldNames = dateNode.fieldNames();
+            while(fieldNames.hasNext()){
+
+                String date = fieldNames.next();
+
+                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(), StockPrice.class);
+
+                String pattern = "yyyy-MM-dd";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date stockPriceDate = dateFormat.parse(date);
+
+
+                stockPrice.setStockDate(stockPriceDate);
+                stockPriceList.add(stockPrice);
+            }
+            StockPrices stockPrices = new StockPrices(stockPriceList);
+
+
+            // Convert LocalDate to Date
+
+
+
+
+            return stockPriceRepo.saveStockWeeklyPrice(stockPrices,stockTicker);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+
+
+        }
+
+
+    }
+
+
+    public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            JsonNode MetaNode = rootNode.get("Meta Data");
+            LocalDate currentDate = LocalDate.now();
+            String stockSymbol =  MetaNode.get("2. Symbol").asText();
+
+            JsonNode dateNode = rootNode.get("Monthly Time Series");
+            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+            Iterator<String> fieldNames = dateNode.fieldNames();
+            while(fieldNames.hasNext()){
+
+                String date = fieldNames.next();
+
+                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(), StockPrice.class);
+
+                String pattern = "yyyy-MM-dd";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date stockPriceDate = dateFormat.parse(date);
+
+
+                stockPrice.setStockDate(stockPriceDate);
+                stockPriceList.add(stockPrice);
+            }
+            StockPrices stockPrices = new StockPrices(stockPriceList);
+
+
+            // Convert LocalDate to Date
+
+
+
+
+            return stockPriceRepo.saveStockMonthlyPrice(stockPrices,stockTicker);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+
+
+        }
+
+
+    }
+
+
+    private String parseApiResponse(String stockTicker, String priceType) {
+        String jsonString =this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/query")
-                        .queryParam("function", "TIME_SERIES_DAILY")
+                        .queryParam("function", priceType)
                         .queryParam("symbol", stockTicker)
-                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
+                        .queryParam("apikey", apiKey)
                         .build())
                 .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .bodyToMono(String.class).block();
 
-        if(apiResponse != null){
-            StockPrice stockPrice = parseApiResponse(apiResponse);
-            return stockPriceRepo.createStock(stockPrice);
-        }
-        return null;
-        //return stockRepo.getStock(stockTickZer);
+
+        return jsonString;
+
+
+
+
     }
-    private StockPrice parseApiResponse(String apiResponse) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-//            return objectMapper.readValue(apiResponse, StockPrice.class);
-            JsonNode rootNode = objectMapper.readTree(apiResponse);
 
-            JsonNode metaDataNode = rootNode.get("Meta Data");
-            String date = metaDataNode.get("3. Last Refreshed").asText();
-            String symbol = metaDataNode.get("2. Symbol").asText();
-
-            JsonNode timeSeriesData = rootNode.get("Time Series (Daily)");
-            String dailyPrices = timeSeriesData.toString();
-
-            StockPrice stockPrice = new StockPrice();
-            stockPrice.setStockTicker(symbol);
-            stockPrice.setUpdatedDate(date);
-            stockPrice.setDailyPrice(dailyPrices);
-
-            return stockPrice;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }

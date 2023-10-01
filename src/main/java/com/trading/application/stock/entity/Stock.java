@@ -1,5 +1,6 @@
 package com.trading.application.stock.entity;
 
+import com.trading.application.stockprice.entity.StockPrice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Component;

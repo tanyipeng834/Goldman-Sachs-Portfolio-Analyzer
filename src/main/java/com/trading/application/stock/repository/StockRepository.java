@@ -8,7 +8,8 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.gson.Gson;
 import com.trading.application.stock.entity.Stock;
-import com.trading.application.stock.entity.StockPrice;
+
+import com.trading.application.stockprice.entity.StockPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -38,21 +39,6 @@ public class StockRepository {
     }
 
     // create Stock, get from api
-    public Stock createStock(Stock newStock) throws ExecutionException, InterruptedException {
-
-        template.opsForHash().put(HASH_KEY, newStock.getStockTicker(), newStock);
-        DocumentReference docReference = firestore.collection("stockPrice").document();
-        Gson gson = new Gson();
-        ArrayList<StockPrice> stockPrices = newStock.getHistoricalStockPrice();
-        String stockPricesListJson = gson.toJson(stockPrices);
-        docReference.update("historicalStockPrice", stockPricesListJson);
-
-
-        // Check if there is no error in the database
-        writeResultApiFuture = docReference.set(newStock);
-        writeResultApiFuture.get();
-        return newStock;
-    }
 
     // get stock with overview if already created in firebase
     public Stock getStockOverview(String stockTicker) throws ExecutionException, InterruptedException {

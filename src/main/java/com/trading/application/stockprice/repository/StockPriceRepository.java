@@ -6,12 +6,19 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.gson.Gson;
+import com.trading.application.stock.entity.Stock;
 import com.trading.application.stockprice.entity.StockPrice;
+import com.trading.application.stockprice.entity.StockPrices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 public class StockPriceRepository {
@@ -29,15 +36,108 @@ public class StockPriceRepository {
 
     }
     // create StockPrice, get from api
-    public String createStock(StockPrice stockPrice) throws ExecutionException, InterruptedException {
+    public StockPrices saveStockDailyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
+        template.opsForHash().put("eodPrice",stockTicker, stockPrices.getStockPriceList().get(0));
 
-//        template.opsForHash().put(HASH_KEY,stockPrice.getStockTicker(),stockPrice);
-        DocumentReference docReference = firestore.collection("stockPrice").document();
-        stockPrice.setStockTicker(docReference.getId());
-        writeResultApiFuture = docReference.set(stockPrice);
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
 
+
+        DocumentReference docReference = firestore.collection("stockPrice").document(stockTicker.toUpperCase());
+// Check if the document exists
+        ApiFuture<DocumentSnapshot> future = docReference.get();
+        DocumentSnapshot document = future.get();
+
+// Create a Gson instance to convert your StockPrices object to JSON
+
+// Create a Gson instance to convert your StockPrices object to JSON
+
+
+        if (document.exists()) {
+            // Document exists, update the field "historicalStockPrice"
+            docReference.update("dailyStockPrice", stockPrices.getStockPriceList());
+            return stockPrices;
+        } else {
+            // Document doesn't exist, create it with the fields
+            Map<String, Object> dailyStockPriceMap = new HashMap<>();
+            // Document doesn't exist, create it with the fields
+            dailyStockPriceMap.put("dailyStockPrice",stockPrices.getStockPriceList());
+
+            docReference.set(dailyStockPriceMap);
+            // Assuming stockPrices is a POJO or a Map
+            return  stockPrices;
+
+            // Optionally, you can set the "historicalStockPrice" field here if needed
+            // docReference.update("historicalStockPrice", stockPricesListJson);
+        }
     }
+
+    public StockPrices saveStockWeeklyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
+
+
+
+        DocumentReference docReference = firestore.collection("stockPrice").document(stockTicker.toUpperCase());
+// Check if the document exists
+        ApiFuture<DocumentSnapshot> future = docReference.get();
+        DocumentSnapshot document = future.get();
+
+// Create a Gson instance to convert your StockPrices object to JSON
+//        Gson gson = new Gson();
+//        String stockPricesListJson = gson.toJson(stockPrices.getStockPriceList());
+
+// Create a Gson instance to convert your StockPrices object to JSON
+
+
+        if (document.exists()) {
+            // Document exists, update the field "historicalStockPrice"
+            docReference.update("weeklyStockPrice", stockPrices.getStockPriceList());
+            return stockPrices;
+        } else {
+            Map<String, Object> weeklyStockPriceMap = new HashMap<>();
+            // Document doesn't exist, create it with the fields
+            weeklyStockPriceMap.put("weeklyStockPrice",stockPrices.getStockPriceList());
+
+            docReference.set(weeklyStockPriceMap);
+            // Assuming stockPrices is a POJO or a Map
+            return  stockPrices;
+
+            // Optionally, you can set the "historicalStockPrice" field here if needed
+            // docReference.update("historicalStockPrice", stockPricesListJson);
+        }
+    }
+
+    public StockPrices saveStockMonthlyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
+
+
+
+        DocumentReference docReference = firestore.collection("stockPrice").document(stockTicker.toUpperCase());
+// Check if the document exists
+        ApiFuture<DocumentSnapshot> future = docReference.get();
+        DocumentSnapshot document = future.get();
+
+// Create a Gson instance to convert your StockPrices object to JSON
+//        Gson gson = new Gson();
+//        String stockPricesListJson = gson.toJson(stockPrices.getStockPriceList());
+
+// Create a Gson instance to convert your StockPrices object to JSON
+
+
+        if (document.exists()) {
+            // Document exists, update the field "historicalStockPrice"
+            docReference.update("monthlyStockPrice", stockPrices.getStockPriceList());
+            return stockPrices;
+        } else {
+            Map<String, Object> monthlyStockPriceMap = new HashMap<>();
+            // Document doesn't exist, create it with the fields
+            monthlyStockPriceMap.put("monthlyStockPrice",stockPrices.getStockPriceList());
+
+            docReference.set(monthlyStockPriceMap);
+            // Assuming stockPrices is a POJO or a Map
+            return  stockPrices;
+
+            // Optionally, you can set the "historicalStockPrice" field here if needed
+            // docReference.update("historicalStockPrice", stockPricesListJson);
+        }
+    }
+
 
     // retrieve value from firebase
     public StockPrice getStock(String stockTicker) throws ExecutionException, InterruptedException {

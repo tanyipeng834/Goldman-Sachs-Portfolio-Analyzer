@@ -7,43 +7,90 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@RequiredArgsConstructor
-@Data
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@RedisHash("StockPrice")
-@Component
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+
+
+
 public class StockPrice implements Serializable {
-    // will be cached. doing daily first
-    private String stockTicker;
-    // date that api is called under [Meta Data] [" 3. Last Refreshed]
-    private String updatedDate;
+    @JsonProperty("1. open")
+    private float openPrice;
+    @JsonProperty("2. high")
+    private float highPrice;
+    @JsonProperty("3. low")
+    private float lowPrice;
+    @JsonProperty("4. close")
+    private float closePrice;
 
-    private String dailyPrice;
 
-    public String getStockTicker() {
-        return stockTicker;
+    private Date stockDate;
+
+
+
+    @JsonProperty("5. volume")
+    private int volume;
+
+    public float getLowPrice() {
+        return lowPrice;
     }
 
-    public void setStockTicker(String stockTicker) {
-        this.stockTicker = stockTicker;
+    public void setLowPrice(float lowPrice) {
+        this.lowPrice = lowPrice;
     }
 
-    public String getUpdatedDate() {
-        return updatedDate;
+
+
+    public Date getStockDate() {
+        return stockDate;
     }
 
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setStockDate(Date stockDate) {
+        this.stockDate = stockDate;
     }
 
-    public String getDailyPrice() {
-        return dailyPrice;
+
+
+    public float getOpenPrice() {
+        return openPrice;
     }
 
-    public void setDailyPrice(String dailyPrice) {
-        this.dailyPrice = dailyPrice;
+    public void setOpenPrice(float openPrice) {
+        this.openPrice = openPrice;
     }
+
+    public float getHighPrice() {
+        return highPrice;
+    }
+
+    public void setHighPrice(float highPrice) {
+        this.highPrice = highPrice;
+    }
+
+    public float getClosePrice() {
+        return closePrice;
+    }
+
+    public void setClosePrice(float closePrice) {
+        this.closePrice = closePrice;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+
+
+
+
+
+
+
 }
-
-
-
