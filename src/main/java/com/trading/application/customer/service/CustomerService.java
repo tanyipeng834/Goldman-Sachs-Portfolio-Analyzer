@@ -36,6 +36,11 @@ public class CustomerService {
         return customerRepo.updateDocumentField(id, "email", email);
     }
 
+    // customer update capital
+    public String customerUpdateCapital(String id, int totalCapitalAvailable) throws ExecutionException, InterruptedException {
+        return customerRepo.updateTotalCapitalAvailable(id, "totalCapitalAvailable", totalCapitalAvailable);
+    }
+
     public String deleteCustomerAccount(String id){
         return customerRepo.deleteCustomerAccount(id);
     }
