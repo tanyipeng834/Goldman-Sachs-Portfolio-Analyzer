@@ -54,13 +54,6 @@ public class PortfolioController {
         return portfolioService.deletePortfolio(portfolioId);
     }
 
-    // update portfolio. when submit button is clicked
-    @PostMapping
-    @RequestMapping("/update/{portfolioId}")
-    public String updatePortfolioName(@RequestBody PortfolioRequest portfolio, @PathVariable String portfolioId) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolio(portfolio, portfolioId);
-    }
-
     // update portfolio name
     @PostMapping
     @RequestMapping("/updatename")
@@ -73,13 +66,6 @@ public class PortfolioController {
     @RequestMapping("/updatedescription")
     public String updatePortfolioDescription(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
         return portfolioService.updatePortfolioDescription(portfolio.getPortfolioId(), portfolio.getPortfolioDescription());
-    }
-
-    @PutMapping
-    @RequestMapping("/updateportfoliostocks/{portfolioId}")
-    public String updatePortfolioStocks(@PathVariable String portfolioId,@RequestBody PortfolioStocksRequest portfolioStocks) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolioStocks(portfolioId, portfolioStocks);
-//        return "test";
     }
 
     @PutMapping

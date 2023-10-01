@@ -66,30 +66,6 @@ public class PortfolioRepository {
         return "Result: " + writeResultApiFuture.get();
     }
 
-//    updating all portfoliostocks here.
-    public String updatePortfolioStocks(String portfolioId, ArrayList<PortfolioStock> portfolioStocks) throws ExecutionException, InterruptedException {
-
-//        writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(portfolioStocks, portfolioStocks);
-//        return "Result: " + writeResultApiFuture.get();
-        // Assuming you have a Firestore document reference
-        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
-        ApiFuture<DocumentSnapshot> future = docRef.get();
-        DocumentSnapshot document = future.get();
-
-        if (document.exists()) {
-            Portfolio portfolio = document.toObject(Portfolio.class);
-            portfolio.setPortfolioStockArray(portfolioStocks);
-
-            docRef.set(portfolio).get();
-
-//            System.out.println("cuz got dependency, now will ask portfoliostocks to update also");
-            return "Result: Portfolio stocks updated successfully";
-        } else {
-            return "Document not found";
-        }
-
-    }
-
     // get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 

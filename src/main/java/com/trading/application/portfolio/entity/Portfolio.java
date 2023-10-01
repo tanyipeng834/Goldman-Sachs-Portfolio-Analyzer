@@ -17,12 +17,7 @@ public class Portfolio {
     private float portfolioValue;
     private float unrealisedPnL;
     private String dateCreated;
-    private ArrayList<PortfolioStock> portfolioStockArray;
-    public ArrayList<PortfolioStock> getPortfolioStockArray() {
-        return portfolioStockArray;
-    }
     private int capital;
-
     private boolean isPublic = true;
 
     private Map<String, List<PortfolioStock>> portStock;
@@ -35,10 +30,6 @@ public class Portfolio {
         this.portStock = portStock;
     }
 
-    public void setPortfolioStockArray(ArrayList<PortfolioStock> portfolioStockArray) {
-        this.portfolioStockArray = portfolioStockArray;
-    }
-
     private String userId;
 
     public String getUserId(){
@@ -47,10 +38,6 @@ public class Portfolio {
 
     public void setUserId(String userId){
         this.userId = userId;
-    }
-
-    public void addStock(PortfolioStock portfolioStock){
-        portfolioStockArray.add(portfolioStock);
     }
 
     public String getPortfolioId() {
