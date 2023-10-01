@@ -70,13 +70,13 @@ public class PortfolioService {
         return portfolioRepo.updatePortfolioField(portfolioId, "portfolioDescription", portfolioDescription);
     }
 
-    public String updatePort(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
+    public String updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         String portfolioName = portfolioStocksRequest.getPortfolioName();
         String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
-        Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAddednew();
-        Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
-        List<String> stocksToDelete = portfolioStocksRequest.getDeletednew();
+        Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAdd();
+        Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
+        List<String> stocksToDelete = portfolioStocksRequest.getDelete();
 
         if(portfolioName != null){
             this.updatePortfolioName(portfolioStocksRequest.getPortfolioId(), portfolioName);
