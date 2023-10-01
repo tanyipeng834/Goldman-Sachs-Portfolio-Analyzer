@@ -60,40 +60,6 @@ public class PortfolioService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
         }
     }
-    // update entire portfolio. frontend will call this.
-    public String updatePortfolio(PortfolioRequest portfolio, String portfolioId) throws ExecutionException, InterruptedException {
-
-//        System.out.println(portfolio.getPortfolioStocks());
-//        check if name changed
-        if(portfolio.getPortfolioName()!=null){
-            System.out.println("update name");
-            updatePortfolioName(portfolioId, portfolio.getPortfolioName());
-
-//            handle error
-        }
-
-//        check if description changed
-        if(portfolio.getPortfolioDescription()!=null){
-            System.out.println("update description");
-            updatePortfolioDescription(portfolioId, portfolio.getPortfolioDescription());
-
-//            handle error
-        }
-
-//        check if stocks changed
-        if(portfolio.getPortfolioStocks()!=null){
-            PortfolioStocksRequest portfolioStocks = portfolio.getPortfolioStocks();
-            //gives a list of stocks in map string
-            // there is a stock being updated/created/deleted
-            System.out.println("update stocks");
-            updatePortfolioStocks(portfolioId, portfolioStocks);
-
-
-//            handle error
-        }
-        return "nondone";
-//        return portfolioRepo.updatePortfolio(portfolioId, "portfolioName", portfolioName);
-    }
 
     // update a portfolio's Name
     public String updatePortfolioName(String portfolioId, String portfolioName) throws ExecutionException, InterruptedException {
@@ -105,59 +71,21 @@ public class PortfolioService {
         return portfolioRepo.updatePortfolioField(portfolioId, "portfolioDescription", portfolioDescription);
     }
 
-    // update all portfolio stocks. calling the portfoliostock service n then repo bef calling port repo
-    public String updatePortfolioStocks(String portfolioId, PortfolioStocksRequest portfolioStocks) throws ExecutionException, InterruptedException {
-
-        if (portfolioStocks.getAdded() != null && !portfolioStocks.getAdded().isEmpty()) {
-            System.out.println("added some stock");
-            List<PortfolioStock> added = portfolioStocks.getAdded();
-//            Map<String, List<PortfolioStock>> added = portfolioStocks.getAdded();
-//            List<PortfolioStock> allPortfolioStocks = new ArrayList<>();
-
-//            // Iterate through the map to collect PortfolioStock objects
-//            for (Map.Entry<String, List<PortfolioStock>> entry : added.entrySet()) {
-//                List<PortfolioStock> portfolioStockList = entry.getValue();
-//                allPortfolioStocks.addAll(portfolioStockList);
-//            }
-//
-//            // Now, allPortfolioStocks contains all individual PortfolioStock objects
-//            for (PortfolioStock portfolioStock : allPortfolioStocks) {
-//                System.out.println(portfolioStock);
-//                String result = portfolioStockService.createPortfolioStock(portfolioStock);
-//                System.out.println(result);
-//            }
-            for(PortfolioStock portfolioStock : added){
-                String result = portfolioStockService.createPortfolioStock(portfolioStock);
-                System.out.println(result);
-            }
-        }
-
-        if (portfolioStocks.getDeleted() != null && !portfolioStocks.getDeleted().isEmpty()) {
-            System.out.println("deleted some stock");
-            List<PortfolioStock> deleted = portfolioStocks.getDeleted();
-            for(PortfolioStock portfolioStock : deleted){
-                String result = portfolioStockService.deletePortfolioStock(portfolioStock);
-                System.out.println(result);
-            }
-        }
-
-        if (portfolioStocks.getUpdated() != null && !portfolioStocks.getUpdated().isEmpty()) {
-            System.out.println("updated some stock");
-            List<PortfolioStock> updated = portfolioStocks.getUpdated();
-            for(PortfolioStock portfolioStock : updated){
-                String result = portfolioStockService.updatePortfolioStock(portfolioId, portfolioStock.getStockTicker(), portfolioStock.getQuantity());
-                System.out.println(result);
-            }
-        }
-
-            return "All stocks are updated";
-    }
-
     public String updatePort(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
+        String portfolioName = portfolioStocksRequest.getPortfolioName();
+        String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
         Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAddednew();
         Map<String, List<PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
         List<String> stocksToDelete = portfolioStocksRequest.getDeletednew();
+
+        if(portfolioName != null){
+            this.updatePortfolioName(portfolioStocksRequest.getPortfolioId(), portfolioName);
+        }
+
+        if(portfolioDesc != null){
+            this.updatePortfolioDescription(portfolioStocksRequest.getPortfolioId(), portfolioDesc);
+        }
 
         if(stocksToAdd != null) {
             for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
