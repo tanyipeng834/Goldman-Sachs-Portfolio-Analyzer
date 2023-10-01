@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trading.application.stock.entity.Stock;
-import com.trading.application.stock.entity.StockPrice;
+
 import com.trading.application.stock.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -41,66 +41,6 @@ public class StockService {
 //    }
 
     // get stock by id
-    public Stock getStock(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
-
-       String jsonString =this.webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/query")
-                        .queryParam("function", "TIME_SERIES_DAILY")
-                        .queryParam("symbol", stockTicker)
-                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class).block();
-                System.out.println("Invoked API");
-                        try {
-                            JsonNode rootNode = objectMapper.readTree(jsonString);
-                            JsonNode MetaNode = rootNode.get("Meta Data");
-                            LocalDate currentDate = LocalDate.now();
-                            String stockSymbol =  MetaNode.get("2. Symbol").asText();
-
-                            JsonNode dateNode = rootNode.get("Time Series (Daily)");
-                            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
-                            Iterator<String> fieldNames = dateNode.fieldNames();
-                            while(fieldNames.hasNext()){
-
-                                String date = fieldNames.next();
-
-                                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(),StockPrice.class);
-
-                                String pattern = "yyyy-MM-dd";
-
-                                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-                                Date stockPriceDate = dateFormat.parse(date);
-
-
-                                stockPrice.setStockDate(stockPriceDate);
-                                stockPriceList.add(stockPrice);
-                            }
-                            String EodDate =  dateNode.fieldNames().next();
-                            String EodPrice = dateNode.get(EodDate).get("4. close").asText();
-
-
-                            // Convert LocalDate to Date
-                            Date currentRefresh = Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-                            Stock newStock = new Stock(stockSymbol,Float.valueOf(EodPrice),stockPriceList,currentRefresh);
-
-
-
-
-                            return stockRepo.createStock(newStock);
-                        }
-                        catch(Exception e){
-                            e.printStackTrace();
-                            throw new RuntimeException("Stock Ticker does not exist");
-
-
-                        }
-
-
-                }
-
 
 
         //return stockRepo.getStock(stockTicker);

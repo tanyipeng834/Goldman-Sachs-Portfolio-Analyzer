@@ -1,9 +1,17 @@
 package com.trading.application.stockprice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.trading.application.stockprice.entity.StockPrice;
+import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.service.StockPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -14,16 +22,23 @@ public class StockPriceController {
     private StockPriceService stockPriceService;
 
     // still need to create in firebase. this is the first call to api
-    @PostMapping
-    @RequestMapping("/{stockTicker}/create-daily-price")
-    public String createStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
-        return stockPriceService.getStockByDailyPrice(stockTicker);
+    @GetMapping
+    @RequestMapping("/dailyprice/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "dailyStockPrice")
+    public StockPrices getDailyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getStockDailyPrice(stockTicker);
+
     }
 
-    // get daily price. from firebase
 //    @GetMapping
-//    @RequestMapping("/{stockTicker}/daily-price")
-//    public Mono<String> getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException {
-//        return stockPriceService.getStockByDailyPrice(stockTicker);
+//    @RequestMapping("/weeklyprice/{stockTicker}")
+//    @Cacheable(key="#stockTicker",cacheNames = "dailyStockPrice")
+//    public StockPrices getDailyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+//        return stockPriceService.getStockWeeklyPrice(stockTicker);
+//
 //    }
+
+
+
+
 }
