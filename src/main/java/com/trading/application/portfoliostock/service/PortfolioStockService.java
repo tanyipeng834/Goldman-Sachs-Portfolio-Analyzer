@@ -2,11 +2,11 @@ package com.trading.application.portfoliostock.service;
 
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -19,14 +19,13 @@ public class PortfolioStockService {
 //    private PortfolioService portfolioService;
 
     // Create PortfolioStock
-    // Checks if Stock exists in portfolio. If false, create new stock.
-    // verification will be done at dropdown so here create 1 stock
-
+    // even if created. user can still add stock. called under update too.
     public String createPortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
-            if(!portfolioStockRepository.checkStockExists(portfolioStock)){
+//            if(!portfolioStockRepository.checkStockExists(portfolioStock)){
 //                portfolioService.incrementPortfolioValue(portfolioStock.getPortfolioId(), portfolioStock.getQuantity() * portfolioStock.getStockPrice());
-                return portfolioStockRepository.createPortfolioStock(portfolioStock);
-            }
+        System.out.println("creating a port stock");
+        portfolioStockRepository.createPortfolioStock(portfolioStock);
+//            }
         return "Portfolio stock created";
     }
 
@@ -48,17 +47,34 @@ public class PortfolioStockService {
     }
 
     // delete Stock from portfolio
-    public String deleteStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+    public String deletePortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
         int quantity = portfolioStockRepository.getPortfolioStock(portfolioStock).getQuantity();
         float price = portfolioStockRepository.getPortfolioStock(portfolioStock).getStockPrice();
-//        portfolioService.decrementPortfolioValue(portfolioStock.getPortfolioId(), quantity * price);
-        return portfolioStockRepository.deleteStock(portfolioStock);
+        return portfolioStockRepository.deletePortfolioStock(portfolioStock);
     }
 
     // update Stock quantity
     // still ongoing
     public String updatePortfolioStock(String portfolioId, String stockTicker, int quantity) throws  ExecutionException, InterruptedException {
         return portfolioStockRepository.updatePortfolioStockField(portfolioId, stockTicker, "quantity", quantity);
+    }
+
+    // NEW
+    // add new stock to portStock
+    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock, request);
+    }
+
+     // NEW
+     // delete stock from portStock
+    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker, request);
+    }
+
+
+    //NEW
+    public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.updateStock( indexToUpdate, portfolioId, userId, stockTicker, portfolioStock, request);
     }
 
     // will do for loop in portfolio
@@ -79,14 +95,14 @@ public class PortfolioStockService {
 //    }
 
     // get sectors of all stocks in a portfolio
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.getSectorsByPortfolioId(portfolioId);
-    }
-
-    // get sectors of all stocks by userId
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.getSectorsByUserId(userId);
-    }
+//    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
+//        return portfolioStockRepository.getSectorsByPortfolioId(portfolioId);
+//    }
+//
+//    // get sectors of all stocks by userId
+//    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
+//        return portfolioStockRepository.getSectorsByUserId(userId);
+//    }
 
     // get all stocks by userId
 //    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {

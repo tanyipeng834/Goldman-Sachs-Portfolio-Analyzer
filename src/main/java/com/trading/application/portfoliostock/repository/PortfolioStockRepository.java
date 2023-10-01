@@ -3,14 +3,15 @@ package com.trading.application.portfoliostock.repository;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.repository.PortfolioRepository;
+import com.trading.application.logs.entity.AccessLog;
+import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.sound.sampled.Port;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,9 @@ public class PortfolioStockRepository {
     private ApiFuture<QuerySnapshot> querySnapshot;
 
     private CollectionReference colRef = firestore.collection("portfolioStock");
+
+    @Autowired
+    private AccessLogService accessLogService = new AccessLogService();
 
     private static void sectorCountLoop(CollectionReference stockColRef, Map<String, Integer> sectorCounts, List<PortfolioStock> myStocks) throws InterruptedException, ExecutionException {
         for (PortfolioStock myStock : myStocks) {
@@ -48,6 +52,7 @@ public class PortfolioStockRepository {
     // create individual PortfolioStock
     public String createPortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
 
+        System.out.println("inside portstockrepo createportstock");
         DocumentReference docReference = firestore.collection("portfolioStock").document();
         writeResultApiFuture = docReference.set(portfolioStock);
         return "Each Portfolio Stock successfully created";
@@ -91,13 +96,14 @@ public class PortfolioStockRepository {
     }
 
     // delete a stock from portfolio
-    public String deleteStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
+    public String deletePortfolioStock(PortfolioStock portfolioStock) throws ExecutionException, InterruptedException {
 
         querySnapshot = colRef.whereEqualTo("portfolioId", portfolioStock.getPortfolioId()).whereEqualTo("stockTicker", portfolioStock.getStockTicker()).get();
 
         String docId = querySnapshot.get().getDocuments().get(0).getId();
 
         writeResultApiFuture = firestore.collection("portfolioStock").document(docId).delete();
+
         return "Stock successfully deleted";
     }
 
@@ -127,6 +133,174 @@ public class PortfolioStockRepository {
 
     }
 
+    // NEW
+    // add new stock to portStock
+    public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+
+        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+
+            Map<String, Object> data = document.getData();
+
+            if (data != null) {
+                Map<String, Object> portStockMap;
+
+                if (data.containsKey("portStock")) {
+                    portStockMap = (Map<String, Object>) data.get("portStock");
+                } else {
+                    // If "portStock" doesn't exist, create a new map
+                    portStockMap = new HashMap<>();
+                }
+
+                Map<String, Object> newItem = new HashMap<>();
+
+                // Check if stockTicker exists in portStock
+                if (portStockMap.containsKey(stockTicker)) {
+                    List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
+
+                    newItem.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
+                    newItem.put("quantity", portfolioStock.getQuantity());
+                    newItem.put("dateBought", portfolioStock.getDateBought());
+                    newItem.put("stockPrice", portfolioStock.getStockPrice());
+                    stockList.add(newItem);
+
+                    portStockMap.put(stockTicker, stockList);
+                } else {
+                    // If stock doesnt exist, add to array
+                    List<Map<String, Object>> stockList = new ArrayList<>();
+                    newItem.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
+                    newItem.put("quantity", portfolioStock.getQuantity());
+                    newItem.put("dateBought", portfolioStock.getDateBought());
+                    newItem.put("stockPrice", portfolioStock.getStockPrice());
+                    stockList.add(newItem);
+
+                    portStockMap.put(stockTicker, stockList);
+                }
+
+                ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                updateFuture.get();
+
+                AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                accessLogService.addLog(accessLog);
+
+                return "Added to " + stockTicker + " array";
+            } else {
+                return "Document data is null";
+            }
+        } else {
+            return "Document does not exist";
+        }
+    }
+
+    // NEW
+    // delete stock from portstock in portfolio
+    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
+
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+
+            Map<String, Object> data = document.getData();
+
+            if (data != null) {
+                Map<String, Object> portStockMap;
+
+                if (data.containsKey("portStock")) {
+                    portStockMap = (Map<String, Object>) data.get("portStock");
+                } else {
+                    // If "portStock" doesn't exist, create a new map
+                    portStockMap = new HashMap<>();
+                }
+
+                if (portStockMap.containsKey(stockTicker)) {
+                    portStockMap.remove(stockTicker);
+
+                    ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                    updateFuture.get();
+
+                    AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString());
+                    accessLogService.addLog(accessLog);
+
+                    return "Deleted " + stockTicker + " from the portfolio";
+                } else {
+                    return stockTicker + " does not exist in the portfolio";
+                }
+            } else {
+                return "Document data is null";
+            }
+        } else {
+            return "Document does not exist";
+        }
+    }
+
+    // NEW
+    public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+
+            Map<String, Object> data = document.getData();
+
+            if (data != null) {
+                Map<String, Object> portStockMap;
+
+                if (data.containsKey("portStock")) {
+                    portStockMap = (Map<String, Object>) data.get("portStock");
+                    Map<String, Object> updatedStock = new HashMap<>();
+
+                    // Check if stockTicker exists in portStock
+                    if (portStockMap.containsKey(stockTicker)) {
+                        List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
+                        System.out.println(stockList);
+
+                        // If stock exists, update
+                        updatedStock.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
+                        updatedStock.put("quantity", portfolioStock.getQuantity());
+                        updatedStock.put("dateBought", portfolioStock.getDateBought());
+                        updatedStock.put("stockPrice", portfolioStock.getStockPrice());
+
+                        if (indexToUpdate >= 0 && indexToUpdate < stockList.size()) {
+                            stockList.remove(indexToUpdate);
+                            stockList.add(indexToUpdate, updatedStock);
+                        } else {
+                            System.out.println("Index is out of bounds.");
+                        }
+
+                        ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
+                        updateFuture.get();
+
+                        AccessLog accessLog = new AccessLog(userId,"UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                        accessLogService.addLog(accessLog);
+
+                        return "Added to " + stockTicker + " array";
+                    } else {
+                        // If stock doesnt exist, add to array
+                        // throw error
+                        return stockTicker + " does not exist in the portfolio";
+                    }
+                } else {
+                    // portstock has to exist. or not throw error cuz nth to update!
+                    return "Port stock does not exist";
+                }
+
+            } else {
+                return "Document data is null";
+            }
+        } else {
+            return "Document does not exist";
+        }
+    }
+
+
     // to update stockprice. if person manually changes the price. kiv.
     public String updatePortfolioStockField(String portfolioId, String stockTicker, String field, float fieldValue) throws ExecutionException, InterruptedException {
 
@@ -141,47 +315,47 @@ public class PortfolioStockRepository {
     }
 
 
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-
-        CollectionReference stockColRef = firestore.collection("stock");
-
-        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
-
-        List<PortfolioStock> myStocks = getAllStocksbyPortfolioId(portfolioId);
-        if (!myStocks.isEmpty()) {
-            sectorCountLoop(stockColRef, sectorCounts, myStocks);
-            return sectorCounts;
-        }
-        return null;
-    }
-
-    // get all stocks by userId
-    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {
-
-        List<PortfolioStock> stocks = new ArrayList<>();
-
-        querySnapshot = colRef.whereEqualTo("userId", userId).get();
-        for(DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-            stocks.add(document.toObject(PortfolioStock.class));
-        }
-
-        return stocks;
-
-    }
-
-//     get all sectors of portfolios that a user owns
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-
-        CollectionReference stockColRef = firestore.collection("stock");
-
-        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
-
-        List<PortfolioStock> myStocks = getAllStocksbyUserId(userId);
-
-        if (!myStocks.isEmpty()) {
-            sectorCountLoop(stockColRef, sectorCounts, myStocks);
-        }
-        return sectorCounts;
-    }
+//    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
+//
+//        CollectionReference stockColRef = firestore.collection("stock");
+//
+//        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+//
+//        List<PortfolioStock> myStocks = getAllStocksbyPortfolioId(portfolioId);
+//        if (!myStocks.isEmpty()) {
+//            sectorCountLoop(stockColRef, sectorCounts, myStocks);
+//            return sectorCounts;
+//        }
+//        return null;
+//    }
+//
+//    // get all stocks by userId
+//    public List<PortfolioStock> getAllStocksbyUserId(String userId) throws ExecutionException, InterruptedException {
+//
+//        List<PortfolioStock> stocks = new ArrayList<>();
+//
+//        querySnapshot = colRef.whereEqualTo("userId", userId).get();
+//        for(DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+//            stocks.add(document.toObject(PortfolioStock.class));
+//        }
+//
+//        return stocks;
+//
+//    }
+//
+////     get all sectors of portfolios that a user owns
+//    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
+//
+//        CollectionReference stockColRef = firestore.collection("stock");
+//
+//        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+//
+//        List<PortfolioStock> myStocks = getAllStocksbyUserId(userId);
+//
+//        if (!myStocks.isEmpty()) {
+//            sectorCountLoop(stockColRef, sectorCounts, myStocks);
+//        }
+//        return sectorCounts;
+//    }
 
 }
