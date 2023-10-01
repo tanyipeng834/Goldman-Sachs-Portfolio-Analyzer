@@ -2,6 +2,7 @@ package com.trading.application.stockprice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.service.StockPriceService;
@@ -22,6 +23,15 @@ public class StockPriceController {
     private StockPriceService stockPriceService;
 
     // still need to create in firebase. this is the first call to api
+
+
+//    @GetMapping
+//    @RequestMapping("/eodprice/{stockTicker}")
+//    @Cacheable(key="#stockTicker",cacheNames = "eod-price")
+//    public JsonNode getLatestStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+//        return stockPriceService.getStockLatestPrice(stockTicker);
+//
+//    }
     @GetMapping
     @RequestMapping("/dailyprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "dailyStockPrice")
@@ -30,13 +40,21 @@ public class StockPriceController {
 
     }
 
-//    @GetMapping
-//    @RequestMapping("/weeklyprice/{stockTicker}")
-//    @Cacheable(key="#stockTicker",cacheNames = "dailyStockPrice")
-//    public StockPrices getDailyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-//        return stockPriceService.getStockWeeklyPrice(stockTicker);
-//
-//    }
+    @GetMapping
+    @RequestMapping("/weeklyprice/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "weeklyStockPrice")
+    public StockPrices getWeeklyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getStockWeeklyPrice(stockTicker);
+
+    }
+
+    @GetMapping
+    @RequestMapping("/monthlyprice/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
+    public StockPrices getMonthlyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getStockMonthlyPrice(stockTicker);
+
+    }
 
 
 

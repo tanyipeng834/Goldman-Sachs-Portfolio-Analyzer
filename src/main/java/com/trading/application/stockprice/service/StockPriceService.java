@@ -7,6 +7,7 @@ import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.repository.StockPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,29 +22,25 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class StockPriceService {
     private final ObjectMapper objectMapper;
-    private final WebClient webClient;
+    @Autowired
+    private StockPriceRepository stockPriceRepo;
 
-    public StockPriceService(WebClient.Builder webClientBuilder,ObjectMapper objectMapper){
+    private final WebClient webClient;
+    @Value("${api.key}")
+    private  String apiKey;
+    @Autowired
+    public StockPriceService(WebClient.Builder webClientBuilder ,ObjectMapper objectMapper){
         this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
         this.objectMapper = objectMapper;
     }
-    @Autowired
-    private StockPriceRepository stockPriceRepo;
+
 
 
     // from api
 
     public StockPrices getStockDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-        String jsonString =this.webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/query")
-                        .queryParam("function", "TIME_SERIES_DAILY")
-                        .queryParam("symbol", stockTicker)
-                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class).block();
+       String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_DAILY");
         System.out.println("Invoked API");
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
@@ -88,18 +85,139 @@ public class StockPriceService {
 
 
     }
+    public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            JsonNode MetaNode = rootNode.get("Meta Data");
+            LocalDate currentDate = LocalDate.now();
+            String stockSymbol =  MetaNode.get("2. Symbol").asText();
+
+            JsonNode dateNode = rootNode.get("Weekly Time Series");
+            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+            Iterator<String> fieldNames = dateNode.fieldNames();
+            while(fieldNames.hasNext()){
+
+                String date = fieldNames.next();
+
+                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(), StockPrice.class);
+
+                String pattern = "yyyy-MM-dd";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date stockPriceDate = dateFormat.parse(date);
 
 
-    private StockPrice parseApiResponse(String stockTicker, String priceType) {
+                stockPrice.setStockDate(stockPriceDate);
+                stockPriceList.add(stockPrice);
+            }
+            StockPrices stockPrices = new StockPrices(stockPriceList);
+
+
+            // Convert LocalDate to Date
+
+
+
+
+            return stockPriceRepo.saveStockWeeklyPrice(stockPrices,stockTicker);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+
+
+        }
+
+
+    }
+//    public StockPrice getStockLatestPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+//
+//        String jsonString =parseApiResponse(stockTicker,"GLOBAL_QUOTE");
+//        System.out.println(jsonString);
+//
+//
+//            // Convert LocalDate to Date
+//        try{
+//
+//
+//
+//
+//
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//            throw new RuntimeException("Stock Ticker does not exist");
+//
+//
+//        }
+//
+//
+//    }
+
+    public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            JsonNode MetaNode = rootNode.get("Meta Data");
+            LocalDate currentDate = LocalDate.now();
+            String stockSymbol =  MetaNode.get("2. Symbol").asText();
+
+            JsonNode dateNode = rootNode.get("Monthly Time Series");
+            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+            Iterator<String> fieldNames = dateNode.fieldNames();
+            while(fieldNames.hasNext()){
+
+                String date = fieldNames.next();
+
+                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(), StockPrice.class);
+
+                String pattern = "yyyy-MM-dd";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date stockPriceDate = dateFormat.parse(date);
+
+
+                stockPrice.setStockDate(stockPriceDate);
+                stockPriceList.add(stockPrice);
+            }
+            StockPrices stockPrices = new StockPrices(stockPriceList);
+
+
+            // Convert LocalDate to Date
+
+
+
+
+            return stockPriceRepo.saveStockMonthlyPrice(stockPrices,stockTicker);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+
+
+        }
+
+
+    }
+
+
+    private String parseApiResponse(String stockTicker, String priceType) {
         String jsonString =this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/query")
                         .queryParam("function", priceType)
                         .queryParam("symbol", stockTicker)
-                        .queryParam("apikey", "K4UXKCTF5POS6YBS")
+                        .queryParam("apikey", apiKey)
                         .build())
                 .retrieve()
                 .bodyToMono(String.class).block();
+
+
+        return jsonString;
 
 
 

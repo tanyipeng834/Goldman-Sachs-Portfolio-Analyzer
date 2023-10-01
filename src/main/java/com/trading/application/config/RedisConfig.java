@@ -47,11 +47,15 @@ public class RedisConfig {
 
         RedisCacheConfiguration cacheConfiguration2 = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(24)); // Set TTL to 24 hours for cache2
+        RedisCacheConfiguration cacheConfiguration3 = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofDays(30)); //
 
         CacheManager cacheManager = RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(cacheConfiguration1)
-                .withCacheConfiguration("dailyStockPrice", cacheConfiguration1)
-                .withCacheConfiguration("weeklyStockPrice", cacheConfiguration2)
+                .withCacheConfiguration("weeklyStockPrice", cacheConfiguration1)
+                .withCacheConfiguration("dailyStockPrice", cacheConfiguration2)
+                .withCacheConfiguration("monthlyStockPrice",cacheConfiguration3)
+                .withCacheConfiguration("eod-price", cacheConfiguration2)
                 .build();
 
         return cacheManager;

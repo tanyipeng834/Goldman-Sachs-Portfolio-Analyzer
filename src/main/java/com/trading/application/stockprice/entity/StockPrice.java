@@ -28,6 +28,9 @@ public class StockPrice implements Serializable {
 
 
     private Date stockDate;
+
+
+
     @JsonProperty("5. volume")
     private int volume;
 
