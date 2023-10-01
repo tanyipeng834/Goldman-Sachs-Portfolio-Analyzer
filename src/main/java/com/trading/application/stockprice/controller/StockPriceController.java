@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,17 +22,29 @@ import java.util.concurrent.ExecutionException;
 public class StockPriceController {
     @Autowired
     private StockPriceService stockPriceService;
+    @Autowired
+    private RedisTemplate<String,Object> template;
+
 
     // still need to create in firebase. this is the first call to api
 
 
-//    @GetMapping
-//    @RequestMapping("/eodprice/{stockTicker}")
-//    @Cacheable(key="#stockTicker",cacheNames = "eod-price")
-//    public JsonNode getLatestStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-//        return stockPriceService.getStockLatestPrice(stockTicker);
-//
-//    }
+    @GetMapping
+    @RequestMapping("/eodprice/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "eod-price")
+    public StockPrice getLatestStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        String stockName = stockTicker.toUpperCase();
+        if (template.opsForHash().hasKey("eodPrice",stockTicker)){
+            return (StockPrice) template.opsForHash().get("eodPrice",stockTicker);
+
+        }
+        else{
+            getDailyStockPrice(stockTicker);
+            return(StockPrice) template.opsForHash().get("eodPrice",stockTicker);
+
+        }
+
+    }
     @GetMapping
     @RequestMapping("/dailyprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "dailyStockPrice")

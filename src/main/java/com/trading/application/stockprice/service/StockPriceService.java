@@ -8,6 +8,7 @@ import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.repository.StockPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -24,6 +25,8 @@ public class StockPriceService {
     private final ObjectMapper objectMapper;
     @Autowired
     private StockPriceRepository stockPriceRepo;
+    @Autowired
+    private RedisTemplate<String,Object> template;
 
     private final WebClient webClient;
     @Value("${api.key}")
@@ -132,29 +135,7 @@ public class StockPriceService {
 
 
     }
-//    public StockPrice getStockLatestPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
-//
-//        String jsonString =parseApiResponse(stockTicker,"GLOBAL_QUOTE");
-//        System.out.println(jsonString);
-//
-//
-//            // Convert LocalDate to Date
-//        try{
-//
-//
-//
-//
-//
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException("Stock Ticker does not exist");
-//
-//
-//        }
-//
-//
-//    }
+
 
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
