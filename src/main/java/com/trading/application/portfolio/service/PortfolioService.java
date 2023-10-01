@@ -74,7 +74,7 @@ public class PortfolioService {
 
         String portfolioName = portfolioStocksRequest.getPortfolioName();
         String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
-        Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAddednew();
+        Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAddednew();
         Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
         List<String> stocksToDelete = portfolioStocksRequest.getDeletednew();
 
@@ -87,10 +87,9 @@ public class PortfolioService {
         }
 
         if(stocksToAdd != null) {
-            for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
-                for (PortfolioStock stock : entry.getValue()){
-                    portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
-                }
+            for (Map.Entry<String, PortfolioStock> entry : stocksToAdd.entrySet()) {
+                    PortfolioStock portfolioStock = entry.getValue();
+                    portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), portfolioStock, request);
             }
         }
 

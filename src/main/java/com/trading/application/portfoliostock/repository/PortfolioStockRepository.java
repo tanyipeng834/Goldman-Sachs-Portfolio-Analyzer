@@ -23,9 +23,7 @@ public class PortfolioStockRepository {
     private Firestore firestore = FirestoreClient.getFirestore();
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     private ApiFuture<WriteResult> writeResultApiFuture;
-
     private ApiFuture<QuerySnapshot> querySnapshot;
-
     private CollectionReference colRef = firestore.collection("portfolioStock");
 
     @Autowired
