@@ -156,7 +156,7 @@ public class PortfolioService {
     public String updatePort(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAddednew();
-        Map<String, List<PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
+        Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdatednew();
         List<String> stocksToDelete = portfolioStocksRequest.getDeletednew();
 
         if(stocksToAdd != null) {
@@ -174,11 +174,15 @@ public class PortfolioService {
         }
 
         if(stocksToUpdate != null) {
-            for(Map.Entry<String, List<PortfolioStock>> entry : stocksToUpdate.entrySet()) {
-                // set default 0 first
-                int indexToUpdate = 0;
-                for (PortfolioStock stock : entry.getValue()){
-                    portfolioStockService.updateStock(indexToUpdate, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
+            for (Map.Entry<String, Map<String, PortfolioStock>> entry : stocksToUpdate.entrySet()) {
+                String stockTicker = entry.getKey();
+
+                for (Map.Entry<String, PortfolioStock> innerEntry : entry.getValue().entrySet()) {
+                    String indexAsString = innerEntry.getKey();
+                    int index = Integer.parseInt(indexAsString);
+
+                    PortfolioStock stock = innerEntry.getValue();
+                    portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
                 }
             }
         }
