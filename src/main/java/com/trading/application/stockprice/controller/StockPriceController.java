@@ -27,8 +27,6 @@ public class StockPriceController {
 
 
     // still need to create in firebase. this is the first call to api
-
-
     @GetMapping
     @RequestMapping("/eodprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "eod-price")
@@ -51,6 +49,20 @@ public class StockPriceController {
     public StockPrices getDailyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockPriceService.getStockDailyPrice(stockTicker);
 
+    }
+
+    @GetMapping
+    @RequestMapping("/balancesheet/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "balanceSheet")
+    public Object getBalanceSheet(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getBalanceSheet(stockTicker);
+    }
+
+    @GetMapping
+    @RequestMapping("/incomestatement/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "incomeStatement")
+    public Object getIncomeStatement(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getIncomeStatement(stockTicker);
     }
 
     @GetMapping
