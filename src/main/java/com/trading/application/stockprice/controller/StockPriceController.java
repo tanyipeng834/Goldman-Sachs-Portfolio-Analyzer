@@ -31,7 +31,7 @@ public class StockPriceController {
 
     @GetMapping
     @RequestMapping("/eodprice/{stockTicker}")
-    @Cacheable(key="#stockTicker",cacheNames = "eod-price")
+    @Cacheable(key="#stockTicker",cacheNames = "eodPrice")
     public StockPrice getLatestStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         String stockName = stockTicker.toUpperCase();
         if (template.opsForHash().hasKey("eodPrice",stockTicker)){
