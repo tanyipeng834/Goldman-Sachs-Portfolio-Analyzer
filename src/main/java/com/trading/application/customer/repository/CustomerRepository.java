@@ -24,6 +24,7 @@ public class CustomerRepository {
     public String addCustomer(Customer customer) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = firestore.collection("customer").document(customer.getId());
+        customer.setTotalCapitalAvailable(10000);
         writeResultApiFuture = docReference.set(customer);
         return writeResultApiFuture.get().getUpdateTime().toDate().toString();
 
@@ -56,6 +57,14 @@ public class CustomerRepository {
         writeResultApiFuture = docReference.update(field, fieldValue);
         return "Result: " + writeResultApiFuture.get();
     }
+
+    // Update int field
+    public String updateTotalCapitalAvailable(String documentId, String field, int fieldValue) throws InterruptedException, ExecutionException {
+        DocumentReference docReference = getReferenceById(documentId);
+        writeResultApiFuture = docReference.update(field, fieldValue);
+        return "Result: " + writeResultApiFuture.get();
+    }
+
 
     public String deleteCustomerAccount(String documentId){
         try {

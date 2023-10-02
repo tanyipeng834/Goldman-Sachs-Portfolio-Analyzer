@@ -56,6 +56,11 @@ public class CustomerController {
         return customerService.customerUpdateEmail(customer.getId(), customer.getEmail());
     }
 
+    @RequestMapping(value = "/updatecapital", method = {RequestMethod.OPTIONS, RequestMethod.PUT})
+    public String customerUpdateCapital(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
+        return customerService.customerUpdateCapital(customer.getId(), customer.getTotalCapitalAvailable());
+    }
+
     @DeleteMapping
     @RequestMapping("/deletecustomer/{id}")
     public String deleteCustomerAccount(@PathVariable String id) throws ExecutionException, InterruptedException {

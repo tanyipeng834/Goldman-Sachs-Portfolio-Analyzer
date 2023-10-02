@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PortfolioStocksRequest {
-    //    private Map<String, List<PortfolioStock>> added;
-//    private Map<String, List<PortfolioStock>> deleted;
-//    private Map<String, List<PortfolioStock>> updated;
-    private List<PortfolioStock> added;
-    private List<PortfolioStock> deleted;
-    private List<PortfolioStock> updated;
 
     private String portfolioId;
 
@@ -21,9 +15,9 @@ public class PortfolioStocksRequest {
 
     private String portfolioDescription;
 
-    private Map<String, List<PortfolioStock>> addednew;
-    private Map<String, List<PortfolioStock>> updatednew;
-    private List<String> deletednew;
+    private Map<String, PortfolioStock> add;
+    private Map<String, Map<String, PortfolioStock>> update;
+    private List<String> delete;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -57,51 +51,27 @@ public class PortfolioStocksRequest {
         this.portfolioDescription = portfolioDescription;
     }
 
-    public Map<String, List<PortfolioStock>> getAddednew() {
-        return addednew;
+    public Map<String, PortfolioStock> getAdd() {
+        return add;
     }
 
-    public void setAddednew(Map<String, List<PortfolioStock>> addednew) {
-        this.addednew = addednew;
+    public void setAdd(Map<String, PortfolioStock> add) {
+        this.add = add;
     }
 
-    public Map<String, List<PortfolioStock>> getUpdatednew() {
-        return updatednew;
+    public Map<String, Map<String, PortfolioStock>> getUpdate() {
+        return update;
     }
 
-    public void setUpdatednew(Map<String, List<PortfolioStock>> updatednew) {
-        this.updatednew = updatednew;
+    public void setUpdate(Map<String, Map<String, PortfolioStock>> update) {
+        this.update = update;
     }
 
-    public List<String> getDeletednew() {
-        return deletednew;
+    public List<String> getDelete() {
+        return delete;
     }
 
-    public void setDeletednew(List<String> deletednew) {
-        this.deletednew = deletednew;
-    }
-
-    public List<PortfolioStock> getAdded() {
-        return added;
-    }
-
-    public void setAdded(List<PortfolioStock> added) {
-        this.added = added;
-    }
-
-    public List<PortfolioStock> getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(List<PortfolioStock> deleted) {
-        this.deleted = deleted;
-    }
-
-    public List<PortfolioStock> getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(List<PortfolioStock> updated) {
-        this.updated = updated;
+    public void setDelete(List<String> delete) {
+        this.delete = delete;
     }
 }

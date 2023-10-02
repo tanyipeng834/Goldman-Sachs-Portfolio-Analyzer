@@ -88,6 +88,40 @@ public class StockPriceService {
 
 
     }
+
+    // get balance sheet
+    public Object getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"BALANCE_SHEET");
+        System.out.println("Invoked API");
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            return rootNode;
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+        }
+    }
+
+    // get income statement
+    // get balance sheet
+    public Object getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
+        System.out.println("Invoked API");
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            return rootNode;
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+        }
+    }
+
     public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
