@@ -105,8 +105,6 @@ public class PortfolioRepository {
 
         Portfolio portfolio = getPortfolio(portfolioId);
 
-        System.out.println("hello");
-
         CollectionReference stockColRef = firestore.collection("stock");
 
         Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
@@ -114,13 +112,10 @@ public class PortfolioRepository {
         if (portfolio != null) {
             Map<String, List<PortfolioStock>> myStocks = portfolio.getPortStock();
 
-            System.out.println(myStocks);
-
             if (!myStocks.isEmpty()) {
                 Set<String> stockKeys = myStocks.keySet();
 
                 for (String stockTicker : stockKeys) {
-                    System.out.println(stockTicker);
                     ApiFuture<DocumentSnapshot> stocksInfo = stockColRef.document(stockTicker).get();
                     DocumentSnapshot stocksInfoDoc = stocksInfo.get();
 
@@ -150,8 +145,6 @@ public class PortfolioRepository {
             for (Portfolio portfolio : allPortfolios) {
                 String portfolioId = portfolio.getPortfolioId();
                 Map<String, Integer> sectorCounts = getSectorsByPortfolioId(portfolioId);
-
-                System.out.println(sectorCounts);
 
                 if (sectorCounts != null) {
                     // Update allSectorCounts with sectorCounts
