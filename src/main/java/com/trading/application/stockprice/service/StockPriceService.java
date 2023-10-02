@@ -3,11 +3,13 @@ package com.trading.application.stockprice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.trading.application.stockprice.controller.StockPriceController;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.repository.StockPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -219,39 +221,54 @@ public class StockPriceService {
 
     }
 
-    // get monthly price from date
-    public Object getMonthlyPriceFromDate(String stockTicker, String month, String year) throws  ExecutionException, InterruptedException , JsonProcessingException {
+    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
+    public StockPrices getMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String key = "monthlyStockPrice::" + stockTicker;
-        Object value = template.opsForValue().get(key);
-        String dateInput = year + "-" + month;
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
 
-        // monthly price not in redis
-        if(value == null){
-            System.out.println("Redis value doesnt exist");
-            return value;
-        }
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            JsonNode MetaNode = rootNode.get("Meta Data");
+            LocalDate currentDate = LocalDate.now();
+            String stockSymbol =  MetaNode.get("2. Symbol").asText();
 
-        StockPrices stockPrices = (StockPrices) value;
-        for(StockPrice stockPrice : stockPrices.getStockPriceList()){
-            String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
+            JsonNode dateNode = rootNode.get("Monthly Time Series");
+            ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+            Iterator<String> fieldNames = dateNode.fieldNames();
+            while(fieldNames.hasNext()){
 
-            if(formattedDateString.contains(dateInput)){
-                StockPrice output = new StockPrice();
-                output.setOpenPrice(stockPrice.getOpenPrice());
-                output.setHighPrice(stockPrice.getHighPrice());
-                output.setLowPrice(stockPrice.getLowPrice());
-                output.setClosePrice(stockPrice.getClosePrice());
-                output.setVolume(stockPrice.getVolume());
-                output.setStockDate(stockPrice.getStockDate());
-                return output;
+                String date = fieldNames.next();
+
+                StockPrice stockPrice = objectMapper.readValue(dateNode.get(date).toString(), StockPrice.class);
+
+                String pattern = "yyyy-MM-dd";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date stockPriceDate = dateFormat.parse(date);
+
+
+                stockPrice.setStockDate(stockPriceDate);
+                stockPriceList.add(stockPrice);
             }
+            StockPrices stockPrices = new StockPrices(stockPriceList);
+
+
+            // Convert LocalDate to Date
+
+
+
+
+            return stockPriceRepo.saveStockMonthlyPrice(stockPrices,stockTicker);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+
+
         }
 
-        return value;
-    }
 
+    }
 
     private String parseApiResponse(String stockTicker, String priceType) {
         String jsonString =this.webClient.get()

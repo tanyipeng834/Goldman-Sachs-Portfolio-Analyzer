@@ -3,6 +3,7 @@ package com.trading.application.stockprice.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.trading.application.stock.service.StockPricesService;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.service.StockPriceService;
@@ -24,6 +25,8 @@ public class StockPriceController {
     private StockPriceService stockPriceService;
     @Autowired
     private RedisTemplate<String,Object> template;
+    @Autowired
+    private StockPricesService stockPricesService;
 
 
     // still need to create in firebase. this is the first call to api
@@ -84,7 +87,7 @@ public class StockPriceController {
     @GetMapping
     @RequestMapping("/testmonth/{stockTicker}")
     public Object getMonthlyPriceFromDate(@PathVariable String stockTicker, @RequestParam String month, @RequestParam String year) throws ExecutionException, InterruptedException, JsonProcessingException {
-        return stockPriceService.getMonthlyPriceFromDate(stockTicker, month, year);
+        return stockPricesService.getMonthlyPriceFromDate(stockTicker, month, year);
 
     }
 
