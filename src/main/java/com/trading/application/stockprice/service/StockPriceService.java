@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -106,7 +107,6 @@ public class StockPriceService {
     }
 
     // get income statement
-    // get balance sheet
     public Object getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
@@ -217,6 +217,39 @@ public class StockPriceService {
         }
 
 
+    }
+
+    // get monthly price from date
+    public Object getMonthlyPriceFromDate(String stockTicker, String month, String year) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String key = "monthlyStockPrice::" + stockTicker;
+        Object value = template.opsForValue().get(key);
+        String dateInput = year + "-" + month;
+
+        // monthly price not in redis
+        if(value == null){
+            System.out.println("Redis value doesnt exist");
+            return value;
+        }
+
+        StockPrices stockPrices = (StockPrices) value;
+        for(StockPrice stockPrice : stockPrices.getStockPriceList()){
+            String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
+
+            if(formattedDateString.contains(dateInput)){
+                StockPrice output = new StockPrice();
+                output.setOpenPrice(stockPrice.getOpenPrice());
+                output.setHighPrice(stockPrice.getHighPrice());
+                output.setLowPrice(stockPrice.getLowPrice());
+                output.setClosePrice(stockPrice.getClosePrice());
+                output.setVolume(stockPrice.getVolume());
+                output.setStockDate(stockPrice.getStockDate());
+                return output;
+            }
+        }
+
+        return value;
     }
 
 

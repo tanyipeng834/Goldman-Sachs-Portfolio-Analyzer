@@ -81,6 +81,13 @@ public class StockPriceController {
 
     }
 
+    @GetMapping
+    @RequestMapping("/testmonth/{stockTicker}")
+    public Object getMonthlyPriceFromDate(@PathVariable String stockTicker, @RequestParam String month, @RequestParam String year) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getMonthlyPriceFromDate(stockTicker, month, year);
+
+    }
+
 
 
 
