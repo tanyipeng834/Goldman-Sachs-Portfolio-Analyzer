@@ -1,4 +1,4 @@
-package com.trading.application.stock.service;
+package com.trading.application.stockprice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
