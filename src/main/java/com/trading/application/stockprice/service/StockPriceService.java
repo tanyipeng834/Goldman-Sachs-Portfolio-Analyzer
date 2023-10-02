@@ -172,7 +172,7 @@ public class StockPriceService {
 
     }
 
-
+    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
@@ -218,13 +218,6 @@ public class StockPriceService {
 
         }
 
-
-    }
-
-    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
-    public StockPrices getMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
-
-        return this.getStockMonthlyPrice(stockTicker);
 
     }
 

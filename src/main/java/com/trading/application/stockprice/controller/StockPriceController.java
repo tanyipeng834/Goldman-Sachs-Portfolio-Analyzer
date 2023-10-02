@@ -74,7 +74,7 @@ public class StockPriceController {
 
     @GetMapping
     @RequestMapping("/monthlyprice/{stockTicker}")
-    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
+//    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getMonthlyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockPriceService.getStockMonthlyPrice(stockTicker);
 

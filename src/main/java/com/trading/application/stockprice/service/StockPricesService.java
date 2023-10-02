@@ -35,7 +35,7 @@ public class StockPricesService {
         if(value == null){
             System.out.println("Redis value doesnt exist");
 
-            stockPriceService.getMonthlyPrice(stockTicker);
+            stockPriceService.getStockMonthlyPrice(stockTicker);
 
             value = template.opsForValue().get(key);
 
