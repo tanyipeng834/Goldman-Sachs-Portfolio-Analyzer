@@ -78,7 +78,7 @@ public class PortfolioStockRepository {
                 ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                 updateFuture.get();
 
-                AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString(), true);
                 accessLogService.addLog(accessLog);
 
                 return "Added to " + stockTicker + " array";
@@ -119,7 +119,7 @@ public class PortfolioStockRepository {
                     ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                     updateFuture.get();
 
-                    AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString());
+                    AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString(), true);
                     accessLogService.addLog(accessLog);
 
                     return "Deleted " + stockTicker + " from the portfolio";
@@ -169,7 +169,7 @@ public class PortfolioStockRepository {
                             ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                             updateFuture.get();
 
-                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated" + stockTicker + " to 0" + portfolioId, LocalDateTime.now().toString());
+                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated" + stockTicker + " to 0" + portfolioId, LocalDateTime.now().toString(), true);
                             accessLogService.addLog(accessLog);
 
                             return "Updated " + stockTicker + " array";
@@ -188,7 +188,7 @@ public class PortfolioStockRepository {
                             ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                             updateFuture.get();
 
-                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString());
+                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString(), true);
                             accessLogService.addLog(accessLog);
 
                             return "Updated " + stockTicker + " array";

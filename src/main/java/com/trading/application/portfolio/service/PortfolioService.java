@@ -28,11 +28,11 @@ public class PortfolioService {
     @Autowired
     private AccessLogService accessLogService = new AccessLogService();
 
-    public ResponseEntity<String> createPortfolio(Portfolio portfolio) {
+    public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request) {
         try {
             String result = portfolioRepo.createPortfolio(portfolio);
             // add to access log after portfolio successfully created in firebase
-            AccessLog accessLog = new AccessLog(portfolio.getUserId(),"CREATE", "192.168.1.1", "Created Portfolio", LocalDateTime.now().toString());
+            AccessLog accessLog = new AccessLog(portfolio.getUserId(),"CREATE", request.getRemoteAddr() , "Created Portfolio", LocalDateTime.now().toString(), true);
             accessLogService.addLog(accessLog);
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException | FirestoreException e) {

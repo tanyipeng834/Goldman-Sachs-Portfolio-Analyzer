@@ -25,8 +25,8 @@ public class PortfolioController {
 
     @PostMapping
     @RequestMapping("/create")
-    public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio) {
-        return portfolioService.createPortfolio(portfolio);
+    public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio, HttpServletRequest request) {
+        return portfolioService.createPortfolio(portfolio, request);
     }
 
     @PostMapping
