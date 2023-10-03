@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -75,6 +78,72 @@ public class StockPricesService {
         }
 
         return null;
+    }
+
+    public Object getPricesFromDateBought(String stockTicker, String dateBought) throws ExecutionException, InterruptedException, JsonProcessingException, ParseException {
+
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String key = "monthlyStockPrice::" + stockTicker;
+        Object value = template.opsForValue().get(key);
+        Date datebought = outputDateFormat.parse(dateBought);
+        Date today = new Date(); // Current date
+        ArrayList<StockPrice> stockPriceList = new ArrayList<>();
+
+        // monthly price not in redis
+        if(value == null){
+            System.out.println("Redis value doesnt exist");
+
+            stockPriceService.getStockMonthlyPrice(stockTicker);
+
+            value = template.opsForValue().get(key);
+
+            StockPrices stockPrices = (StockPrices) value;
+
+            for(StockPrice stockPrice : stockPrices.getStockPriceList()){
+                String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
+                Date dateToCompare = outputDateFormat.parse(formattedDateString);
+
+                // Check if dateToCompare is between dateBought and today
+                if (datebought.compareTo(dateToCompare) <= 0 && dateToCompare.compareTo(today) <= 0) {
+
+                    StockPrice output = new StockPrice();
+                    output.setOpenPrice(stockPrice.getOpenPrice());
+                    output.setHighPrice(stockPrice.getHighPrice());
+                    output.setLowPrice(stockPrice.getLowPrice());
+                    output.setClosePrice(stockPrice.getClosePrice());
+                    output.setVolume(stockPrice.getVolume());
+                    output.setStockDate(stockPrice.getStockDate());
+                    stockPriceList.add(output);
+                }
+
+            }
+
+            return stockPriceList;
+
+        }
+
+        StockPrices stockPrices = (StockPrices) value;
+        for(StockPrice stockPrice : stockPrices.getStockPriceList()){
+            String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
+            Date dateToCompare = outputDateFormat.parse(formattedDateString);
+
+            // Check if dateToCompare is between dateBought and today
+            if (datebought.compareTo(dateToCompare) <= 0 && dateToCompare.compareTo(today) <= 0) {
+//                System.out.println(formattedDateString + " is between dateBought and today.");
+
+                StockPrice output = new StockPrice();
+                output.setOpenPrice(stockPrice.getOpenPrice());
+                output.setHighPrice(stockPrice.getHighPrice());
+                output.setLowPrice(stockPrice.getLowPrice());
+                output.setClosePrice(stockPrice.getClosePrice());
+                output.setVolume(stockPrice.getVolume());
+                output.setStockDate(stockPrice.getStockDate());
+                stockPriceList.add(output);
+            }
+
+        }
+
+        return stockPriceList;
     }
 
 }

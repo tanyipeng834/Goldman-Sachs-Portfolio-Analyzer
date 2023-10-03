@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -84,6 +85,13 @@ public class StockPriceController {
     @RequestMapping("/getmonthlypricebydate/{stockTicker}")
     public Object getMonthlyPriceFromDate(@PathVariable String stockTicker, @RequestParam String month, @RequestParam String year) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockPricesService.getMonthlyPriceFromDate(stockTicker, month, year);
+
+    }
+
+    @GetMapping
+    @RequestMapping("/getpricesfromdatebought/{stockTicker}")
+    public Object getPricesFromDateBought(@PathVariable String stockTicker, @RequestParam String dateBought) throws ExecutionException, InterruptedException, JsonProcessingException, ParseException {
+        return stockPricesService.getPricesFromDateBought(stockTicker, dateBought);
 
     }
 
