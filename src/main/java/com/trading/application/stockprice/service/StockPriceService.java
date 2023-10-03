@@ -3,11 +3,13 @@ package com.trading.application.stockprice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.trading.application.stockprice.controller.StockPriceController;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.repository.StockPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -88,6 +91,39 @@ public class StockPriceService {
 
 
     }
+
+    // get balance sheet
+    public Object getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"BALANCE_SHEET");
+        System.out.println("Invoked API");
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            return rootNode;
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+        }
+    }
+
+    // get income statement
+    public Object getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+
+        String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
+        System.out.println("Invoked API");
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonString);
+            return rootNode;
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Stock Ticker does not exist");
+        }
+    }
+
     public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
@@ -136,7 +172,7 @@ public class StockPriceService {
 
     }
 
-
+    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
@@ -184,7 +220,6 @@ public class StockPriceService {
 
 
     }
-
 
     private String parseApiResponse(String stockTicker, String priceType) {
         String jsonString =this.webClient.get()

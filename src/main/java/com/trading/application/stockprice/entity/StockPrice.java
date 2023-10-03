@@ -32,7 +32,7 @@ public class StockPrice implements Serializable {
 
 
     @JsonProperty("5. volume")
-    private int volume;
+    private long volume;
 
     public float getLowPrice() {
         return lowPrice;
@@ -78,11 +78,11 @@ public class StockPrice implements Serializable {
         this.closePrice = closePrice;
     }
 
-    public int getVolume() {
+    public long getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(long volume) {
         this.volume = volume;
     }
 

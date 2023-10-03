@@ -1,7 +1,5 @@
 package com.trading.application.logs.entity;
 
-import org.springframework.stereotype.Component;
-
 public class AccessLog {
 
     private String userId;
@@ -9,16 +7,18 @@ public class AccessLog {
     private String ipAddress;
     private String info;
     private String dateTime;
+    private boolean success;
 
     public AccessLog(){
 
     }
-    public AccessLog(String userId, String action, String ipAddress, String info, String dateTime) {
+    public AccessLog(String userId, String action, String ipAddress, String info, String dateTime, boolean success) {
         this.userId = userId;
         this.action = action;
         this.ipAddress = ipAddress;
         this.info = info;
         this.dateTime = dateTime;
+        this.success = success;
     }
 
     public String getUserId() {
@@ -59,5 +59,13 @@ public class AccessLog {
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

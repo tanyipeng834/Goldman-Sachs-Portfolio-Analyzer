@@ -38,6 +38,7 @@ public class StockPriceRepository {
     // create StockPrice, get from api
     public StockPrices saveStockDailyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
         template.opsForHash().put("eodPrice",stockTicker, stockPrices.getStockPriceList().get(0));
+        template.expire("eodPrice", 24, TimeUnit.HOURS);
 
 
 

@@ -2,18 +2,16 @@ package com.trading.application.stockprice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.trading.application.stockprice.service.StockPricesService;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import com.trading.application.stockprice.service.StockPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -24,14 +22,14 @@ public class StockPriceController {
     private StockPriceService stockPriceService;
     @Autowired
     private RedisTemplate<String,Object> template;
+    @Autowired
+    private StockPricesService stockPricesService;
 
 
     // still need to create in firebase. this is the first call to api
-
-
     @GetMapping
     @RequestMapping("/eodprice/{stockTicker}")
-    @Cacheable(key="#stockTicker",cacheNames = "eod-price")
+    @Cacheable(key="#stockTicker",cacheNames = "eodPrice")
     public StockPrice getLatestStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         String stockName = stockTicker.toUpperCase();
         if (template.opsForHash().hasKey("eodPrice",stockTicker)){
@@ -54,6 +52,20 @@ public class StockPriceController {
     }
 
     @GetMapping
+    @RequestMapping("/balancesheet/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "balanceSheet")
+    public Object getBalanceSheet(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getBalanceSheet(stockTicker);
+    }
+
+    @GetMapping
+    @RequestMapping("/incomestatement/{stockTicker}")
+    @Cacheable(key="#stockTicker",cacheNames = "incomeStatement")
+    public Object getIncomeStatement(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPriceService.getIncomeStatement(stockTicker);
+    }
+
+    @GetMapping
     @RequestMapping("/weeklyprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "weeklyStockPrice")
     public StockPrices getWeeklyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
@@ -63,9 +75,23 @@ public class StockPriceController {
 
     @GetMapping
     @RequestMapping("/monthlyprice/{stockTicker}")
-    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
+//    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getMonthlyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockPriceService.getStockMonthlyPrice(stockTicker);
+
+    }
+
+    @GetMapping
+    @RequestMapping("/getmonthlypricebydate/{stockTicker}")
+    public Object getMonthlyPriceFromDate(@PathVariable String stockTicker, @RequestParam String month, @RequestParam String year) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockPricesService.getMonthlyPriceFromDate(stockTicker, month, year);
+
+    }
+
+    @GetMapping
+    @RequestMapping("/getpricesfromdatebought/{stockTicker}")
+    public Object getPricesFromDateBought(@PathVariable String stockTicker, @RequestParam String dateBought) throws ExecutionException, InterruptedException, JsonProcessingException, ParseException {
+        return stockPricesService.getPricesFromDateBought(stockTicker, dateBought);
 
     }
 

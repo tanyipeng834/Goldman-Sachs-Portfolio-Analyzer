@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trading.application.stock.entity.Stock;
 
 import com.trading.application.stock.repository.StockRepository;
+import com.trading.application.stockprice.entity.StockPrice;
+import com.trading.application.stockprice.entity.StockPrices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
