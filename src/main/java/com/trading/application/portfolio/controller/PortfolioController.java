@@ -2,7 +2,6 @@ package com.trading.application.portfolio.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.entity.PortfolioRequest;
 import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.service.PortfolioService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -99,6 +98,17 @@ public class PortfolioController {
         Map<String, Integer> allSectorCounts = portfolioService.getSectorsByUserId(userId);
         if (allSectorCounts != null) {
             return new ResponseEntity<>(allSectorCounts, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    @RequestMapping("/getcountriesbyuser/{userId}")
+    public ResponseEntity<Map<String, Integer>> getCountriesByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        Map<String, Integer> allCountryCounts = portfolioService.getCountriesByUserId(userId);
+        if (allCountryCounts != null) {
+            return new ResponseEntity<>(allCountryCounts, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

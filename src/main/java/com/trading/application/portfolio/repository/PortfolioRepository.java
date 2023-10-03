@@ -5,9 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
 import com.trading.application.stock.entity.Stock;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -167,6 +165,49 @@ public class PortfolioRepository {
         return null;
     }
 
+    // to display on Map (overview)
+    public Map<String, Integer> getCountriesByUserId(String userId) throws ExecutionException, InterruptedException {
 
+        List<Portfolio> allPortfolios = getAllPortfolios(userId);
 
+        Map<String, Integer> allCountriesCounts = new HashMap<>();
+        if (allPortfolios != null) {
+
+            for (Portfolio portfolio : allPortfolios) {
+                Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
+
+                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
+                    int count = 0;
+                    String stockTicker = entry.getKey();
+                    List<PortfolioStock> portfolioStockList = entry.getValue(); // Get the list of PortfolioStock objects
+
+                    for(PortfolioStock portfolioStock: portfolioStockList){
+                        int quantity = portfolioStock.getQuantity();
+                        count += quantity;
+                    }
+                    System.out.println(stockTicker);
+                    ApiFuture<DocumentSnapshot> future = firestore.collection("stock").document(stockTicker).get();
+                    DocumentSnapshot document = future.get();
+
+                    Stock stock = null;
+                    if (document.exists()) {
+                        stock = document.toObject(Stock.class);
+                        String country = stock.getCountry();
+
+                        if (allCountriesCounts.containsKey(country)) {
+                            int currentCount = allCountriesCounts.get(country);
+                            allCountriesCounts.put(country, currentCount + count);
+                        } else {
+                            allCountriesCounts.put(country, count);
+                        }
+
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            return allCountriesCounts;
+        }
+        return null;
+    }
 }

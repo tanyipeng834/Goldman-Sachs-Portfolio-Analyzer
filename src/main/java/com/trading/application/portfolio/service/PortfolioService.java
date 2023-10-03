@@ -143,5 +143,9 @@ public class PortfolioService {
         return portfolioRepo.getSectorsByUserId(userId);
     }
 
+    public Map<String, Integer> getCountriesByUserId(String userId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.getCountriesByUserId(userId);
+    }
+
 
 }
