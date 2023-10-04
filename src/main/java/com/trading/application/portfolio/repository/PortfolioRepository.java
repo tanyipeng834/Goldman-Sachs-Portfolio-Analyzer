@@ -64,6 +64,14 @@ public class PortfolioRepository {
         return "Result: " + writeResultApiFuture.get();
     }
 
+    // Overloading
+    // Update a portfolio's field
+    public String updatePortfolioField(String portfolioId, String field, boolean fieldValue) throws ExecutionException, InterruptedException {
+
+        writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
+        return "Result: " + writeResultApiFuture.get();
+    }
+
     // get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
