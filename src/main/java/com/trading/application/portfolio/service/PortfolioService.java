@@ -111,7 +111,7 @@ public class PortfolioService {
         } catch (InterruptedException | ExecutionException | FirestoreException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
         }
-        
+
     }
 
     // get all portfolios of a customer
