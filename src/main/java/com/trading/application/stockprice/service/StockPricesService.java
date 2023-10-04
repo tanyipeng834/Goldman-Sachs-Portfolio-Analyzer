@@ -1,16 +1,11 @@
 package com.trading.application.stockprice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trading.application.stockprice.controller.StockPriceController;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
-import com.trading.application.stockprice.repository.StockPriceRepository;
-import com.trading.application.stockprice.service.StockPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +15,6 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class StockPricesService {
 
-    private ObjectMapper objectMapper;
     @Autowired
     private RedisTemplate<String,Object> template;
     @Autowired
@@ -47,14 +41,7 @@ public class StockPricesService {
                 String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
 
                 if(formattedDateString.contains(dateInput)){
-                    StockPrice output = new StockPrice();
-                    output.setOpenPrice(stockPrice.getOpenPrice());
-                    output.setHighPrice(stockPrice.getHighPrice());
-                    output.setLowPrice(stockPrice.getLowPrice());
-                    output.setClosePrice(stockPrice.getClosePrice());
-                    output.setVolume(stockPrice.getVolume());
-                    output.setStockDate(stockPrice.getStockDate());
-                    return output;
+                    return new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume());
                 }
             }
 
@@ -66,14 +53,7 @@ public class StockPricesService {
             String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
 
             if(formattedDateString.contains(dateInput)){
-                StockPrice output = new StockPrice();
-                output.setOpenPrice(stockPrice.getOpenPrice());
-                output.setHighPrice(stockPrice.getHighPrice());
-                output.setLowPrice(stockPrice.getLowPrice());
-                output.setClosePrice(stockPrice.getClosePrice());
-                output.setVolume(stockPrice.getVolume());
-                output.setStockDate(stockPrice.getStockDate());
-                return output;
+                return new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume());
             }
         }
 
@@ -105,15 +85,7 @@ public class StockPricesService {
 
                 // Check if dateToCompare is between dateBought and today
                 if (datebought.compareTo(dateToCompare) <= 0 && dateToCompare.compareTo(today) <= 0) {
-
-                    StockPrice output = new StockPrice();
-                    output.setOpenPrice(stockPrice.getOpenPrice());
-                    output.setHighPrice(stockPrice.getHighPrice());
-                    output.setLowPrice(stockPrice.getLowPrice());
-                    output.setClosePrice(stockPrice.getClosePrice());
-                    output.setVolume(stockPrice.getVolume());
-                    output.setStockDate(stockPrice.getStockDate());
-                    stockPriceList.add(output);
+                    stockPriceList.add(new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume()));
                 }
 
             }
@@ -129,16 +101,8 @@ public class StockPricesService {
 
             // Check if dateToCompare is between dateBought and today
             if (datebought.compareTo(dateToCompare) <= 0 && dateToCompare.compareTo(today) <= 0) {
-//                System.out.println(formattedDateString + " is between dateBought and today.");
 
-                StockPrice output = new StockPrice();
-                output.setOpenPrice(stockPrice.getOpenPrice());
-                output.setHighPrice(stockPrice.getHighPrice());
-                output.setLowPrice(stockPrice.getLowPrice());
-                output.setClosePrice(stockPrice.getClosePrice());
-                output.setVolume(stockPrice.getVolume());
-                output.setStockDate(stockPrice.getStockDate());
-                stockPriceList.add(output);
+                stockPriceList.add(new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume()));
             }
 
         }
