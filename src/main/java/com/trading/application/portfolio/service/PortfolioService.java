@@ -147,5 +147,9 @@ public class PortfolioService {
         return portfolioRepo.getCountriesByUserId(userId);
     }
 
+    public int getTotalPortfolioValue(String userId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.getTotalPortfolioValue(userId);
+    }
+
 
 }

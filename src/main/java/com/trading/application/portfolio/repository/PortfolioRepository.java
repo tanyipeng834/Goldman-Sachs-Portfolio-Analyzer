@@ -203,4 +203,33 @@ public class PortfolioRepository {
         }
         return null;
     }
+
+    //get total portfolio value to display on overview
+    public int getTotalPortfolioValue(String userId) throws ExecutionException, InterruptedException {
+
+        List<Portfolio> allPortfolios = getAllPortfolios(userId);
+
+        int portfolioValue = 0;
+        if (allPortfolios != null) {
+
+            for (Portfolio portfolio : allPortfolios) {
+                Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
+
+                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
+                    List<PortfolioStock> portfolioStockList = entry.getValue();
+
+                    for(PortfolioStock portfolioStock: portfolioStockList){
+                        int quantity = portfolioStock.getQuantity();
+                        float boughtPrice = portfolioStock.getStockBoughtPrice();
+                        portfolioValue += (boughtPrice * quantity);
+                    }
+
+                }
+            }
+            return portfolioValue;
+        }
+        return portfolioValue;
+    }
+
+
 }

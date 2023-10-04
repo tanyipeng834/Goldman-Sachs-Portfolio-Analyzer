@@ -114,5 +114,10 @@ public class PortfolioController {
         }
     }
 
+    @GetMapping
+    @RequestMapping("/gettotalportfoliovalue/{userId}")
+    public Integer getTotalPortfolioValue(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        return portfolioService.getTotalPortfolioValue(userId);
+    }
 
 }
