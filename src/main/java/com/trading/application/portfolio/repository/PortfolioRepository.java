@@ -33,15 +33,6 @@ public class PortfolioRepository {
         return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
-    public String addStock(String portfolioStockId ,String portfolioId) throws ExecutionException,InterruptedException{
-        DocumentReference portfolioDocReference = firestore.collection("portfolio").document(portfolioId);
-        DocumentReference portfolioStockReference = firestore.collection("portfolioStock").document(portfolioStockId);
-        writeResultApiFuture = portfolioDocReference.update("portfolioStockArray",FieldValue.arrayUnion(portfolioStockReference));
-        System.out.println("Update time : " + portfolioStockReference.get());
-
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
-    }
-
     // delete a portfolio
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 

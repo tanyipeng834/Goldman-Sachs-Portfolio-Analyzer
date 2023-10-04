@@ -40,10 +40,6 @@ public class PortfolioService {
         }
     }
 
-    public String addStock(String portfolioStockId,String portfolioId) throws ExecutionException,InterruptedException{
-        return portfolioRepo.addStock(portfolioStockId,portfolioId);
-    }
-
     // get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getPortfolio(portfolioId);

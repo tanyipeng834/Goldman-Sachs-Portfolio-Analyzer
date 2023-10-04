@@ -26,18 +26,7 @@ public class PortfolioController {
     public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio, HttpServletRequest request) {
         return portfolioService.createPortfolio(portfolio, request);
     }
-
-    @PostMapping
-    @RequestMapping("/add")
-    public String addStock(@RequestBody JsonNode portfolioStockData) throws ExecutionException,InterruptedException{
-
-       String portfolioId = portfolioStockData.get("portfolioId").asText();
-       String portfolioStockId = portfolioStockData.get("portfolioStockId").asText();
-        System.out.println(portfolioId);
-        System.out.println(portfolioStockId);
-        return portfolioService.addStock(portfolioStockId,portfolioId);
-    }
-
+    
     // get a portfolio
     @GetMapping
     @RequestMapping("/{portfolioId}")
