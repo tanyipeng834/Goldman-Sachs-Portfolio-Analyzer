@@ -1,14 +1,20 @@
 package com.trading.application.config;
 
+import com.trading.application.listener.LogSubsciber;
+import com.trading.application.logs.entity.AccessLog;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -39,6 +45,15 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+    @Bean
+    RedisTemplate<String, Object> publishTemplate(RedisConnectionFactory redisConnectionFactory) {
+
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setValueSerializer(new JdkSerializationRedisSerializer());
+
+        return template;
+    }
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
@@ -60,5 +75,27 @@ public class RedisConfig {
 
         return cacheManager;
     }
+
+    @Bean
+    public ChannelTopic topic(){
+
+        return new ChannelTopic("Logs");
+
+    }
+    @Bean
+    public MessageListenerAdapter messageListenerAdapter(){
+        // Have to put the new receiver class inside the listener adapter
+        return new MessageListenerAdapter(new LogSubsciber());
+    }
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(){
+
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory());
+        container.addMessageListener(messageListenerAdapter(),topic());
+        return container;
+    }
+
+
 
 }

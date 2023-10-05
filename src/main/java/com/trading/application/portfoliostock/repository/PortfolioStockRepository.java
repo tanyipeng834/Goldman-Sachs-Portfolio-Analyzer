@@ -1,13 +1,21 @@
 package com.trading.application.portfoliostock.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.gson.Gson;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -25,6 +33,13 @@ public class PortfolioStockRepository {
     private ApiFuture<WriteResult> writeResultApiFuture;
     private ApiFuture<QuerySnapshot> querySnapshot;
     private CollectionReference colRef = firestore.collection("portfolioStock");
+    @Autowired
+    @Qualifier("publishTemplate")
+    private RedisTemplate<String,Object> template;
+    Logger logger = LoggerFactory.getLogger(AccessLogService.class);
+
+    @Autowired
+    private ChannelTopic topic;
 
     @Autowired
     private AccessLogService accessLogService = new AccessLogService();
@@ -79,7 +94,13 @@ public class PortfolioStockRepository {
                 updateFuture.get();
 
                 AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString(), true);
-                accessLogService.addLog(accessLog);
+
+                Gson gson = new Gson();
+                String logJson = gson.toJson(accessLog);
+
+                    template.convertAndSend(topic.getTopic(), logJson);
+
+                //accessLogService.addLog(accessLog);
 
                 return "Added to " + stockTicker + " array";
             } else {
@@ -120,7 +141,13 @@ public class PortfolioStockRepository {
                     updateFuture.get();
 
                     AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString(), true);
-                    accessLogService.addLog(accessLog);
+                    ObjectMapper objectMapper = new ObjectMapper();
+
+                    Gson gson = new Gson();
+                    String logJson = gson.toJson(accessLog);
+
+                    template.convertAndSend(topic.getTopic(), logJson);
+                    //accessLogService.addLog(accessLog);
 
                     return "Deleted " + stockTicker + " from the portfolio";
                 } else {
@@ -170,7 +197,12 @@ public class PortfolioStockRepository {
                             updateFuture.get();
 
                             AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated" + stockTicker + " to 0" + portfolioId, LocalDateTime.now().toString(), true);
-                            accessLogService.addLog(accessLog);
+                            Gson gson = new Gson();
+                            String logJson = gson.toJson(accessLog);
+                            logger.info(logJson);
+
+                            template.convertAndSend(topic.getTopic(), logJson);
+                            //accessLogService.addLog(accessLog);
 
                             return "Updated " + stockTicker + " array";
                         } else {
@@ -189,7 +221,12 @@ public class PortfolioStockRepository {
                             updateFuture.get();
 
                             AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString(), true);
-                            accessLogService.addLog(accessLog);
+                            Gson gson = new Gson();
+                            String logJson = gson.toJson(accessLog);
+                            logger.info(logJson);
+
+                            template.convertAndSend(topic.getTopic(), logJson);
+                            //accessLogService.addLog(accessLog);
 
                             return "Updated " + stockTicker + " array";
                         }

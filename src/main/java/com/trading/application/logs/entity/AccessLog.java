@@ -9,6 +9,7 @@ public class AccessLog {
     private String dateTime;
     private boolean success;
 
+
     public AccessLog(){
 
     }
