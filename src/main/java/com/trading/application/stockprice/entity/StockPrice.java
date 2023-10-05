@@ -25,14 +25,22 @@ public class StockPrice implements Serializable {
     private float lowPrice;
     @JsonProperty("4. close")
     private float closePrice;
-
-
     private Date stockDate;
-
-
-
     @JsonProperty("5. volume")
     private long volume;
+
+    public StockPrice() {
+
+    }
+
+    public StockPrice(float openPrice, float highPrice, float lowPrice, float closePrice, Date stockDate, long volume) {
+        this.openPrice = openPrice;
+        this.highPrice = highPrice;
+        this.lowPrice = lowPrice;
+        this.closePrice = closePrice;
+        this.stockDate = stockDate;
+        this.volume = volume;
+    }
 
     public float getLowPrice() {
         return lowPrice;

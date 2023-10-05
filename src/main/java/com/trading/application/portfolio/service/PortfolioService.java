@@ -40,10 +40,6 @@ public class PortfolioService {
         }
     }
 
-    public String addStock(String portfolioStockId,String portfolioId) throws ExecutionException,InterruptedException{
-        return portfolioRepo.addStock(portfolioStockId,portfolioId);
-    }
-
     // get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getPortfolio(portfolioId);
@@ -60,72 +56,58 @@ public class PortfolioService {
         }
     }
 
-    // update a portfolio's Name
-    public String updatePortfolioName(String portfolioId, String portfolioName) throws ExecutionException, InterruptedException {
-        return portfolioRepo.updatePortfolioField(portfolioId, "portfolioName", portfolioName);
-    }
+    public ResponseEntity<String> updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
-    // update a portfolio's Description
-    public String updatePortfolioDescription(String portfolioId, String portfolioDescription) throws ExecutionException, InterruptedException {
-        return portfolioRepo.updatePortfolioField(portfolioId, "portfolioDescription", portfolioDescription);
-    }
+        try {
+            String portfolioName = portfolioStocksRequest.getPortfolioName();
+            String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
+            Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAdd();
+            Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
+            List<String> stocksToDelete = portfolioStocksRequest.getDelete();
 
-    public String updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
-
-        String portfolioName = portfolioStocksRequest.getPortfolioName();
-        String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
-        Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAdd();
-        Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
-        List<String> stocksToDelete = portfolioStocksRequest.getDelete();
-
-        if(portfolioName != null){
-            this.updatePortfolioName(portfolioStocksRequest.getPortfolioId(), portfolioName);
-        }
-
-        if(portfolioDesc != null){
-            this.updatePortfolioDescription(portfolioStocksRequest.getPortfolioId(), portfolioDesc);
-        }
-
-        if(stocksToAdd != null) {
-            for (Map.Entry<String, PortfolioStock> entry : stocksToAdd.entrySet()) {
-                    PortfolioStock portfolioStock = entry.getValue();
-                    portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), portfolioStock, request);
+            if(portfolioName != null){
+                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioName", portfolioName);
             }
-        }
 
-        if(stocksToDelete != null) {
-            for (String stockTicker: stocksToDelete) {
-                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stockTicker, request);
+            if(portfolioDesc != null){
+                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioDescription", portfolioDesc);
             }
-        }
 
-        if(stocksToUpdate != null) {
-            for (Map.Entry<String, Map<String, PortfolioStock>> entry : stocksToUpdate.entrySet()) {
-                String stockTicker = entry.getKey();
-
-                for (Map.Entry<String, PortfolioStock> innerEntry : entry.getValue().entrySet()) {
-                    String indexAsString = innerEntry.getKey();
-                    int index = Integer.parseInt(indexAsString);
-
-                    PortfolioStock stock = innerEntry.getValue();
-                    portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
+            if(stocksToAdd != null) {
+                for (Map.Entry<String, PortfolioStock> entry : stocksToAdd.entrySet()) {
+                        PortfolioStock portfolioStock = entry.getValue();
+                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), portfolioStock, request);
                 }
             }
+
+            if(stocksToDelete != null) {
+                for (String stockTicker: stocksToDelete) {
+                    portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stockTicker, request);
+                }
+            }
+
+            if(stocksToUpdate != null) {
+                for (Map.Entry<String, Map<String, PortfolioStock>> entry : stocksToUpdate.entrySet()) {
+                    String stockTicker = entry.getKey();
+
+                    for (Map.Entry<String, PortfolioStock> innerEntry : entry.getValue().entrySet()) {
+                        String indexAsString = innerEntry.getKey();
+                        int index = Integer.parseInt(indexAsString);
+
+                        PortfolioStock stock = innerEntry.getValue();
+                        portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
+                    }
+                }
+            }
+
+            portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());
+
+            return ResponseEntity.ok("Portfolio updated successfully.");
+
+        } catch (InterruptedException | ExecutionException | FirestoreException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
         }
 
-        return "works!!!";
-    }
-
-    // Increment a portfolio's Value
-    public void incrementPortfolioValue(String portfolioId, float totalStockPrice) throws ExecutionException, InterruptedException {
-        float portfolioVal = portfolioRepo.getPortfolio(portfolioId).getPortfolioValue();
-        portfolioRepo.updatePortfolioField(portfolioId, "portfolioValue", portfolioVal + totalStockPrice);
-    }
-
-    // Decrement a portfolio's Value
-    public void decrementPortfolioValue(String portfolioId, float totalStockPrice) throws ExecutionException, InterruptedException {
-        float portfolioVal = portfolioRepo.getPortfolio(portfolioId).getPortfolioValue();
-        portfolioRepo.updatePortfolioField(portfolioId, "portfolioValue", portfolioVal - totalStockPrice);
     }
 
     // get all portfolios of a customer
@@ -141,6 +123,14 @@ public class PortfolioService {
     // get sectors of all stocks a user has
     public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getSectorsByUserId(userId);
+    }
+
+    public Map<String, Integer> getCountriesByUserId(String userId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.getCountriesByUserId(userId);
+    }
+
+    public int getTotalPortfolioValue(String userId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.getTotalPortfolioValue(userId);
     }
 
 

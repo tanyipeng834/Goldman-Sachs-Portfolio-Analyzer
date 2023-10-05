@@ -19,6 +19,8 @@ public class PortfolioStocksRequest {
     private Map<String, Map<String, PortfolioStock>> update;
     private List<String> delete;
 
+    private boolean isPublic;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -73,5 +75,13 @@ public class PortfolioStocksRequest {
 
     public void setDelete(List<String> delete) {
         this.delete = delete;
+    }
+
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 }

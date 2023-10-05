@@ -5,9 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import com.trading.application.portfoliostock.repository.PortfolioStockRepository;
 import com.trading.application.stock.entity.Stock;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -35,15 +33,6 @@ public class PortfolioRepository {
         return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
-    public String addStock(String portfolioStockId ,String portfolioId) throws ExecutionException,InterruptedException{
-        DocumentReference portfolioDocReference = firestore.collection("portfolio").document(portfolioId);
-        DocumentReference portfolioStockReference = firestore.collection("portfolioStock").document(portfolioStockId);
-        writeResultApiFuture = portfolioDocReference.update("portfolioStockArray",FieldValue.arrayUnion(portfolioStockReference));
-        System.out.println("Update time : " + portfolioStockReference.get());
-
-        return writeResultApiFuture.get().getUpdateTime().toDate().toString();
-    }
-
     // delete a portfolio
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
@@ -61,6 +50,14 @@ public class PortfolioRepository {
     // Overloading
     // Update a portfolio's field
     public String updatePortfolioField(String portfolioId, String field, float fieldValue) throws ExecutionException, InterruptedException {
+
+        writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
+        return "Result: " + writeResultApiFuture.get();
+    }
+
+    // Overloading
+    // Update a portfolio's field
+    public String updatePortfolioField(String portfolioId, String field, boolean fieldValue) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
         return "Result: " + writeResultApiFuture.get();
@@ -105,8 +102,6 @@ public class PortfolioRepository {
 
         Portfolio portfolio = getPortfolio(portfolioId);
 
-        System.out.println("hello");
-
         CollectionReference stockColRef = firestore.collection("stock");
 
         Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
@@ -114,13 +109,10 @@ public class PortfolioRepository {
         if (portfolio != null) {
             Map<String, List<PortfolioStock>> myStocks = portfolio.getPortStock();
 
-            System.out.println(myStocks);
-
             if (!myStocks.isEmpty()) {
                 Set<String> stockKeys = myStocks.keySet();
 
                 for (String stockTicker : stockKeys) {
-                    System.out.println(stockTicker);
                     ApiFuture<DocumentSnapshot> stocksInfo = stockColRef.document(stockTicker).get();
                     DocumentSnapshot stocksInfoDoc = stocksInfo.get();
 
@@ -151,8 +143,6 @@ public class PortfolioRepository {
                 String portfolioId = portfolio.getPortfolioId();
                 Map<String, Integer> sectorCounts = getSectorsByPortfolioId(portfolioId);
 
-                System.out.println(sectorCounts);
-
                 if (sectorCounts != null) {
                     // Update allSectorCounts with sectorCounts
                     for (Map.Entry<String, Integer> entry : sectorCounts.entrySet()) {
@@ -167,6 +157,78 @@ public class PortfolioRepository {
         return null;
     }
 
+    // to display on Map (overview)
+    public Map<String, Integer> getCountriesByUserId(String userId) throws ExecutionException, InterruptedException {
+
+        List<Portfolio> allPortfolios = getAllPortfolios(userId);
+
+        Map<String, Integer> allCountriesCounts = new HashMap<>();
+        if (allPortfolios != null) {
+
+            for (Portfolio portfolio : allPortfolios) {
+                Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
+
+                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
+                    int count = 0;
+                    String stockTicker = entry.getKey();
+                    List<PortfolioStock> portfolioStockList = entry.getValue(); // Get the list of PortfolioStock objects
+
+                    for(PortfolioStock portfolioStock: portfolioStockList){
+                        int quantity = portfolioStock.getQuantity();
+                        count += quantity;
+                    }
+                    System.out.println(stockTicker);
+                    ApiFuture<DocumentSnapshot> future = firestore.collection("stock").document(stockTicker).get();
+                    DocumentSnapshot document = future.get();
+
+                    Stock stock = null;
+                    if (document.exists()) {
+                        stock = document.toObject(Stock.class);
+                        String country = stock.getCountry();
+
+                        if (allCountriesCounts.containsKey(country)) {
+                            int currentCount = allCountriesCounts.get(country);
+                            allCountriesCounts.put(country, currentCount + count);
+                        } else {
+                            allCountriesCounts.put(country, count);
+                        }
+
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            return allCountriesCounts;
+        }
+        return null;
+    }
+
+    //get total portfolio value to display on overview
+    public int getTotalPortfolioValue(String userId) throws ExecutionException, InterruptedException {
+
+        List<Portfolio> allPortfolios = getAllPortfolios(userId);
+
+        int portfolioValue = 0;
+        if (allPortfolios != null) {
+
+            for (Portfolio portfolio : allPortfolios) {
+                Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
+
+                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
+                    List<PortfolioStock> portfolioStockList = entry.getValue();
+
+                    for(PortfolioStock portfolioStock: portfolioStockList){
+                        int quantity = portfolioStock.getQuantity();
+                        float boughtPrice = portfolioStock.getStockBoughtPrice();
+                        portfolioValue += (boughtPrice * quantity);
+                    }
+
+                }
+            }
+            return portfolioValue;
+        }
+        return portfolioValue;
+    }
 
 
 }

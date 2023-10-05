@@ -3,8 +3,6 @@ package com.trading.application.portfolio.entity;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +17,7 @@ public class Portfolio {
     private String dateCreated;
     private int capital;
     private boolean isPublic = true;
+    private Map<String,Integer> countryExposure;
 
     private Map<String, List<PortfolioStock>> portStock;
 
@@ -102,5 +101,13 @@ public class Portfolio {
 
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
+    }
+
+    public Map<String, Integer> getCountryExposure() {
+        return countryExposure;
+    }
+
+    public void setCountryExposure(Map<String, Integer> countryExposure) {
+        this.countryExposure = countryExposure;
     }
 }

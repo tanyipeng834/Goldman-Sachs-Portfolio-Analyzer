@@ -2,7 +2,6 @@ package com.trading.application.portfolio.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.entity.PortfolioRequest;
 import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.service.PortfolioService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -28,18 +26,7 @@ public class PortfolioController {
     public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio, HttpServletRequest request) {
         return portfolioService.createPortfolio(portfolio, request);
     }
-
-    @PostMapping
-    @RequestMapping("/add")
-    public String addStock(@RequestBody JsonNode portfolioStockData) throws ExecutionException,InterruptedException{
-
-       String portfolioId = portfolioStockData.get("portfolioId").asText();
-       String portfolioStockId = portfolioStockData.get("portfolioStockId").asText();
-        System.out.println(portfolioId);
-        System.out.println(portfolioStockId);
-        return portfolioService.addStock(portfolioStockId,portfolioId);
-    }
-
+    
     // get a portfolio
     @GetMapping
     @RequestMapping("/{portfolioId}")
@@ -54,23 +41,9 @@ public class PortfolioController {
         return portfolioService.deletePortfolio(portfolioId);
     }
 
-    // update portfolio name
-    @PostMapping
-    @RequestMapping("/updatename")
-    public String updatePortfolioName(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolioName(portfolio.getPortfolioId(), portfolio.getPortfolioName());
-    }
-
-    // update portfolio description
-    @PostMapping
-    @RequestMapping("/updatedescription")
-    public String updatePortfolioDescription(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolioDescription(portfolio.getPortfolioId(), portfolio.getPortfolioDescription());
-    }
-
     @PutMapping
     @RequestMapping("/updateportfolio/")
-    public String updatePortfolio(@RequestBody PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> updatePortfolio(@RequestBody PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
         return portfolioService.updatePortfolio(portfolioStocksRequest, request);
     }
 
@@ -104,5 +77,21 @@ public class PortfolioController {
         }
     }
 
+    @GetMapping
+    @RequestMapping("/getcountriesbyuser/{userId}")
+    public ResponseEntity<Map<String, Integer>> getCountriesByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        Map<String, Integer> allCountryCounts = portfolioService.getCountriesByUserId(userId);
+        if (allCountryCounts != null) {
+            return new ResponseEntity<>(allCountryCounts, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    @RequestMapping("/gettotalportfoliovalue/{userId}")
+    public Integer getTotalPortfolioValue(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        return portfolioService.getTotalPortfolioValue(userId);
+    }
 
 }
