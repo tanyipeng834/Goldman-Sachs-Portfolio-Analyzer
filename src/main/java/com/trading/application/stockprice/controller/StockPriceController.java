@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/stockprice")
@@ -79,6 +80,44 @@ public class StockPriceController {
     public StockPrices getMonthlyStockPrice(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockPriceService.getStockMonthlyPrice(stockTicker);
 
+    }
+
+    @GetMapping
+    @RequestMapping(("/quarterlyprice/{stockTicker}/{year}/{quarter}"))
+    @Cacheable(key="#stockTicker")
+    public float getQuarterlyStockPrice(
+            @PathVariable String stockTicker,
+            @PathVariable int year,
+            @PathVariable int quarter
+    ) throws ExecutionException, InterruptedException, JsonProcessingException {
+        // Calculate the start and end dates based on the year and quarter
+        LocalDate startDate;
+        LocalDate endDate;
+
+        // Assuming quarters are defined as Q1=1, Q2=2, Q3=3, Q4=4
+        switch (quarter) {
+            case 1:
+                startDate = LocalDate.of(year, 1, 1);
+                endDate = LocalDate.of(year, 3, 31);
+                break;
+            case 2:
+                startDate = LocalDate.of(year, 4, 1);
+                endDate = LocalDate.of(year, 6, 30);
+                break;
+            case 3:
+                startDate = LocalDate.of(year, 7, 1);
+                endDate = LocalDate.of(year, 9, 30);
+                break;
+            case 4:
+                startDate = LocalDate.of(year, 10, 1);
+                endDate = LocalDate.of(year, 12, 31);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid quarter: " + quarter);
+        }
+
+        // Call your service method to fetch quarterly stock price data
+        return stockPriceService.getStockQuarterlyPrice(stockTicker, startDate, endDate);
     }
 
 

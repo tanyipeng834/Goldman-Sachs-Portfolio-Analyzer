@@ -219,6 +219,10 @@ public class StockPriceService {
 
     }
 
+    public float getStockQuarterlyPrice(){
+
+    }
+
 
     private String parseApiResponse(String stockTicker, String priceType) {
         String jsonString =this.webClient.get()
