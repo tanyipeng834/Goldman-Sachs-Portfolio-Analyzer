@@ -85,7 +85,7 @@ public class StockPriceController {
 
     @GetMapping
     @RequestMapping("/quarterlyreturn/{stockTicker}/{year}/{quarter}")
-    @Cacheable(key="#stockTicker", cacheNames = "quaterlyReturns")
+    @Cacheable(key = "{#stockTicker, #year, #quarter}", cacheNames = "quaterlyReturns")
     public float getQuarterlyStockPrice(
             @PathVariable String stockTicker,
             @PathVariable int year,
