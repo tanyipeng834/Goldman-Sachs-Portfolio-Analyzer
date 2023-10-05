@@ -17,8 +17,6 @@ public class AccessLogRepository {
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     private ApiFuture<WriteResult> writeResultApiFuture;
 
-    private ArrayList<AccessLog> accessLogs = new ArrayList<>();
-
     public String addLog(AccessLog accessLog) throws ExecutionException, InterruptedException {
 
         ApiFuture<DocumentReference> addedDocRef = firestore.collection("logs").document(accessLog.getUserId()).collection("logs").add(accessLog);
@@ -27,6 +25,8 @@ public class AccessLogRepository {
     }
 
     public ArrayList<AccessLog> getLogs(String userId) throws ExecutionException,  InterruptedException {
+
+        ArrayList<AccessLog> accessLogs = new ArrayList<>();
 
         ApiFuture<QuerySnapshot> future = firestore.collection("logs").document(userId).collection("logs").get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();

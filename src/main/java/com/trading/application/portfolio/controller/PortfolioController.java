@@ -26,7 +26,7 @@ public class PortfolioController {
     public ResponseEntity<String> createPortfolio(@RequestBody Portfolio portfolio, HttpServletRequest request) {
         return portfolioService.createPortfolio(portfolio, request);
     }
-    
+
     // get a portfolio
     @GetMapping
     @RequestMapping("/{portfolioId}")

@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/accesslog")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AccessLogController {
 
     @Autowired
