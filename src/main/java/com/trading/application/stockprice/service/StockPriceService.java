@@ -16,12 +16,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class StockPriceService {
@@ -222,10 +225,55 @@ public class StockPriceService {
     }
 
 
-    public float getStockQuarterlyPrice(){
+
+
+    public float getStockQuarterlyReturn(String stockTicker, LocalDate startDate, LocalDate endDate)
+            throws IOException, ExecutionException, InterruptedException {
+        String key = "monthlyStockPrice::" + stockTicker;
+        Object value = template.opsForValue().get(key);
+
+
+        if (value == null) {
+            // If data is not available in the cache, fetch it and store it in the cache
+            StockPrices stockPrices = getStockMonthlyPrice(stockTicker);
+
+            // Store the data in the cache
+            template.opsForValue().set(key, stockPrices);
+            List<StockPrice> stockPriceList = stockPrices.getStockPriceList();
+            return calculateQuarterlyReturn(stockPriceList, startDate, endDate);
+        }
+        else{
+
+            StockPrices  stockPrices = (StockPrices) value;
+            List<StockPrice> stockPriceList= stockPrices.getStockPriceList();
+            return calculateQuarterlyReturn(stockPriceList, startDate, endDate);
+
+        }
+
+        // Calculate the quarterly return based on the start and end date
 
     }
 
+    private float calculateQuarterlyReturn(List<StockPrice> monthlyStockPrices, LocalDate startDate, LocalDate endDate) {
+        // Filter the monthly stock prices for the specified date range
+        List<StockPrice> filteredPrices = monthlyStockPrices.stream()
+                .filter(price -> {
+                    LocalDate stockDate = convertDateToLocalDate(price.getStockDate());
+                    return !stockDate.isBefore(startDate) && !stockDate.isAfter(endDate);
+                })
+                .collect(Collectors.toList());
+
+        // Calculate quarterly return using the filtered data
+        if (filteredPrices.size() == 0) {
+            // Handle the case where there is no data for the specified date range
+            return 0.0f; // You can change this to an appropriate default value or handle it as needed
+        }
+
+        float quarterlyReturn = ((filteredPrices.get(filteredPrices.size() - 1).getClosePrice() -
+                filteredPrices.get(0).getClosePrice()) / filteredPrices.get(0).getClosePrice()) * 100;
+
+        return quarterlyReturn;
+    }
 
 
     private String parseApiResponse(String stockTicker, String priceType) {
@@ -245,6 +293,14 @@ public class StockPriceService {
 
 
 
+
+
+
+    }
+    private LocalDate convertDateToLocalDate(Date date) {
+        return Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
 

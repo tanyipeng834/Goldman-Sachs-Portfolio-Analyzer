@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import java.time.LocalDate;
@@ -83,14 +84,13 @@ public class StockPriceController {
     }
 
     @GetMapping
-<<<<<<< HEAD
-    @RequestMapping(("/quarterlyprice/{stockTicker}/{year}/{quarter}"))
-    @Cacheable(key="#stockTicker")
+    @RequestMapping("/quarterlyreturn/{stockTicker}/{year}/{quarter}")
+    @Cacheable(key="#stockTicker", cacheNames = "quaterlyReturns")
     public float getQuarterlyStockPrice(
             @PathVariable String stockTicker,
             @PathVariable int year,
             @PathVariable int quarter
-    ) throws ExecutionException, InterruptedException, JsonProcessingException {
+    ) throws ExecutionException, InterruptedException, IOException {
         // Calculate the start and end dates based on the year and quarter
         LocalDate startDate;
         LocalDate endDate;
@@ -118,7 +118,8 @@ public class StockPriceController {
         }
 
         // Call your service method to fetch quarterly stock price data
-        return stockPriceService.getStockQuarterlyPrice(stockTicker, startDate, endDate);
+        return stockPriceService.getStockQuarterlyReturn(stockTicker, startDate, endDate);
+    }
 
     @RequestMapping("/getmonthlypricebydate/{stockTicker}")
     public Object getMonthlyPriceFromDate(@PathVariable String stockTicker, @RequestParam String month, @RequestParam String year) throws ExecutionException, InterruptedException, JsonProcessingException {
