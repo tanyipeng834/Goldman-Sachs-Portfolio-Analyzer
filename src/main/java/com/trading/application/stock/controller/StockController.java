@@ -1,11 +1,13 @@
 package com.trading.application.stock.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @EnableCaching
@@ -31,11 +33,11 @@ public class StockController {
 //        return stockService.(stockTicker);
 //    }
 
-//    @GetMapping
-//    @RequestMapping("/{stockTicker}/companyOverview")
-//    public Stock getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-//        return stockService.getStockOverview(stockTicker);
-//    }
+    @GetMapping
+    @RequestMapping("/{stockTicker}/companyOverview")
+    public Stock getStockOverviewById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return stockService.getStockOverview(stockTicker);
+    }
 
 
 }
