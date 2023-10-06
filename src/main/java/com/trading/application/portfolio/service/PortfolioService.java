@@ -61,9 +61,11 @@ public class PortfolioService {
         try {
             String portfolioName = portfolioStocksRequest.getPortfolioName();
             String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
+            int capital = portfolioStocksRequest.getCapital();
             Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAdd();
             Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
             List<String> stocksToDelete = portfolioStocksRequest.getDelete();
+            Map<String, Map<String, PortfolioStock>> stocksDelete = portfolioStocksRequest.getNewdelete();
 
             if(portfolioName != null){
                 portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioName", portfolioName);
@@ -71,6 +73,10 @@ public class PortfolioService {
 
             if(portfolioDesc != null){
                 portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioDescription", portfolioDesc);
+            }
+
+            if(capital != 0){
+                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "capital", capital);
             }
 
             if(stocksToAdd != null) {

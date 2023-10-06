@@ -95,7 +95,7 @@ public class Portfolio {
         this.capital = capital;
     }
 
-    public boolean isPublic() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 

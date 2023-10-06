@@ -19,7 +19,11 @@ public class PortfolioStocksRequest {
     private Map<String, Map<String, PortfolioStock>> update;
     private List<String> delete;
 
+    private Map<String, Map<String, PortfolioStock>> newdelete;
+
     private boolean isPublic;
+
+    private int capital;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -83,5 +87,25 @@ public class PortfolioStocksRequest {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    public Map<String, Map<String, PortfolioStock>> getNewdelete() {
+        return newdelete;
+    }
+
+    public void setNewdelete(Map<String, Map<String, PortfolioStock>> newdelete) {
+        this.newdelete = newdelete;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public int getCapital() {
+        return capital;
+    }
+
+    public void setCapital(int capital) {
+        this.capital = capital;
     }
 }
