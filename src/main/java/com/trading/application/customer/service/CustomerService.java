@@ -45,4 +45,8 @@ public class CustomerService {
         return customerRepo.deleteCustomerAccount(id);
     }
 
+    public float getCustomerCapital(String id) throws ExecutionException, InterruptedException {
+        return customerRepo.getTotalCapitalAvailable(id);
+    }
+
 }
