@@ -21,16 +21,14 @@ public class PortfolioStockService {
         return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock, request);
     }
 
-     // NEW
-     // delete stock from portStock
-    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker, request);
-    }
-
-
     //NEW
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         return portfolioStockRepository.updateStock( indexToUpdate, portfolioId, userId, stockTicker, portfolioStock, request);
+    }
+
+    // delete stock from portStock
+    public String deleteStock(int indexToDelete, String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.deleteStock(indexToDelete, portfolioId, userId, stockTicker, request);
     }
 
 }

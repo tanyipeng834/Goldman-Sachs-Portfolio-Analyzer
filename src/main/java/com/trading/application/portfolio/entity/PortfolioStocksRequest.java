@@ -14,12 +14,11 @@ public class PortfolioStocksRequest {
     private String portfolioName;
 
     private String portfolioDescription;
-
-    private Map<String, PortfolioStock> add;
+    
+    private Map<String, List<PortfolioStock>> add;
     private Map<String, Map<String, PortfolioStock>> update;
-    private List<String> delete;
 
-    private Map<String, Map<String, PortfolioStock>> newdelete;
+    private Map<String, List<Integer>> delete;
 
     private boolean isPublic;
 
@@ -57,11 +56,11 @@ public class PortfolioStocksRequest {
         this.portfolioDescription = portfolioDescription;
     }
 
-    public Map<String, PortfolioStock> getAdd() {
+    public Map<String, List<PortfolioStock>> getAdd() {
         return add;
     }
 
-    public void setAdd(Map<String, PortfolioStock> add) {
+    public void setAdd(Map<String, List<PortfolioStock>> add) {
         this.add = add;
     }
 
@@ -73,14 +72,6 @@ public class PortfolioStocksRequest {
         this.update = update;
     }
 
-    public List<String> getDelete() {
-        return delete;
-    }
-
-    public void setDelete(List<String> delete) {
-        this.delete = delete;
-    }
-
     public boolean getIsPublic() {
         return isPublic;
     }
@@ -89,12 +80,12 @@ public class PortfolioStocksRequest {
         isPublic = aPublic;
     }
 
-    public Map<String, Map<String, PortfolioStock>> getNewdelete() {
-        return newdelete;
+    public Map<String, List<Integer>> getDelete() {
+        return delete;
     }
 
-    public void setNewdelete(Map<String, Map<String, PortfolioStock>> newdelete) {
-        this.newdelete = newdelete;
+    public void setDelete(Map<String, List<Integer>> delete) {
+        this.delete = delete;
     }
 
     public boolean isPublic() {

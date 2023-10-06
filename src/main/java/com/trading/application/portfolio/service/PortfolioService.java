@@ -62,10 +62,9 @@ public class PortfolioService {
             String portfolioName = portfolioStocksRequest.getPortfolioName();
             String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
             int capital = portfolioStocksRequest.getCapital();
-            Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAdd();
+            Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAdd();
             Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
-            List<String> stocksToDelete = portfolioStocksRequest.getDelete();
-            Map<String, Map<String, PortfolioStock>> stocksDelete = portfolioStocksRequest.getNewdelete();
+            Map<String, List<Integer>> stocksToDelete = portfolioStocksRequest.getDelete();
 
             if(portfolioName != null){
                 portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioName", portfolioName);
@@ -80,16 +79,25 @@ public class PortfolioService {
             }
 
             if(stocksToAdd != null) {
-                for (Map.Entry<String, PortfolioStock> entry : stocksToAdd.entrySet()) {
-                        PortfolioStock portfolioStock = entry.getValue();
-                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), portfolioStock, request);
+                for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
+                    List<PortfolioStock> value = entry.getValue();
+                    for (PortfolioStock stock : value) {
+                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
+                    }
                 }
             }
 
             if(stocksToDelete != null) {
-                for (String stockTicker: stocksToDelete) {
-                    portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stockTicker, request);
+                for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
+                    List<Integer> value = entry.getValue();
+                    for (Integer number : value) {
+                        portfolioStockService.deleteStock(number, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), request);
+                    }
                 }
+            }
+
+            if(stocksToUpdate != null){
+                System.out.println(stocksToDelete);
             }
 
             if(stocksToUpdate != null) {
