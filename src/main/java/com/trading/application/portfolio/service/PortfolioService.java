@@ -86,7 +86,7 @@ public class PortfolioService {
                     }
                 }
             }
-            
+
             if(stocksToUpdate != null){
                 System.out.println(stocksToDelete);
             }
