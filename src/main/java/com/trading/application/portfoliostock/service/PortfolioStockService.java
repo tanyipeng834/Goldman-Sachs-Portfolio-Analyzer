@@ -28,10 +28,6 @@ public class PortfolioStockService {
     }
 
     // delete stock from portStock
-//    public String deleteStock(int indexToDelete, String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
-//        return portfolioStockRepository.deleteStock(indexToDelete, portfolioId, userId, stockTicker, request);
-//    }
-
     public String deleteStock(String portfolioId, String userId, Map<String, List<Integer>> stocksToDelete, HttpServletRequest request) throws ExecutionException, InterruptedException {
         return portfolioStockRepository.deleteStock(portfolioId, userId, stocksToDelete, request);
     }

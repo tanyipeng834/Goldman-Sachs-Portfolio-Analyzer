@@ -56,75 +56,6 @@ public class PortfolioService {
         }
     }
 
-//    public ResponseEntity<String> updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
-//
-//        try {
-//            String portfolioName = portfolioStocksRequest.getPortfolioName();
-//            String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
-//            int capital = portfolioStocksRequest.getCapital();
-//            Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAdd();
-//            Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
-//            Map<String, List<Integer>> stocksToDelete = portfolioStocksRequest.getDelete();
-//
-//            if(portfolioName != null){
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioName", portfolioName);
-//            }
-//
-//            if(portfolioDesc != null){
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioDescription", portfolioDesc);
-//            }
-//
-//            if(capital != 0){
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "capital", capital);
-//            }
-//
-//            if(stocksToAdd != null) {
-//                for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
-//                    List<PortfolioStock> value = entry.getValue();
-//                    for (PortfolioStock stock : value) {
-//                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
-//                    }
-//                }
-//            }
-//
-//            if(stocksToDelete != null) {
-//                for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
-//                    List<Integer> value = entry.getValue();
-//                    for (Integer number : value) {
-//                        System.out.println(number);
-//                        portfolioStockService.deleteStock(number, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), request);
-//                    }
-//                }
-//            }
-//
-//            if(stocksToUpdate != null){
-//                System.out.println(stocksToDelete);
-//            }
-//
-//            if(stocksToUpdate != null) {
-//                for (Map.Entry<String, Map<String, PortfolioStock>> entry : stocksToUpdate.entrySet()) {
-//                    String stockTicker = entry.getKey();
-//
-//                    for (Map.Entry<String, PortfolioStock> innerEntry : entry.getValue().entrySet()) {
-//                        String indexAsString = innerEntry.getKey();
-//                        int index = Integer.parseInt(indexAsString);
-//
-//                        PortfolioStock stock = innerEntry.getValue();
-//                        portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
-//                    }
-//                }
-//            }
-//
-//            portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());
-//
-//            return ResponseEntity.ok("Portfolio updated successfully.");
-//
-//        } catch (InterruptedException | ExecutionException | FirestoreException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
-//        }
-//
-//    }
-
     public ResponseEntity<String> updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         try {
@@ -177,13 +108,6 @@ public class PortfolioService {
             }
 
             if(stocksToDelete != null) {
-//                for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
-//                    List<Integer> value = entry.getValue();
-//                    for (Integer number : value) {
-//                        System.out.println(number);
-//                        portfolioStockService.deleteStock(number, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), request);
-//                    }
-//                }
                 portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stocksToDelete, request);
             }
 

@@ -93,7 +93,7 @@ public class PortfolioStockRepository {
                 ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                 updateFuture.get();
 
-                AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString(), true);
+                AccessLog accessLog = new AccessLog(userId,"ADD", request.getRemoteAddr(), "Added x" + portfolioStock.getQuantity() + " " + stockTicker + " to Portfolio ID:" + portfolioId, LocalDateTime.now().toString(), true);
 
                 Gson gson = new Gson();
                 String logJson = gson.toJson(accessLog);
@@ -110,57 +110,7 @@ public class PortfolioStockRepository {
             return "Document does not exist";
         }
     }
-
-    // NEW
-    // delete stock from portstock in portfolio
-//    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
-//
-//        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
-//
-//        ApiFuture<DocumentSnapshot> future = docRef.get();
-//        DocumentSnapshot document = future.get();
-//
-//        if (document.exists()) {
-//
-//            Map<String, Object> data = document.getData();
-//
-//            if (data != null) {
-//                Map<String, Object> portStockMap;
-//
-//                if (data.containsKey("portStock")) {
-//                    portStockMap = (Map<String, Object>) data.get("portStock");
-//                } else {
-//                    // If "portStock" doesn't exist, create a new map
-//                    portStockMap = new HashMap<>();
-//                }
-//
-//                if (portStockMap.containsKey(stockTicker)) {
-//                    portStockMap.remove(stockTicker);
-//
-//                    ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
-//                    updateFuture.get();
-//
-//                    AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted " + stockTicker + " from " + portfolioId, LocalDateTime.now().toString(), true);
-//                    ObjectMapper objectMapper = new ObjectMapper();
-//
-//                    Gson gson = new Gson();
-//                    String logJson = gson.toJson(accessLog);
-//
-//                    template.convertAndSend(topic.getTopic(), logJson);
-//                    //accessLogService.addLog(accessLog);
-//
-//                    return "Deleted " + stockTicker + " from the portfolio";
-//                } else {
-//                    return stockTicker + " does not exist in the portfolio";
-//                }
-//            } else {
-//                return "Document data is null";
-//            }
-//        } else {
-//            return "Document does not exist";
-//        }
-//    }
-
+    
     // NEW
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
@@ -220,7 +170,7 @@ public class PortfolioStockRepository {
                             ApiFuture<WriteResult> updateFuture = docRef.update("portStock", portStockMap);
                             updateFuture.get();
 
-                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " to " + portfolioId, LocalDateTime.now().toString(), true);
+                            AccessLog accessLog = new AccessLog(userId, "UPDATE", request.getRemoteAddr(), "Updated x" + portfolioStock.getQuantity() + " " + stockTicker + " on Portfolio ID:" + portfolioId, LocalDateTime.now().toString(), true);
                             Gson gson = new Gson();
                             String logJson = gson.toJson(accessLog);
                             logger.info(logJson);
@@ -248,50 +198,6 @@ public class PortfolioStockRepository {
         }
     }
 
-//    public String deleteStock(int indexToDelete, String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
-//        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
-//        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
-//        DocumentSnapshot document = future.get();
-//
-//        if (document.exists()) {
-//            Map<String, Object> data = document.getData();
-//
-//            if (data != null && data.containsKey("portStock")) {
-//                Map<String, Object> portStock = (Map<String, Object>) data.get("portStock");
-//
-//                if (portStock.containsKey(stockTicker) && portStock.get(stockTicker) instanceof ArrayList) {
-//                    ArrayList<Map<String, Object>> stockArray = (ArrayList<Map<String, Object>>) portStock.get(stockTicker);
-//
-//                    if (indexToDelete >= 0 && indexToDelete < stockArray.size()) {
-//                        stockArray.remove(indexToDelete);
-//                        System.out.println(stockArray);
-//
-//                        if(stockArray.isEmpty()){
-//                            portStock.remove(stockTicker);
-//                        }
-//
-//                        // Update the Firestore document with the modified portStock object
-//
-//                        data.put("portStock", portStock);
-//                        System.out.println(data);
-//                        ApiFuture<WriteResult> updateFuture = docRef.set(data, SetOptions.merge());
-//                        updateFuture.get();
-//
-//                        return "Element at index " + indexToDelete + " in " + stockTicker + " array deleted successfully.";
-//                    } else {
-//                        return "Invalid index: " + indexToDelete;
-//                    }
-//                } else {
-//                    return  stockTicker + " field is missing or not an array.";
-//                }
-//            } else {
-//                return "portStock field is missing.";
-//            }
-//        } else {
-//            return "Document does not exist.";
-//        }
-//    }
-
     public String deleteStock(String portfolioId, String userId, Map<String, List<Integer>> stocksToDelete, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -302,8 +208,6 @@ public class PortfolioStockRepository {
 
             if (data != null && data.containsKey("portStock")) {
                 Map<String, Object> portStock = (Map<String, Object>) data.get("portStock");
-
-
 
                 for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
 
@@ -316,6 +220,8 @@ public class PortfolioStockRepository {
                             if (value.get(i) < stockArray.size()) {
 
                                 int index = value.get(i);
+                                String quantity = stockArray.get(index).get("quantity") + "";
+                                String dateBought = stockArray.get(index).get("dateBought") + "";
                                 stockArray.remove(index);
 
                                 if(stockArray.isEmpty()){
@@ -326,6 +232,14 @@ public class PortfolioStockRepository {
 
                                 ApiFuture<WriteResult> updateFuture = docRef.set(data);
                                 updateFuture.get();
+
+                                AccessLog accessLog = new AccessLog(userId,"DELETE", request.getRemoteAddr(), "Deleted x" + quantity + " " + entry.getKey() + " from Portfolio ID: " + portfolioId, LocalDateTime.now().toString(), true);
+                                ObjectMapper objectMapper = new ObjectMapper();
+
+                                Gson gson = new Gson();
+                                String logJson = gson.toJson(accessLog);
+
+                                template.convertAndSend(topic.getTopic(), logJson);
                             }
                             else {
                                 System.out.println("index out of bounds!");
