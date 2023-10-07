@@ -156,16 +156,7 @@ public class PortfolioService {
                 }
             }
 
-            if(stocksToDelete != null) {
-//                for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
-//                    List<Integer> value = entry.getValue();
-//                    for (Integer number : value) {
-//                        System.out.println(number);
-//                        portfolioStockService.deleteStock(number, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), request);
-//                    }
-//                }
-                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stocksToDelete, request);
-            }
+
 
             if(stocksToUpdate != null){
                 System.out.println(stocksToDelete);
@@ -183,6 +174,17 @@ public class PortfolioService {
                         portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
                     }
                 }
+            }
+
+            if(stocksToDelete != null) {
+//                for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
+//                    List<Integer> value = entry.getValue();
+//                    for (Integer number : value) {
+//                        System.out.println(number);
+//                        portfolioStockService.deleteStock(number, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), request);
+//                    }
+//                }
+                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stocksToDelete, request);
             }
 
             portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());
