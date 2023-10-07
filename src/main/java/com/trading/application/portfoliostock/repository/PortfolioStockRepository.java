@@ -248,7 +248,51 @@ public class PortfolioStockRepository {
         }
     }
 
-    public String deleteStock(int indexToDelete, String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
+//    public String deleteStock(int indexToDelete, String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
+//        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+//        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+//        DocumentSnapshot document = future.get();
+//
+//        if (document.exists()) {
+//            Map<String, Object> data = document.getData();
+//
+//            if (data != null && data.containsKey("portStock")) {
+//                Map<String, Object> portStock = (Map<String, Object>) data.get("portStock");
+//
+//                if (portStock.containsKey(stockTicker) && portStock.get(stockTicker) instanceof ArrayList) {
+//                    ArrayList<Map<String, Object>> stockArray = (ArrayList<Map<String, Object>>) portStock.get(stockTicker);
+//
+//                    if (indexToDelete >= 0 && indexToDelete < stockArray.size()) {
+//                        stockArray.remove(indexToDelete);
+//                        System.out.println(stockArray);
+//
+//                        if(stockArray.isEmpty()){
+//                            portStock.remove(stockTicker);
+//                        }
+//
+//                        // Update the Firestore document with the modified portStock object
+//
+//                        data.put("portStock", portStock);
+//                        System.out.println(data);
+//                        ApiFuture<WriteResult> updateFuture = docRef.set(data, SetOptions.merge());
+//                        updateFuture.get();
+//
+//                        return "Element at index " + indexToDelete + " in " + stockTicker + " array deleted successfully.";
+//                    } else {
+//                        return "Invalid index: " + indexToDelete;
+//                    }
+//                } else {
+//                    return  stockTicker + " field is missing or not an array.";
+//                }
+//            } else {
+//                return "portStock field is missing.";
+//            }
+//        } else {
+//            return "Document does not exist.";
+//        }
+//    }
+
+    public String deleteStock(String portfolioId, String userId, Map<String, List<Integer>> stocksToDelete, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
         DocumentSnapshot document = future.get();
@@ -259,30 +303,45 @@ public class PortfolioStockRepository {
             if (data != null && data.containsKey("portStock")) {
                 Map<String, Object> portStock = (Map<String, Object>) data.get("portStock");
 
-                if (portStock.containsKey(stockTicker) && portStock.get(stockTicker) instanceof ArrayList) {
-                    ArrayList<Map<String, Object>> stockArray = (ArrayList<Map<String, Object>>) portStock.get(stockTicker);
 
-                    if (indexToDelete >= 0 && indexToDelete < stockArray.size()) {
-                        stockArray.remove(indexToDelete);
 
-                        // Update the Firestore document with the modified portStock object
-                        data.put("portStock", portStock);
-                        ApiFuture<WriteResult> updateFuture = docRef.set(data, SetOptions.merge());
-                        updateFuture.get();
+                for (Map.Entry<String, List<Integer>> entry : stocksToDelete.entrySet()) {
 
-                        return "Element at index " + indexToDelete + " in " + stockTicker + " array deleted successfully.";
-                    } else {
-                        return "Invalid index: " + indexToDelete;
+                    if (portStock.containsKey(entry.getKey()) && portStock.get(entry.getKey()) instanceof ArrayList) {
+
+                        ArrayList<Map<String, Object>> stockArray = (ArrayList<Map<String, Object>>) portStock.get(entry.getKey());
+
+                        List<Integer> value = entry.getValue();
+                        for(int i = value.size()-1; i >= 0; i--){
+                            if (value.get(i) < stockArray.size()) {
+
+                                int index = value.get(i);
+                                stockArray.remove(index);
+
+                                if(stockArray.isEmpty()){
+                                    portStock.remove(entry.getKey());
+                                }
+
+                                data.put("portStock", portStock);
+
+                                ApiFuture<WriteResult> updateFuture = docRef.set(data);
+                                updateFuture.get();
+                            }
+                            else {
+                                System.out.println("index out of bounds!");
+                            }
+                        }
+
                     }
-                } else {
-                    return  stockTicker + " field is missing or not an array.";
                 }
+
             } else {
                 return "portStock field is missing.";
             }
         } else {
             return "Document does not exist.";
         }
+        return "";
     }
 
 }

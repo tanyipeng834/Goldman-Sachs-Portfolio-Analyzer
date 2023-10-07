@@ -14,7 +14,7 @@ public class PortfolioStocksRequest {
     private String portfolioName;
 
     private String portfolioDescription;
-    
+
     private Map<String, List<PortfolioStock>> add;
     private Map<String, Map<String, PortfolioStock>> update;
 
