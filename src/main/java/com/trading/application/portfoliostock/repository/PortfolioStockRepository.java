@@ -110,7 +110,7 @@ public class PortfolioStockRepository {
             return "Document does not exist";
         }
     }
-    
+
     // NEW
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
