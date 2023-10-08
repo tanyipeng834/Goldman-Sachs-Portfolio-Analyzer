@@ -72,7 +72,8 @@ public class PortfolioRepository {
         Portfolio portfolio = null;
         if(document.exists()){
             portfolio = document.toObject(Portfolio.class);
-            portfolio.setIsPublic(document.getBoolean("public"));
+//            portfolio.setIsPublic(document.getBoolean("public"));
+            portfolio.setPublic(document.getBoolean("public"));
             return portfolio;
         }
         else
