@@ -76,4 +76,29 @@ public class CustomerRepository {
         }
     }
 
-}
+    public float getTotalCapitalAvailable(String documentId) throws InterruptedException, ExecutionException {
+        DocumentReference docRef = getReferenceById(documentId);
+        try {
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+
+            if (document.exists()) {
+                Long totalCapital = document.getLong("totalCapitalAvailable");
+
+                if (totalCapital != null) {
+                    return totalCapital.intValue();
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+    }
+
+

@@ -61,9 +61,10 @@ public class PortfolioService {
         try {
             String portfolioName = portfolioStocksRequest.getPortfolioName();
             String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
-            Map<String, PortfolioStock> stocksToAdd = portfolioStocksRequest.getAdd();
+            int capital = portfolioStocksRequest.getCapital();
+            Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAdd();
             Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
-            List<String> stocksToDelete = portfolioStocksRequest.getDelete();
+            Map<String, List<Integer>> stocksToDelete = portfolioStocksRequest.getDelete();
 
             if(portfolioName != null){
                 portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioName", portfolioName);
@@ -73,17 +74,21 @@ public class PortfolioService {
                 portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioDescription", portfolioDesc);
             }
 
+            if(capital != 0){
+                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "capital", capital);
+            }
+
             if(stocksToAdd != null) {
-                for (Map.Entry<String, PortfolioStock> entry : stocksToAdd.entrySet()) {
-                        PortfolioStock portfolioStock = entry.getValue();
-                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), portfolioStock, request);
+                for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
+                    List<PortfolioStock> value = entry.getValue();
+                    for (PortfolioStock stock : value) {
+                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
+                    }
                 }
             }
 
-            if(stocksToDelete != null) {
-                for (String stockTicker: stocksToDelete) {
-                    portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stockTicker, request);
-                }
+            if(stocksToUpdate != null){
+                System.out.println(stocksToDelete);
             }
 
             if(stocksToUpdate != null) {
@@ -98,6 +103,10 @@ public class PortfolioService {
                         portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
                     }
                 }
+            }
+
+            if(stocksToDelete != null) {
+                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stocksToDelete, request);
             }
 
             portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());

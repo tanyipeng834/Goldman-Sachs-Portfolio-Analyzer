@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -21,16 +22,14 @@ public class PortfolioStockService {
         return portfolioStockRepository.addNewStock(portfolioId, userId, stockTicker, portfolioStock, request);
     }
 
-     // NEW
-     // delete stock from portStock
-    public String deleteStock(String portfolioId, String userId, String stockTicker, HttpServletRequest request) throws ExecutionException, InterruptedException {
-        return portfolioStockRepository.deleteStock(portfolioId, userId, stockTicker, request);
-    }
-
-
     //NEW
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         return portfolioStockRepository.updateStock( indexToUpdate, portfolioId, userId, stockTicker, portfolioStock, request);
+    }
+
+    // delete stock from portStock
+    public String deleteStock(String portfolioId, String userId, Map<String, List<Integer>> stocksToDelete, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        return portfolioStockRepository.deleteStock(portfolioId, userId, stocksToDelete, request);
     }
 
 }

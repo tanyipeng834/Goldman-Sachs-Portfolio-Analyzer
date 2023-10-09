@@ -96,7 +96,7 @@ public class StockPriceService {
     }
 
     // get balance sheet
-    public Object getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+    public JsonNode getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"BALANCE_SHEET");
         System.out.println("Invoked API");
@@ -112,7 +112,7 @@ public class StockPriceService {
     }
 
     // get income statement
-    public Object getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
+    public JsonNode getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
         System.out.println("Invoked API");

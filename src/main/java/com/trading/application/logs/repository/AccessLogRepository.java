@@ -28,7 +28,7 @@ public class AccessLogRepository {
 
         ArrayList<AccessLog> accessLogs = new ArrayList<>();
 
-        ApiFuture<QuerySnapshot> future = firestore.collection("logs").document(userId).collection("logs").get();
+        ApiFuture<QuerySnapshot> future = firestore.collection("logs").document(userId).collection("logs").orderBy("dateTime", Query.Direction.DESCENDING).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
             accessLogs.add(document.toObject(AccessLog.class));

@@ -16,6 +16,8 @@ public class Portfolio {
     private float unrealisedPnL;
     private String dateCreated;
     private int capital;
+//    private boolean isPublic = true;
+
     private boolean isPublic = true;
     private Map<String,Integer> countryExposure;
 
@@ -95,12 +97,21 @@ public class Portfolio {
         this.capital = capital;
     }
 
+//    public boolean getIsPublic() {
+//        return isPublic;
+//    }
+//
+//    public void setIsPublic(boolean isPublic) {
+//        this.isPublic = isPublic;
+//    }
+
+
     public boolean isPublic() {
         return isPublic;
     }
 
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public Map<String, Integer> getCountryExposure() {

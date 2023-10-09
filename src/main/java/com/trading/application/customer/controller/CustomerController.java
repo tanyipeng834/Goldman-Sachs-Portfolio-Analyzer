@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.concurrent.ExecutionException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/customer")
@@ -65,6 +65,12 @@ public class CustomerController {
     @RequestMapping("/deletecustomer/{id}")
     public String deleteCustomerAccount(@PathVariable String id) throws ExecutionException, InterruptedException {
         return customerService.deleteCustomerAccount(id);
+    }
+
+    @GetMapping
+    @RequestMapping("/getcapital/{userId}")
+    public float getCapital(@PathVariable String userId) throws ExecutionException, InterruptedException {
+        return customerService.getCustomerCapital(userId);
     }
 
 }
