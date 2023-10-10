@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.sound.sampled.Port;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -92,6 +95,12 @@ public class PortfolioController {
     @RequestMapping("/gettotalportfoliovalue/{userId}")
     public Integer getTotalPortfolioValue(@PathVariable String userId) throws ExecutionException, InterruptedException {
         return portfolioService.getTotalPortfolioValue(userId);
+    }
+
+    @GetMapping
+    @RequestMapping("/getpublicportfolios")
+    public ResponseEntity<ArrayList<Portfolio>> getAllPublicPortfolios() throws ExecutionException, InterruptedException {
+        return new ResponseEntity<>(portfolioService.getAllPublicPortfolios(), HttpStatus.OK);
     }
 
 }

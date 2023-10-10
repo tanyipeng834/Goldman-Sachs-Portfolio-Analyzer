@@ -8,6 +8,7 @@ import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
 import org.springframework.stereotype.Repository;
 
+import javax.sound.sampled.Port;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -230,6 +231,25 @@ public class PortfolioRepository {
             return portfolioValue;
         }
         return portfolioValue;
+    }
+
+    public ArrayList<Portfolio> getAllPublicPortfolios() throws InterruptedException, ExecutionException {
+
+        ArrayList<Portfolio> portfolios = new ArrayList<>();
+        Query query = firestore.collection("portfolio").whereEqualTo("public", true);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+        try {
+            QuerySnapshot documents = querySnapshot.get();
+
+            for (QueryDocumentSnapshot document : documents) {
+                portfolios.add(document.toObject(Portfolio.class));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return portfolios;
     }
 
 

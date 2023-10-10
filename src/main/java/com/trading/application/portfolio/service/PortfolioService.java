@@ -142,5 +142,9 @@ public class PortfolioService {
         return portfolioRepo.getTotalPortfolioValue(userId);
     }
 
+    public ArrayList<Portfolio> getAllPublicPortfolios() throws ExecutionException, InterruptedException {
+        return portfolioRepo.getAllPublicPortfolios();
+    }
+
 
 }

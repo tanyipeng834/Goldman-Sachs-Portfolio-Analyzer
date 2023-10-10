@@ -102,6 +102,7 @@ public class StockPriceService {
         System.out.println("Invoked API");
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
+            System.out.println("HERE " + rootNode);
             return rootNode;
 
         }
