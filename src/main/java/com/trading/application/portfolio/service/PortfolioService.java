@@ -108,10 +108,10 @@ public class PortfolioService {
             portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());
 
             // recalculate portfolio value
-//            if(stocksToUpdate!=null | stocksToAdd!=null | stocksToDelete!=null) {
-//                float newPortfolioValue = portfolioRepo.calculatePortfolioValue(portfolioStocksRequest.getPortfolioId());
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioValue", newPortfolioValue);
-//            }
+            if(stocksToUpdate!=null | stocksToAdd!=null | stocksToDelete!=null) {
+                float newPortfolioValue = portfolioRepo.calculatePortfolioValue(portfolioStocksRequest.getPortfolioId());
+                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioValue", newPortfolioValue);
+            }
 
             return ResponseEntity.ok("Portfolio updated successfully.");
 

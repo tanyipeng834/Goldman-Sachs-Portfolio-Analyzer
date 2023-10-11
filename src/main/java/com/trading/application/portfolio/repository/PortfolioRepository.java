@@ -29,7 +29,25 @@ public class PortfolioRepository {
 
         DocumentReference docReference = firestore.collection("portfolio").document();
         portfolio.setPortfolioId(docReference.getId());
+
+        Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
+
+        float portfolioValue = 0;
+        if (portfolioPortStocks != null) {
+            for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
+                List<PortfolioStock> portfolioStockList = entry.getValue();
+
+                for (PortfolioStock portfolioStock : portfolioStockList) {
+                    int quantity = portfolioStock.getQuantity();
+                    float boughtPrice = portfolioStock.getStockBoughtPrice();
+                    portfolioValue += (boughtPrice * quantity);
+                }
+            }
+        }
+
+        portfolio.setPortfolioValue(portfolioValue);
         writeResultApiFuture = docReference.set(portfolio);
+
         return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
