@@ -87,10 +87,6 @@ public class PortfolioService {
                 }
             }
 
-            if(stocksToUpdate != null){
-                System.out.println(stocksToDelete);
-            }
-
             if(stocksToUpdate != null) {
                 for (Map.Entry<String, Map<String, PortfolioStock>> entry : stocksToUpdate.entrySet()) {
                     String stockTicker = entry.getKey();
@@ -110,6 +106,12 @@ public class PortfolioService {
             }
 
             portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());
+
+            // recalculate portfolio value
+//            if(stocksToUpdate!=null | stocksToAdd!=null | stocksToDelete!=null) {
+//                float newPortfolioValue = portfolioRepo.calculatePortfolioValue(portfolioStocksRequest.getPortfolioId());
+//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioValue", newPortfolioValue);
+//            }
 
             return ResponseEntity.ok("Portfolio updated successfully.");
 
@@ -138,8 +140,8 @@ public class PortfolioService {
         return portfolioRepo.getCountriesByUserId(userId);
     }
 
-    public int getTotalPortfolioValue(String userId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.getTotalPortfolioValue(userId);
+    public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
+        return portfolioRepo.calculatePortfolioValue(portfolioId);
     }
 
     public ArrayList<Portfolio> getAllPublicPortfolios() throws ExecutionException, InterruptedException {

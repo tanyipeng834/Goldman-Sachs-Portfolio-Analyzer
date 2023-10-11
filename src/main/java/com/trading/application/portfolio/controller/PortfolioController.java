@@ -1,6 +1,5 @@
 package com.trading.application.portfolio.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.service.PortfolioService;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +90,9 @@ public class PortfolioController {
     }
 
     @GetMapping
-    @RequestMapping("/gettotalportfoliovalue/{userId}")
-    public Integer getTotalPortfolioValue(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        return portfolioService.getTotalPortfolioValue(userId);
+    @RequestMapping("/gettotalportfoliovalue/{portfolioId}")
+    public float getTotalPortfolioValue(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
+        return portfolioService.getTotalPortfolioValue(portfolioId);
     }
 
     @GetMapping

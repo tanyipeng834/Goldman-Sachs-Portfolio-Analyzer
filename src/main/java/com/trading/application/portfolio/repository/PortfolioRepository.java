@@ -8,7 +8,6 @@ import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.stock.entity.Stock;
 import org.springframework.stereotype.Repository;
 
-import javax.sound.sampled.Port;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -206,28 +205,31 @@ public class PortfolioRepository {
         return null;
     }
 
-    //get total portfolio value to display on overview
-    public int getTotalPortfolioValue(String userId) throws ExecutionException, InterruptedException {
+    //get each portfolio value
+    public float calculatePortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
 
-        List<Portfolio> allPortfolios = getAllPortfolios(userId);
+        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+        DocumentSnapshot document = future.get();
 
-        int portfolioValue = 0;
-        if (allPortfolios != null) {
+        float portfolioValue = 0;
 
-            for (Portfolio portfolio : allPortfolios) {
-                Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
+        Portfolio portfolio = null;
+        if(document.exists()){
+            portfolio = document.toObject(Portfolio.class);
+            Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
 
+            if (portfolioPortStocks != null) {
                 for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
                     List<PortfolioStock> portfolioStockList = entry.getValue();
 
-                    for(PortfolioStock portfolioStock: portfolioStockList){
+                    for (PortfolioStock portfolioStock : portfolioStockList) {
                         int quantity = portfolioStock.getQuantity();
                         float boughtPrice = portfolioStock.getStockBoughtPrice();
                         portfolioValue += (boughtPrice * quantity);
                     }
-
                 }
             }
+        }else{
             return portfolioValue;
         }
         return portfolioValue;
