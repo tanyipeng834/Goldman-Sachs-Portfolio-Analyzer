@@ -83,7 +83,7 @@ public class StockPriceService {
 
 
 
-            return stockPriceRepo.saveStockDailyPrice(stockPrices,stockTicker);
+            return stockPrices;
         }
         catch(Exception e){
             e.printStackTrace();
@@ -164,7 +164,7 @@ public class StockPriceService {
 
 
 
-            return stockPriceRepo.saveStockWeeklyPrice(stockPrices,stockTicker);
+            return stockPrices;
         }
         catch(Exception e){
             e.printStackTrace();
@@ -213,7 +213,7 @@ public class StockPriceService {
 
 
 
-            return stockPriceRepo.saveStockMonthlyPrice(stockPrices,stockTicker);
+            return stockPrices;
         }
         catch(Exception e){
             e.printStackTrace();
