@@ -35,23 +35,10 @@ public class SecurityConfig {
     private String issuer;
 
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedOrigin("http://localhost:8080"); // Allow requests from this origin
-       configuration.addAllowedHeader("*");
-        configuration.setExposedHeaders(Arrays.asList("Authorization")); // Expose 'Authorization' header
-
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-
-       // Expose 'Authorization' header
 
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -64,13 +51,19 @@ public class SecurityConfig {
 //                        .requestMatchers(new AntPathRequestMatcher("/customer/**")).permitAll()
 //                );
 
-        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authorize) -> authorize
+//        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authorize) -> authorize
+//
+//                .requestMatchers("/customer/**").permitAll()
+//                .requestMatchers("/stockprice/**").authenticated()
+//
+//
+//        );
 
-                .requestMatchers("/customer/**").permitAll()
-                .requestMatchers("/stockprice/**").authenticated()
+        http.cors().and().csrf().disable().authorizeHttpRequests().
+                requestMatchers("/customer/**")
+                .permitAll().anyRequest().permitAll()
+                .and().oauth2ResourceServer().jwt();;
 
-
-        );
 
 
         return http.build();
