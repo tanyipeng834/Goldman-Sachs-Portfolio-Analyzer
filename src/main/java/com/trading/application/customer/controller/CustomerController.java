@@ -1,6 +1,5 @@
 package com.trading.application.customer.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -72,7 +71,7 @@ public class CustomerController {
     }
 
     // update customer name
-    @PostMapping
+    @PutMapping
     @RequestMapping("/updatename")
     public String updateCustomerName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.updateCustomerName(customer.getId(), customer.getName());
@@ -85,6 +84,7 @@ public class CustomerController {
         return customerService.customerUpdateEmail(customer.getId(), customer.getEmail());
     }
 
+    @PutMapping
     @RequestMapping(value = "/updatecapital", method = {RequestMethod.OPTIONS, RequestMethod.PUT})
     public String customerUpdateCapital(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.customerUpdateCapital(customer.getId(), customer.getTotalCapitalAvailable());
