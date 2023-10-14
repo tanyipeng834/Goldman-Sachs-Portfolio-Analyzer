@@ -61,7 +61,7 @@ public class SecurityConfig {
 
         http.cors().and().csrf().disable().authorizeHttpRequests().
                 requestMatchers("/customer/**")
-                .permitAll().anyRequest().permitAll()
+                .permitAll().anyRequest().authenticated()
                 .and().oauth2ResourceServer().jwt();;
 
 
