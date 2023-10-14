@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.Map;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,7 +45,16 @@ public class TestPortfolioController {
 
         String portfolioId = "BjHkZggaxiFlhKdSJXcy";
 
-        mockMvc.perform(get("/portfolio/" + portfolioId).header("authorization", "Bearer " + token)).andDo(print()).andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.portfolioId").value(portfolioId)).andExpect(MockMvcResultMatchers.jsonPath("$.portfolioName").value("portfolio_name")).andExpect(MockMvcResultMatchers.jsonPath("$.portfolioDescription").value("portfolio_desc")).andExpect(MockMvcResultMatchers.jsonPath("$.portfolioValue").value(37)).andExpect(MockMvcResultMatchers.jsonPath("$.unrealisedPnL").value(0)).andExpect(MockMvcResultMatchers.jsonPath("$.dateCreated").value("14/10/2023")).andExpect(MockMvcResultMatchers.jsonPath("$.userId").value("fad")).andExpect(MockMvcResultMatchers.jsonPath("$.capital").value(5000)).andExpect(MockMvcResultMatchers.jsonPath("$.public").value(true)).andExpect(MockMvcResultMatchers.jsonPath("$.countryExposure", nullValue())).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.IBM[0].stockBoughtPrice").value(5)).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.IBM[0].quantity").value(5)).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.IBM[0].dateBought").value("23/9/2023")).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.TSLA[0].stockBoughtPrice").value(6)).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.TSLA[0].quantity").value(2)).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.TSLA[0].dateBought").value("23/9/2023"));
+        mockMvc.perform(get("/portfolio/" + portfolioId).header("authorization", "Bearer " + token)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.portfolioId").value(portfolioId)).andExpect(MockMvcResultMatchers.jsonPath("$.portfolioName").value("portfolio_name"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.portfolioDescription").value("portfolio_desc")).andExpect(MockMvcResultMatchers.jsonPath("$.portfolioValue").value(37))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.unrealisedPnL").value(0)).andExpect(MockMvcResultMatchers.jsonPath("$.dateCreated").value("14/10/2023"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value("fad")).andExpect(MockMvcResultMatchers.jsonPath("$.capital").value(5000))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.public").value(true)).andExpect(MockMvcResultMatchers.jsonPath("$.countryExposure", nullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.portStock.IBM[0].stockBoughtPrice").value(5)).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.IBM[0].quantity").value(5))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.portStock.IBM[0].dateBought").value("23/9/2023")).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.TSLA[0].stockBoughtPrice").value(6))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.portStock.TSLA[0].quantity").value(2)).andExpect(MockMvcResultMatchers.jsonPath("$.portStock.TSLA[0].dateBought").value("23/9/2023"));
     }
 
     @Test
@@ -62,7 +74,8 @@ public class TestPortfolioController {
         String body = "{\"portfolioName\":\"new_portfolio_name\",\"portfolioDescription\":\"new_portfolio_desc\"," +
                 "\"capital\":6000,\"isPublic\":false,\"delete\":{\"TSLA\":[0]},\"add\":{\"TSLA\":[{\"quantity\":7," + "\"dateBought\":\"23/9/2023\",\"stockBoughtPrice\":450},{\"quantity\":7,\"dateBought\":\"23/9/2023\"," + "\"stockBoughtPrice\":450}]},\"update\":{\"IBM\":{\"1\":{\"stockBoughtPrice\":5,\"quantity\":10," + "\"dateBought\":\"23/9/2023\"}}},\"portfolioId\":\"x7WENlGE2kV6dtt0mjCB\",\"userId\":\"fad\"}";
 
-        mockMvc.perform(post("/portfolio/updateportfolio/").header("authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).content(body)).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(post("/portfolio/updateportfolio/").header("authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).content(body)).andDo(print())
+                .andExpect(status().isOk());
 
     }
 
@@ -71,8 +84,27 @@ public class TestPortfolioController {
 
         String userId = "fad";
 
-        mockMvc.perform(get("/portfolio/getportfolios/" + userId).header("authorization", "Bearer " + token)).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(get("/portfolio/getportfolios/" + userId).header("authorization", "Bearer " + token)).andDo(print())
+                .andExpect(status().isOk());
 
     }
+
+    @Test
+    public void shouldReturnTotalPortfolioValue() throws Exception {
+
+        String portfolioId = "BjHkZggaxiFlhKdSJXcy";
+
+        mockMvc.perform(get("/portfolio/gettotalportfoliovalue/" + portfolioId).header("authorization", "Bearer " + token)).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnAllPublicPortfolios() throws Exception {
+
+        mockMvc.perform(get("/portfolio/getpublicportfolios").header("authorization", "Bearer " + token)).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
 
 }
