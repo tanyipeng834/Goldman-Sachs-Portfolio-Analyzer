@@ -19,6 +19,7 @@ public class LogSubsciber implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        logger.info(String.valueOf(message));
         String jsonMessage = message.toString();
         logger.info(jsonMessage);// Assuming message contains JSON data
         jsonMessage = extractJsonFromMessage(jsonMessage);
