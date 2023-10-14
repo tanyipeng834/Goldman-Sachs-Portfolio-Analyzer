@@ -29,8 +29,8 @@ public class CustomerController {
     @PostMapping
     @RequestMapping("/")
     public ResponseEntity<Object> createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException,UnirestException {
-
-        String accessToken = generateJWT();
+        String accessToken ="";
+//        String accessToken = generateJWT();
         Map<String, Object> customerResponseBody = new HashMap<>();
         customerResponseBody.put("customerData", customerService.createCustomer(customer));
         customerResponseBody.put("token", accessToken);
@@ -52,7 +52,9 @@ public class CustomerController {
                 return new ResponseEntity<>(new CustomError(404, "Customer not found"), HttpStatus.NOT_FOUND);
             }
 
-            String accessToken = generateJWT();
+            String accessToken ="";
+
+//            String accessToken = generateJWT();
 
 
 // Extract the access_token from the JSON response
