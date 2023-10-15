@@ -49,7 +49,7 @@ public class StockPriceService {
 
     public StockPrices getStockDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-       String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_DAILY");
+       String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_DAILY_ADJUSTED");
         System.out.println("Invoked API");
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
@@ -130,7 +130,7 @@ public class StockPriceService {
 
     public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY_ADJUSTED");
 
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
@@ -179,7 +179,7 @@ public class StockPriceService {
     @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY_ADJUSTED");
 
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
