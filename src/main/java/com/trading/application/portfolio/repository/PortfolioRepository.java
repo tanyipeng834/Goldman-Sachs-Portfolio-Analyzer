@@ -51,6 +51,13 @@ public class PortfolioRepository {
         return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
+    public String updatePortfolio(String portfolioId, Portfolio portfolio) throws ExecutionException, InterruptedException {
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+        docRef.set(portfolio, SetOptions.merge()).get();
+
+        return "Updated document with ID: " + docRef.getId();
+    }
+
     // delete a portfolio
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 

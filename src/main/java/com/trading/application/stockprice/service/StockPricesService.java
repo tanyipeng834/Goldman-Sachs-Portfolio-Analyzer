@@ -1,6 +1,8 @@
 package com.trading.application.stockprice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.trading.application.stock.entity.Stock;
+import com.trading.application.stock.service.StockService;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ public class StockPricesService {
     private RedisTemplate<String,Object> template;
     @Autowired
     private StockPriceService stockPriceService;
+
 
     // get monthly price from date
     public Object getMonthlyPriceFromDate(String stockTicker, String month, String year) throws ExecutionException, InterruptedException , JsonProcessingException {

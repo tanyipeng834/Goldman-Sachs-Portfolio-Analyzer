@@ -16,9 +16,19 @@ public class Portfolio {
     private float unrealisedPnL;
     private String dateCreated;
     private int capital;
+    private boolean rebalancing = false;
 //    private boolean isPublic = true;
 
     private boolean isPublic = true;
+
+    public boolean isRebalancing() {
+        return rebalancing;
+    }
+
+    public void setRebalancing(boolean rebalancing) {
+        this.rebalancing = rebalancing;
+    }
+
     private Map<String,Integer> countryExposure;
 
     private Map<String, List<PortfolioStock>> portStock;
