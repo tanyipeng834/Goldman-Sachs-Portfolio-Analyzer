@@ -53,7 +53,21 @@ public class PortfolioRepository {
 
     public String updatePortfolio(String portfolioId, Portfolio portfolio) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
-        docRef.set(portfolio, SetOptions.merge()).get();
+
+        float portfolioValue = 0;
+        if (portfolio.getPortStock() != null) {
+            for (Map.Entry<String, List<PortfolioStock>> entry : portfolio.getPortStock().entrySet()) {
+                List<PortfolioStock> portfolioStockList = entry.getValue();
+
+                for (PortfolioStock portfolioStock : portfolioStockList) {
+                    int quantity = portfolioStock.getQuantity();
+                    float boughtPrice = portfolioStock.getStockBoughtPrice();
+                    portfolioValue += (boughtPrice * quantity);
+                }
+            }
+        }
+        portfolio.setPortfolioValue(portfolioValue);
+        docRef.set(portfolio);
 
         return "Updated document with ID: " + docRef.getId();
     }
