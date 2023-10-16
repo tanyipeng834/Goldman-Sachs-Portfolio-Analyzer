@@ -10,6 +10,17 @@ public class PortfolioStock {
     private int quantity;
     private String dateBought;
     private float stockBoughtPrice;
+
+    private float allocation;
+
+    public float getAllocation() {
+        return allocation;
+    }
+
+    public void setAllocation(float allocation) {
+        this.allocation = allocation;
+    }
+
     public int getQuantity() {
         return quantity;
     }

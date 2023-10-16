@@ -32,6 +32,16 @@ public class PortfolioRepository {
 
         Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
 
+        float portfolioValue = calculatePortfolioValue(portfolioPortStocks);
+
+        portfolio.setPortfolioValue(portfolioValue);
+        writeResultApiFuture = docReference.set(portfolio);
+
+        return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
+    }
+
+    // calculatePortfolioValue
+    public float calculatePortfolioValue(Map<String, List<PortfolioStock>> portfolioPortStocks){
         float portfolioValue = 0;
         if (portfolioPortStocks != null) {
             for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
@@ -44,11 +54,17 @@ public class PortfolioRepository {
                 }
             }
         }
+        return portfolioValue;
+    }
 
+    public String updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolio.getPortfolioId());
+
+        float portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
         portfolio.setPortfolioValue(portfolioValue);
-        writeResultApiFuture = docReference.set(portfolio);
+        writeResultApiFuture = docRef.set(portfolio);
 
-        return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
+        return "Updated document with ID: " + writeResultApiFuture.get().toString();
     }
 
     // delete a portfolio
@@ -117,112 +133,6 @@ public class PortfolioRepository {
 
     }
 
-    // get sectors of all stocks in a portfolio
-    public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-
-        Portfolio portfolio = getPortfolio(portfolioId);
-
-        CollectionReference stockColRef = firestore.collection("stock");
-
-        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
-
-        if (portfolio != null) {
-            Map<String, List<PortfolioStock>> myStocks = portfolio.getPortStock();
-
-            if (!myStocks.isEmpty()) {
-                Set<String> stockKeys = myStocks.keySet();
-
-                for (String stockTicker : stockKeys) {
-                    ApiFuture<DocumentSnapshot> stocksInfo = stockColRef.document(stockTicker).get();
-                    DocumentSnapshot stocksInfoDoc = stocksInfo.get();
-
-                    if (stocksInfoDoc.exists()) {
-                        Stock stock = stocksInfoDoc.toObject(Stock.class);
-                        String sector = stock.getSector();
-
-                        // Update the sector counts in the map
-                        sectorCounts.put(sector, sectorCounts.getOrDefault(sector, 0) + 1);
-                    }
-                }
-                return sectorCounts;
-            }
-        }
-        return null;
-    }
-
-    // get all sectors of stocks that a user owns
-    public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-
-        List<Portfolio> allPortfolios = getAllPortfolios(userId);
-
-        Map<String, Integer> allSectorCounts = new HashMap<>(); // Map to store all sector counts
-
-        if (allPortfolios != null) {
-
-            for (Portfolio portfolio : allPortfolios) {
-                String portfolioId = portfolio.getPortfolioId();
-                Map<String, Integer> sectorCounts = getSectorsByPortfolioId(portfolioId);
-
-                if (sectorCounts != null) {
-                    // Update allSectorCounts with sectorCounts
-                    for (Map.Entry<String, Integer> entry : sectorCounts.entrySet()) {
-                        String sector = entry.getKey();
-                        int count = entry.getValue();
-                        allSectorCounts.put(sector, allSectorCounts.getOrDefault(sector, 0) + count);
-                    }
-                }
-            }
-            return allSectorCounts;
-        }
-        return null;
-    }
-
-    // to display on Map (overview)
-    public Map<String, Integer> getCountriesByUserId(String userId) throws ExecutionException, InterruptedException {
-
-        List<Portfolio> allPortfolios = getAllPortfolios(userId);
-
-        Map<String, Integer> allCountriesCounts = new HashMap<>();
-        if (allPortfolios != null) {
-
-            for (Portfolio portfolio : allPortfolios) {
-                Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
-
-                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
-                    int count = 0;
-                    String stockTicker = entry.getKey();
-                    List<PortfolioStock> portfolioStockList = entry.getValue(); // Get the list of PortfolioStock objects
-
-                    for(PortfolioStock portfolioStock: portfolioStockList){
-                        int quantity = portfolioStock.getQuantity();
-                        count += quantity;
-                    }
-                    System.out.println(stockTicker);
-                    ApiFuture<DocumentSnapshot> future = firestore.collection("stock").document(stockTicker).get();
-                    DocumentSnapshot document = future.get();
-
-                    Stock stock = null;
-                    if (document.exists()) {
-                        stock = document.toObject(Stock.class);
-                        String country = stock.getCountry();
-
-                        if (allCountriesCounts.containsKey(country)) {
-                            int currentCount = allCountriesCounts.get(country);
-                            allCountriesCounts.put(country, currentCount + count);
-                        } else {
-                            allCountriesCounts.put(country, count);
-                        }
-
-                    } else {
-                        return null;
-                    }
-                }
-            }
-            return allCountriesCounts;
-        }
-        return null;
-    }
-
     //get each portfolio value
     public float calculatePortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
 
@@ -236,17 +146,7 @@ public class PortfolioRepository {
             portfolio = document.toObject(Portfolio.class);
             Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
 
-            if (portfolioPortStocks != null) {
-                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
-                    List<PortfolioStock> portfolioStockList = entry.getValue();
-
-                    for (PortfolioStock portfolioStock : portfolioStockList) {
-                        int quantity = portfolioStock.getQuantity();
-                        float boughtPrice = portfolioStock.getStockBoughtPrice();
-                        portfolioValue += (boughtPrice * quantity);
-                    }
-                }
-            }
+            portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
         }else{
             return portfolioValue;
         }

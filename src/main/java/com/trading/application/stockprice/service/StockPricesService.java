@@ -1,6 +1,8 @@
 package com.trading.application.stockprice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.trading.application.stock.entity.Stock;
+import com.trading.application.stock.service.StockService;
 import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ public class StockPricesService {
     @Autowired
     private StockPriceService stockPriceService;
 
+
     // get monthly price from date
     public Object getMonthlyPriceFromDate(String stockTicker, String month, String year) throws ExecutionException, InterruptedException , JsonProcessingException {
 
@@ -36,16 +39,6 @@ public class StockPricesService {
 
             value = template.opsForValue().get(key);
 
-            StockPrices stockPrices = (StockPrices) value;
-            for(StockPrice stockPrice : stockPrices.getStockPriceList()){
-                String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
-
-                if(formattedDateString.contains(dateInput)){
-                    return new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume());
-                }
-            }
-
-            return null;
         }
 
         StockPrices stockPrices = (StockPrices) value;
@@ -76,21 +69,6 @@ public class StockPricesService {
             stockPriceService.getStockMonthlyPrice(stockTicker);
 
             value = template.opsForValue().get(key);
-
-            StockPrices stockPrices = (StockPrices) value;
-
-            for(StockPrice stockPrice : stockPrices.getStockPriceList()){
-                String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
-                Date dateToCompare = outputDateFormat.parse(formattedDateString);
-
-                // Check if dateToCompare is between dateBought and today
-                if (datebought.compareTo(dateToCompare) <= 0 && dateToCompare.compareTo(today) <= 0) {
-                    stockPriceList.add(new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume()));
-                }
-
-            }
-
-            return stockPriceList;
 
         }
 

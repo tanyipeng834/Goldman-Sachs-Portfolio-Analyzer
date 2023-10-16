@@ -1,5 +1,6 @@
 package com.trading.application.portfolio.controller;
 
+import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.service.PortfolioService;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -42,11 +44,19 @@ public class PortfolioController {
         return portfolioService.deletePortfolio(portfolioId);
     }
 
+//    @PutMapping
+//    @RequestMapping("/updateportfolio/")
+//    public ResponseEntity<String> updatePortfolio(@RequestBody PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
+//        return portfolioService.updatePortfolio(portfolioStocksRequest, request);
+//    }
+
     @PutMapping
-    @RequestMapping("/updateportfolio/")
-    public ResponseEntity<String> updatePortfolio(@RequestBody PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolio(portfolioStocksRequest, request);
+    @RequestMapping("updateportfolio")
+    public ResponseEntity<String> updatePortfolio(@RequestBody Portfolio portfolio, HttpServletRequest request) throws ExecutionException,
+            InterruptedException {
+        return portfolioService.updatePortfolio(portfolio, request);
     }
+
 
     // get all portfolios of a customer
     @GetMapping
@@ -73,17 +83,6 @@ public class PortfolioController {
         Map<String, Integer> allSectorCounts = portfolioService.getSectorsByUserId(userId);
         if (allSectorCounts != null) {
             return new ResponseEntity<>(allSectorCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping
-    @RequestMapping("/getcountriesbyuser/{userId}")
-    public ResponseEntity<Map<String, Integer>> getCountriesByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> allCountryCounts = portfolioService.getCountriesByUserId(userId);
-        if (allCountryCounts != null) {
-            return new ResponseEntity<>(allCountryCounts, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
