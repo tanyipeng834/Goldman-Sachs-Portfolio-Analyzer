@@ -51,9 +51,9 @@ public class PortfolioController {
 //    }
 
     @PutMapping
-    @RequestMapping("updateportfolio/{portfolioId}")
-    public String updatePortfolio(@PathVariable String portfolioId, @RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolio(portfolioId, portfolio);
+    @RequestMapping("updateportfolio")
+    public String updatePortfolio(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
+        return portfolioService.updatePortfolio(portfolio);
     }
 
 

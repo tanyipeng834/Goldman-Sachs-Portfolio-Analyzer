@@ -57,8 +57,8 @@ public class PortfolioRepository {
         return portfolioValue;
     }
 
-    public String updatePortfolio(String portfolioId, Portfolio portfolio) throws ExecutionException, InterruptedException {
-        DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
+    public String updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
+        DocumentReference docRef = firestore.collection("portfolio").document(portfolio.getPortfolioId());
 
         float portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
         portfolio.setPortfolioValue(portfolioValue);

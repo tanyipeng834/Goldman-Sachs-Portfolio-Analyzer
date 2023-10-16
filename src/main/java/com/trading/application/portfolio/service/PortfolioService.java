@@ -70,8 +70,8 @@ public class PortfolioService {
         }
     }
 
-    public String updatePortfolio(String portfolioId, Portfolio portfolio) throws ExecutionException, InterruptedException {
-        return portfolioRepo.updatePortfolio(portfolioId, portfolio);
+    public String updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
+        return portfolioRepo.updatePortfolio(portfolio);
     }
 
 //    public ResponseEntity<String> updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
