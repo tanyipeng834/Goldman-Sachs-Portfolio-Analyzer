@@ -32,6 +32,16 @@ public class PortfolioRepository {
 
         Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
 
+        float portfolioValue = calculatePortfolioValue(portfolioPortStocks);
+
+        portfolio.setPortfolioValue(portfolioValue);
+        writeResultApiFuture = docReference.set(portfolio);
+
+        return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
+    }
+
+    // calculatePortfolioValue
+    public float calculatePortfolioValue(Map<String, List<PortfolioStock>> portfolioPortStocks){
         float portfolioValue = 0;
         if (portfolioPortStocks != null) {
             for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
@@ -44,28 +54,13 @@ public class PortfolioRepository {
                 }
             }
         }
-
-        portfolio.setPortfolioValue(portfolioValue);
-        writeResultApiFuture = docReference.set(portfolio);
-
-        return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
+        return portfolioValue;
     }
 
     public String updatePortfolio(String portfolioId, Portfolio portfolio) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
 
-        float portfolioValue = 0;
-        if (portfolio.getPortStock() != null) {
-            for (Map.Entry<String, List<PortfolioStock>> entry : portfolio.getPortStock().entrySet()) {
-                List<PortfolioStock> portfolioStockList = entry.getValue();
-
-                for (PortfolioStock portfolioStock : portfolioStockList) {
-                    int quantity = portfolioStock.getQuantity();
-                    float boughtPrice = portfolioStock.getStockBoughtPrice();
-                    portfolioValue += (boughtPrice * quantity);
-                }
-            }
-        }
+        float portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
         portfolio.setPortfolioValue(portfolioValue);
         docRef.set(portfolio);
 
@@ -151,17 +146,7 @@ public class PortfolioRepository {
             portfolio = document.toObject(Portfolio.class);
             Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
 
-            if (portfolioPortStocks != null) {
-                for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
-                    List<PortfolioStock> portfolioStockList = entry.getValue();
-
-                    for (PortfolioStock portfolioStock : portfolioStockList) {
-                        int quantity = portfolioStock.getQuantity();
-                        float boughtPrice = portfolioStock.getStockBoughtPrice();
-                        portfolioValue += (boughtPrice * quantity);
-                    }
-                }
-            }
+            portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
         }else{
             return portfolioValue;
         }
