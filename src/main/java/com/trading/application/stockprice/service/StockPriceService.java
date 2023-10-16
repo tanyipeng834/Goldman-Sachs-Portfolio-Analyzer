@@ -130,7 +130,7 @@ public class StockPriceService {
 
     public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
-        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY_ADJUSTED");
+        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
 
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
