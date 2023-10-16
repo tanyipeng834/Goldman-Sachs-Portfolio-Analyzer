@@ -52,8 +52,9 @@ public class PortfolioController {
 
     @PutMapping
     @RequestMapping("updateportfolio")
-    public ResponseEntity<String> updatePortfolio(@RequestBody Portfolio portfolio) throws ExecutionException, InterruptedException {
-        return portfolioService.updatePortfolio(portfolio);
+    public ResponseEntity<String> updatePortfolio(@RequestBody Portfolio portfolio, HttpServletRequest request) throws ExecutionException,
+            InterruptedException {
+        return portfolioService.updatePortfolio(portfolio, request);
     }
 
 

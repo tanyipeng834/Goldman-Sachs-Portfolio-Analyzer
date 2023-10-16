@@ -46,8 +46,7 @@ public class PortfolioService {
         try {
             String result = portfolioRepo.createPortfolio(portfolio);
             // add to access log after portfolio successfully created in firebase
-            AccessLog accessLog = new AccessLog(portfolio.getUserId(),"CREATE", request.getRemoteAddr() , "Created Portfolio", LocalDateTime.now().toString(), true);
-            accessLogService.addLog(accessLog);
+            accessLogService.addLog(new AccessLog(portfolio.getUserId(),"CREATE", request.getRemoteAddr() , "Created Portfolio", LocalDateTime.now().toString(), true));
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException | FirestoreException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating portfolio.");
@@ -70,10 +69,14 @@ public class PortfolioService {
         }
     }
 
-    public ResponseEntity<String> updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> updatePortfolio(Portfolio portfolio, HttpServletRequest request) throws ExecutionException,
+            InterruptedException {
 //        return portfolioRepo.updatePortfolio(portfolio);
         try {
             String result = portfolioRepo.updatePortfolio(portfolio);
+            // add to access log after portfolio successfully updated in firebase
+            accessLogService.addLog(new AccessLog(portfolio.getUserId(),"UPDATE", request.getRemoteAddr() , "Updated " +
+                    "Portfolio", LocalDateTime.now().toString(), true));
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException | FirestoreException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating " +

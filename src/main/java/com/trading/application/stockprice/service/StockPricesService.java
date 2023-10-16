@@ -38,7 +38,7 @@ public class StockPricesService {
             stockPriceService.getStockMonthlyPrice(stockTicker);
 
             value = template.opsForValue().get(key);
-            
+
         }
 
         StockPrices stockPrices = (StockPrices) value;
