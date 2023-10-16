@@ -70,8 +70,15 @@ public class PortfolioService {
         }
     }
 
-    public String updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
-        return portfolioRepo.updatePortfolio(portfolio);
+    public ResponseEntity<String> updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
+//        return portfolioRepo.updatePortfolio(portfolio);
+        try {
+            String result = portfolioRepo.updatePortfolio(portfolio);
+            return ResponseEntity.ok(result);
+        } catch (InterruptedException | ExecutionException | FirestoreException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating " +
+                    "portfolio.");
+        }
     }
 
 //    public ResponseEntity<String> updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {

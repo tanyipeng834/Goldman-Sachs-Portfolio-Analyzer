@@ -62,9 +62,9 @@ public class PortfolioRepository {
 
         float portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
         portfolio.setPortfolioValue(portfolioValue);
-        docRef.set(portfolio);
+        writeResultApiFuture = docRef.set(portfolio);
 
-        return "Updated document with ID: " + docRef.getId();
+        return "Updated document with ID: " + writeResultApiFuture.get().toString();
     }
 
     // delete a portfolio
