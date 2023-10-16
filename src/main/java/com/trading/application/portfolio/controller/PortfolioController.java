@@ -88,17 +88,6 @@ public class PortfolioController {
     }
 
     @GetMapping
-    @RequestMapping("/getcountriesbyuser/{userId}")
-    public ResponseEntity<Map<String, Integer>> getCountriesByUserId(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        Map<String, Integer> allCountryCounts = portfolioService.getCountriesByUserId(userId);
-        if (allCountryCounts != null) {
-            return new ResponseEntity<>(allCountryCounts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping
     @RequestMapping("/gettotalportfoliovalue/{portfolioId}")
     public float getTotalPortfolioValue(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioService.getTotalPortfolioValue(portfolioId);

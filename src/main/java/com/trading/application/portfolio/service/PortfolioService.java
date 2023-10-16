@@ -1,5 +1,8 @@
 package com.trading.application.portfolio.service;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FirestoreException;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
@@ -8,12 +11,16 @@ import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
+
 import com.trading.application.stock.service.StockService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.data.redis.core.RedisTemplate;
+import com.trading.application.stock.entity.Stock;
+
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -31,6 +38,9 @@ public class PortfolioService {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private RedisTemplate<String,Object> template;
 
     public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request) {
         try {
@@ -136,16 +146,70 @@ public class PortfolioService {
 
     // get sectors of all stocks in a portfolio
     public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.getSectorsByPortfolioId(portfolioId);
+
+        Portfolio portfolio = portfolioRepo.getPortfolio(portfolioId);
+
+//        CollectionReference stockColRef = firestore.collection("stock");
+
+        Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
+
+        if (portfolio != null) {
+            Map<String, List<PortfolioStock>> myStocks = portfolio.getPortStock();
+
+            if (!myStocks.isEmpty()) {
+                Set<String> stockKeys = myStocks.keySet();
+
+                for (String stockTicker : stockKeys) {
+
+                    String key = "companyOverview::" + stockTicker;
+
+                    Object value = template.opsForValue().get(key);
+
+                    if (value == null) {
+                        stockService.getStockOverview(stockTicker);
+                        value = template.opsForValue().get(key);
+                    }
+
+                    Stock stock = (Stock) value;
+                    String sector = stock.getSector();
+
+                    // Update the sector counts in the map
+                    sectorCounts.put(sector, sectorCounts.getOrDefault(sector, 0) + 1);
+
+                }
+                return sectorCounts;
+            }
+        }
+        return null;
+
     }
 
     // get sectors of all stocks a user has
     public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.getSectorsByUserId(userId);
-    }
 
-    public Map<String, Integer> getCountriesByUserId(String userId) throws ExecutionException, InterruptedException {
-        return portfolioRepo.getCountriesByUserId(userId);
+        List<Portfolio> allPortfolios = portfolioRepo.getAllPortfolios(userId);
+
+        Map<String, Integer> allSectorCounts = new HashMap<>(); // Map to store all sector counts
+
+        if (allPortfolios != null) {
+
+            for (Portfolio portfolio : allPortfolios) {
+                String portfolioId = portfolio.getPortfolioId();
+                Map<String, Integer> sectorCounts = getSectorsByPortfolioId(portfolioId);
+
+                if (sectorCounts != null) {
+                    // Update allSectorCounts with sectorCounts
+                    for (Map.Entry<String, Integer> entry : sectorCounts.entrySet()) {
+                        String sector = entry.getKey();
+                        int count = entry.getValue();
+                        allSectorCounts.put(sector, allSectorCounts.getOrDefault(sector, 0) + count);
+                    }
+                }
+            }
+            return allSectorCounts;
+        }
+        return null;
+
     }
 
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
