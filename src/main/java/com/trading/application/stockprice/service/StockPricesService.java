@@ -38,17 +38,7 @@ public class StockPricesService {
             stockPriceService.getStockMonthlyPrice(stockTicker);
 
             value = template.opsForValue().get(key);
-
-            StockPrices stockPrices = (StockPrices) value;
-            for(StockPrice stockPrice : stockPrices.getStockPriceList()){
-                String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
-
-                if(formattedDateString.contains(dateInput)){
-                    return new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume());
-                }
-            }
-
-            return null;
+            
         }
 
         StockPrices stockPrices = (StockPrices) value;
@@ -79,21 +69,6 @@ public class StockPricesService {
             stockPriceService.getStockMonthlyPrice(stockTicker);
 
             value = template.opsForValue().get(key);
-
-            StockPrices stockPrices = (StockPrices) value;
-
-            for(StockPrice stockPrice : stockPrices.getStockPriceList()){
-                String formattedDateString = outputDateFormat.format(stockPrice.getStockDate());
-                Date dateToCompare = outputDateFormat.parse(formattedDateString);
-
-                // Check if dateToCompare is between dateBought and today
-                if (datebought.compareTo(dateToCompare) <= 0 && dateToCompare.compareTo(today) <= 0) {
-                    stockPriceList.add(new StockPrice(stockPrice.getOpenPrice(),stockPrice.getHighPrice(), stockPrice.getLowPrice(), stockPrice.getClosePrice(),stockPrice.getStockDate(),stockPrice.getVolume()));
-                }
-
-            }
-
-            return stockPriceList;
 
         }
 
