@@ -48,7 +48,7 @@ public class PortfolioRepository {
                 List<PortfolioStock> portfolioStockList = entry.getValue();
 
                 for (PortfolioStock portfolioStock : portfolioStockList) {
-                    int quantity = portfolioStock.getQuantity();
+                    float quantity = portfolioStock.getQuantity();
                     float boughtPrice = portfolioStock.getStockBoughtPrice();
                     portfolioValue += (boughtPrice * quantity);
                 }
