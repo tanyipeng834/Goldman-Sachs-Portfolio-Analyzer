@@ -7,7 +7,7 @@ import java.util.Map;
 @Component
 public class PortfolioStock {
 
-    private int quantity;
+    private float quantity;
     private String dateBought;
     private float stockBoughtPrice;
 
@@ -38,11 +38,11 @@ public class PortfolioStock {
         this.allocation = allocation;
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 

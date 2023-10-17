@@ -133,7 +133,7 @@ public class PortfolioStockRepository {
                         List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
 
                         // If stock exists, update
-                        int quantity = portfolioStock.getQuantity();
+                        float quantity = portfolioStock.getQuantity();
 
                         if (quantity == 0) {
                             // delete specific stock based on the index
