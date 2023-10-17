@@ -8,6 +8,23 @@ import java.util.Map;
 
 @Component
 public class Portfolio {
+    @Override
+    public String toString() {
+        return "Portfolio{" +
+                "portfolioId='" + portfolioId + '\'' +
+                ", portfolioName='" + portfolioName + '\'' +
+                ", portfolioDescription='" + portfolioDescription + '\'' +
+                ", portfolioValue=" + portfolioValue +
+                ", unrealisedPnL=" + unrealisedPnL +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", capital=" + capital +
+                ", rebalancing=" + rebalancing +
+                ", isPublic=" + isPublic +
+                ", countryExposure=" + countryExposure +
+                ", portStock=" + portStock +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 
     private String portfolioId;
     private String portfolioName;

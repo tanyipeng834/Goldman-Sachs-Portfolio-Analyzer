@@ -13,6 +13,23 @@ public class PortfolioStock {
 
     private float allocation;
 
+    public PortfolioStock(int quantity, String dateBought, float stockBoughtPrice, float allocation) {
+        this.quantity = quantity;
+        this.dateBought = dateBought;
+        this.stockBoughtPrice = stockBoughtPrice;
+        this.allocation = allocation;
+    }
+
+    public PortfolioStock(PortfolioStock other) {
+        this.quantity = other.quantity;
+        this.dateBought = other.dateBought;
+        this.stockBoughtPrice = other.stockBoughtPrice;
+        this.allocation = other.allocation;
+    }
+    public PortfolioStock() {
+        // Default constructor
+    }
+
     public float getAllocation() {
         return allocation;
     }

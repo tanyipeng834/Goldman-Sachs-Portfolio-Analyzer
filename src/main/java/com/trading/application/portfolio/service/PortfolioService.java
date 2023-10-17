@@ -1,18 +1,18 @@
 package com.trading.application.portfolio.service;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentSnapshot;
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.firestore.FirestoreException;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
-import com.trading.application.portfolio.entity.PortfolioStocksRequest;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 import com.trading.application.portfoliostock.service.PortfolioStockService;
 
 import com.trading.application.stock.service.StockService;
+import com.trading.application.stockprice.entity.StockPrice;
+import com.trading.application.stockprice.service.StockPricesService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +23,8 @@ import com.trading.application.stock.entity.Stock;
 
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -40,16 +42,40 @@ public class PortfolioService {
     private StockService stockService;
 
     @Autowired
-    private RedisTemplate<String,Object> template;
+    private RedisTemplate<String, Object> template;
+
+    @Autowired
+    private StockPricesService stockPricesService;
 
     public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request) {
         try {
-            String result = portfolioRepo.createPortfolio(portfolio);
+
             // add to access log after portfolio successfully created in firebase
-            accessLogService.addLog(new AccessLog(portfolio.getUserId(),"CREATE", request.getRemoteAddr() , "Created Portfolio", LocalDateTime.now().toString(), true));
+            accessLogService.addLog(new AccessLog(portfolio.getUserId(), "CREATE", request.getRemoteAddr(), "Created Portfolio", LocalDateTime.now().toString(), true));
+            // May need to add some rebalancing logic
+            rebalance(portfolio);
+            System.out.println(portfolio.getPortStock());
+            Map<String, List<PortfolioStock>> portMap = portfolio.getPortStock();
+            for (Map.Entry<String, List<PortfolioStock>> entry : portMap.entrySet()) {
+                String symbol = entry.getKey();
+                List<PortfolioStock> stocks = entry.getValue();
+
+                System.out.println("Stock Symbol: " + symbol);
+
+                for (PortfolioStock stock : stocks) {
+                    System.out.println("  Allocation: " + stock.getAllocation());
+                    System.out.println("  Stock Bought Price: " + stock.getStockBoughtPrice());
+                    System.out.println("  Quantity: " + stock.getQuantity());
+                    // Add more details as needed
+                }
+            }
+
+            String result = portfolioRepo.createPortfolio(portfolio);
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException | FirestoreException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating portfolio.");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -75,7 +101,7 @@ public class PortfolioService {
         try {
             String result = portfolioRepo.updatePortfolio(portfolio);
             // add to access log after portfolio successfully updated in firebase
-            accessLogService.addLog(new AccessLog(portfolio.getUserId(),"UPDATE", request.getRemoteAddr() , "Updated " +
+            accessLogService.addLog(new AccessLog(portfolio.getUserId(), "UPDATE", request.getRemoteAddr(), "Updated " +
                     "Portfolio", LocalDateTime.now().toString(), true));
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException | FirestoreException e) {
@@ -221,6 +247,107 @@ public class PortfolioService {
         return null;
 
     }
+
+    public Portfolio rebalance(Portfolio portfolio) throws ExecutionException, InterruptedException, JsonProcessingException {
+        String startDate = portfolio.getDateCreated();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        YearMonth createYearMonth = YearMonth.parse(startDate, formatter);
+
+        int year = createYearMonth.getYear();
+        int month = createYearMonth.getMonthValue();
+
+        YearMonth newYearMonth = YearMonth.of(year, month);
+
+        Map<String, List<PortfolioStock>> portMap = portfolio.getPortStock();
+
+
+        // You can access the value associated with the key using map.get(key)
+        rebalanceValue(newYearMonth, portMap,portfolio);
+
+        return portfolio;
+
+
+    }
+
+    public float rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio) throws ExecutionException, InterruptedException, JsonProcessingException {
+        YearMonth createdTime = stockTime;     // Initialize the list
+        YearMonth currentYearMonth = YearMonth.now();
+        int counter = -1;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+        while (createdTime.isBefore(currentYearMonth) || createdTime.equals(currentYearMonth)) {
+            // Add logic here to process PortfolioStock and add to newPortfolioStock        // For example, if PortfolioStock is retrieved from some source:
+            // have to create a new list with the 1st object to take care of update
+            float portValue = 0.0f;
+            List<PortfolioStock> portAllocation = new ArrayList<>();
+            for (Map.Entry<String, List<PortfolioStock>> entry : portMap.entrySet()) {
+                String key = entry.getKey();
+                // Get the previous quantity of the stock from the last rebalancing
+                if (counter>=0) {
+                    // Get the previous quantity
+                    PortfolioStock stock = entry.getValue().get(counter);
+                    Object currentStockPrice = stockPricesService.getMonthlyPriceFromDate(key, String.format("%02d", createdTime.getMonthValue()), String.valueOf(createdTime.getYear()));
+                    if (currentStockPrice instanceof StockPrice) {
+                        StockPrice stockPrice = (StockPrice) currentStockPrice; // Cast currentStockPrice to StockPrice
+                        float currentPrice = stockPrice.getClosePrice();
+                        PortfolioStock rebalancedStock = new PortfolioStock(stock);
+                        rebalancedStock.setStockBoughtPrice(currentPrice);
+
+                        entry.getValue().add(rebalancedStock);
+
+                        portValue += currentPrice*rebalancedStock.getQuantity();
+                        portAllocation.add(rebalancedStock);
+
+
+
+
+
+
+
+                    }
+
+
+                }
+
+
+            }
+            rebalanceStock(portAllocation,portValue);
+            portfolio.setPortfolioValue(portValue);
+
+            createdTime = createdTime.plusMonths(3);
+            counter += 1;
+
+            // Process the value here
+        }
+
+
+        return 0;
+
+    }
+
+
+    public void rebalanceStock(List<PortfolioStock> portStock,float portValue)
+    {
+        for (PortfolioStock stock : portStock)
+        {
+            float idealAmount = stock.getAllocation()* portValue/stock.getStockBoughtPrice();
+            int idealAmountInt = (int) idealAmount;
+            stock.setQuantity(idealAmountInt);
+
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+
 
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.calculatePortfolioValue(portfolioId);

@@ -178,7 +178,7 @@ public class StockPriceService {
 
     @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
-
+        System.out.println("Invoked API");
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
 
         try {
