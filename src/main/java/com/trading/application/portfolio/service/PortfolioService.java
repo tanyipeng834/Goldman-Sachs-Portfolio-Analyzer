@@ -312,7 +312,7 @@ public class PortfolioService {
 
 
     }
-    
+
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.calculatePortfolioValue(portfolioId);
     }
