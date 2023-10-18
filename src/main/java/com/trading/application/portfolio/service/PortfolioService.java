@@ -3,6 +3,7 @@ package com.trading.application.portfolio.service;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.firestore.FirestoreException;
+import com.google.gson.Gson;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
@@ -15,6 +16,7 @@ import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.service.StockPricesService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,8 @@ public class PortfolioService {
     @Autowired
     private StockPricesService stockPricesService;
 
+
+
     public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request)  {
         try {
 
@@ -56,7 +60,7 @@ public class PortfolioService {
             // May need to add some rebalancing logic
 
             if (portfolio.isRebalancing()) {
-                rebalance(portfolio);
+                rebalance(portfolio,request.getRemoteAddr());
             }
 //
             String result = portfolioRepo.createPortfolio(portfolio);
@@ -89,7 +93,7 @@ public class PortfolioService {
             String result = portfolioRepo.updatePortfolio(portfolio);
 
             if(portfolio.isRebalancing()){
-                rebalance(portfolio);
+                rebalance(portfolio,request.getRemoteAddr());
             }
             // add to access log after portfolio successfully updated in firebase
             accessLogService.addLog(new AccessLog(portfolio.getUserId(), "UPDATE", request.getRemoteAddr(), "Updated " +
@@ -239,7 +243,7 @@ public class PortfolioService {
 
     }
 
-    public Portfolio rebalance(Portfolio portfolio) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public Portfolio rebalance(Portfolio portfolio ,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
         String startDate = portfolio.getDateCreated();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
@@ -254,14 +258,14 @@ public class PortfolioService {
 
 
         // You can access the value associated with the key using map.get(key)
-        rebalanceValue(newYearMonth, portMap,portfolio);
+        rebalanceValue(newYearMonth, portMap,portfolio,remoteAddress);
 
         return portfolio;
 
 
     }
 
-    public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
         YearMonth createdTime = stockTime;     // Initialize the list
         YearMonth currentYearMonth = YearMonth.now();
         int counter = -1;
@@ -307,7 +311,7 @@ public class PortfolioService {
 
             }
 
-            float newPortValue =rebalanceStock(portAllocation,portValue);
+            float newPortValue =rebalanceStock(portAllocation,portValue,portfolio,remoteAddress);
             portfolio.setPortfolioValue(newPortValue);
 
 
@@ -323,28 +327,50 @@ public class PortfolioService {
     }
 
 
-    public float rebalanceStock(List<PortfolioStock> portStock,float currentPortValue)
-    {
+    public float rebalanceStock(List<PortfolioStock> portStock,float currentPortValue,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException {
         float newPortValue = 0.0f;
+        List<String> portMapKeys = new ArrayList<>(portfolio.getPortStock().keySet());
+        int counter =0;
         for (PortfolioStock stock : portStock)
         {
             // Calculate the ideal amount
             float idealAmount = stock.getAllocation() * currentPortValue / stock.getStockBoughtPrice();
 
             // Create a DecimalFormat object to format the float to 2 decimal places
-            DecimalFormat df = new DecimalFormat("#.00");
+            DecimalFormat df = new DecimalFormat("0.00");
+
 
             // Format the idealAmount to a string with 2 decimal places
             String formattedIdealAmount = df.format(idealAmount);
+            float formattedIdealAmountFloat = Float.parseFloat(formattedIdealAmount);
+            if(stock.getQuantity()<idealAmount){
+                float addedAmount = idealAmount-stock.getQuantity();
+
+
+
+                accessLogService.addLog(new AccessLog(portfolio.getUserId(),"ADD", remoteAddress, "Added x" + addedAmount + " " + portMapKeys.get(counter) + " to Portfolio ID:" + portfolio.getPortfolioId(), LocalDateTime.now().toString(), true));
+
+            } else if (idealAmount<stock.getQuantity()) {
+
+                float subtractedAmount = idealAmount-stock.getQuantity();
+                accessLogService.addLog(new AccessLog(portfolio.getUserId(),"DELETE", remoteAddress, "Deleted x" + subtractedAmount + " " + portMapKeys.get(counter) + " from Portfolio ID: " + portfolio.getPortfolioId(), LocalDateTime.now().toString(), true));
+
+
+
+
+
+            }
 
             // Parse the formatted string back to a float if needed
-            float formattedIdealAmountFloat = Float.parseFloat(formattedIdealAmount);
+
 
             // Set the stock quantity to the formatted idealAmount
+            System.out.println(formattedIdealAmountFloat);
+
             stock.setQuantity(formattedIdealAmountFloat);
             newPortValue += formattedIdealAmountFloat*idealAmount;
             // Still have to add the add /delete into the Access Log
-
+            counter +=1;
 
 
         }

@@ -34,7 +34,6 @@ public class PortfolioStockRepository {
     private ApiFuture<QuerySnapshot> querySnapshot;
     private CollectionReference colRef = firestore.collection("portfolioStock");
     @Autowired
-
     private RedisTemplate<String,Object> template;
     Logger logger = LoggerFactory.getLogger(AccessLogService.class);
 
