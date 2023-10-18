@@ -343,6 +343,7 @@ public class PortfolioService {
             // Format the idealAmount to a string with 2 decimal places
             String formattedIdealAmount = df.format(idealAmount);
             float formattedIdealAmountFloat = Float.parseFloat(formattedIdealAmount);
+
             if(stock.getQuantity()<idealAmount){
                 float addedAmount = idealAmount-stock.getQuantity();
 
@@ -368,7 +369,7 @@ public class PortfolioService {
             System.out.println(formattedIdealAmountFloat);
 
             stock.setQuantity(formattedIdealAmountFloat);
-            newPortValue += formattedIdealAmountFloat*idealAmount;
+            newPortValue += formattedIdealAmountFloat*stock.getStockBoughtPrice();
             // Still have to add the add /delete into the Access Log
             counter +=1;
 
