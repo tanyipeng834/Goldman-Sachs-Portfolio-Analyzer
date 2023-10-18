@@ -22,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import com.trading.application.stock.entity.Stock;
 
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -47,35 +48,21 @@ public class PortfolioService {
     @Autowired
     private StockPricesService stockPricesService;
 
-    public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request) {
+    public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request)  {
         try {
 
             // add to access log after portfolio successfully created in firebase
             accessLogService.addLog(new AccessLog(portfolio.getUserId(), "CREATE", request.getRemoteAddr(), "Created Portfolio", LocalDateTime.now().toString(), true));
             // May need to add some rebalancing logic
-            rebalance(portfolio);
-            System.out.println(portfolio.getPortStock());
-            Map<String, List<PortfolioStock>> portMap = portfolio.getPortStock();
-            for (Map.Entry<String, List<PortfolioStock>> entry : portMap.entrySet()) {
-                String symbol = entry.getKey();
-                List<PortfolioStock> stocks = entry.getValue();
 
-                System.out.println("Stock Symbol: " + symbol);
-
-                for (PortfolioStock stock : stocks) {
-                    System.out.println("  Allocation: " + stock.getAllocation());
-                    System.out.println("  Stock Bought Price: " + stock.getStockBoughtPrice());
-                    System.out.println("  Quantity: " + stock.getQuantity());
-                    // Add more details as needed
-                }
+            if (portfolio.isRebalancing()) {
+                rebalance(portfolio);
             }
-
+//
             String result = portfolioRepo.createPortfolio(portfolio);
             return ResponseEntity.ok(result);
-        } catch (InterruptedException | ExecutionException | FirestoreException e) {
+        } catch (InterruptedException | ExecutionException | FirestoreException |JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating portfolio.");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -90,7 +77,7 @@ public class PortfolioService {
         try {
             String result = portfolioRepo.deletePortfolio(portfolioId);
             return ResponseEntity.ok(result);
-        } catch (InterruptedException | ExecutionException | FirestoreException e) {
+        } catch (InterruptedException | ExecutionException | FirestoreException  e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
         }
     }
@@ -100,11 +87,15 @@ public class PortfolioService {
 //        return portfolioRepo.updatePortfolio(portfolio);
         try {
             String result = portfolioRepo.updatePortfolio(portfolio);
+
+            if(portfolio.isRebalancing()){
+                rebalance(portfolio);
+            }
             // add to access log after portfolio successfully updated in firebase
             accessLogService.addLog(new AccessLog(portfolio.getUserId(), "UPDATE", request.getRemoteAddr(), "Updated " +
                     "Portfolio", LocalDateTime.now().toString(), true));
             return ResponseEntity.ok(result);
-        } catch (InterruptedException | ExecutionException | FirestoreException e) {
+        } catch (InterruptedException | ExecutionException | FirestoreException | JsonProcessingException  e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating " +
                     "portfolio.");
         }
@@ -270,12 +261,13 @@ public class PortfolioService {
 
     }
 
-    public float rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio) throws ExecutionException, InterruptedException, JsonProcessingException {
         YearMonth createdTime = stockTime;     // Initialize the list
         YearMonth currentYearMonth = YearMonth.now();
         int counter = -1;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         while (createdTime.isBefore(currentYearMonth) || createdTime.equals(currentYearMonth)) {
             // Add logic here to process PortfolioStock and add to newPortfolioStock        // For example, if PortfolioStock is retrieved from some source:
             // have to create a new list with the 1st object to take care of update
@@ -293,11 +285,13 @@ public class PortfolioService {
                         float currentPrice = stockPrice.getClosePrice();
                         PortfolioStock rebalancedStock = new PortfolioStock(stock);
                         rebalancedStock.setStockBoughtPrice(currentPrice);
+                        rebalancedStock.setDateBought(createdTime.format(formatter));
 
                         entry.getValue().add(rebalancedStock);
 
                         portValue += currentPrice*rebalancedStock.getQuantity();
                         portAllocation.add(rebalancedStock);
+
 
 
 
@@ -312,8 +306,10 @@ public class PortfolioService {
 
 
             }
-            rebalanceStock(portAllocation,portValue);
-            portfolio.setPortfolioValue(portValue);
+
+            float newPortValue =rebalanceStock(portAllocation,portValue);
+            portfolio.setPortfolioValue(newPortValue);
+
 
             createdTime = createdTime.plusMonths(3);
             counter += 1;
@@ -322,22 +318,38 @@ public class PortfolioService {
         }
 
 
-        return 0;
+
 
     }
 
 
-    public void rebalanceStock(List<PortfolioStock> portStock,float portValue)
+    public float rebalanceStock(List<PortfolioStock> portStock,float currentPortValue)
     {
+        float newPortValue = 0.0f;
         for (PortfolioStock stock : portStock)
         {
-            float idealAmount = stock.getAllocation()* portValue/stock.getStockBoughtPrice();
-            int idealAmountInt = (int) idealAmount;
-            stock.setQuantity(idealAmountInt);
+            // Calculate the ideal amount
+            float idealAmount = stock.getAllocation() * currentPortValue / stock.getStockBoughtPrice();
+
+            // Create a DecimalFormat object to format the float to 2 decimal places
+            DecimalFormat df = new DecimalFormat("#.00");
+
+            // Format the idealAmount to a string with 2 decimal places
+            String formattedIdealAmount = df.format(idealAmount);
+
+            // Parse the formatted string back to a float if needed
+            float formattedIdealAmountFloat = Float.parseFloat(formattedIdealAmount);
+
+            // Set the stock quantity to the formatted idealAmount
+            stock.setQuantity(formattedIdealAmountFloat);
+            newPortValue += formattedIdealAmountFloat*idealAmount;
+            // Still have to add the add /delete into the Access Log
 
 
 
         }
+        return newPortValue;
+
 
 
     }
