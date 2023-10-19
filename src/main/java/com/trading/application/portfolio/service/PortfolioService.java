@@ -112,71 +112,6 @@ public class PortfolioService {
         }
     }
 
-//    public ResponseEntity<String> updatePortfolio(PortfolioStocksRequest portfolioStocksRequest, HttpServletRequest request) throws ExecutionException, InterruptedException {
-//
-//        try {
-//            String portfolioName = portfolioStocksRequest.getPortfolioName();
-//            String portfolioDesc = portfolioStocksRequest.getPortfolioDescription();
-//            int capital = portfolioStocksRequest.getCapital();
-//            Map<String, List<PortfolioStock>> stocksToAdd = portfolioStocksRequest.getAdd();
-//            Map<String, Map<String, PortfolioStock>> stocksToUpdate = portfolioStocksRequest.getUpdate();
-//            Map<String, List<Integer>> stocksToDelete = portfolioStocksRequest.getDelete();
-//
-//            if(portfolioName != null){
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioName", portfolioName);
-//            }
-//
-//            if(portfolioDesc != null){
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioDescription", portfolioDesc);
-//            }
-//
-//            if(capital != 0){
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "capital", capital);
-//            }
-//
-//            if(stocksToAdd != null) {
-//                for (Map.Entry<String, List<PortfolioStock>> entry : stocksToAdd.entrySet()) {
-//                    List<PortfolioStock> value = entry.getValue();
-//                    for (PortfolioStock stock : value) {
-//                        portfolioStockService.addNewStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
-//                    }
-//                }
-//            }
-//
-//            if(stocksToUpdate != null) {
-//                for (Map.Entry<String, Map<String, PortfolioStock>> entry : stocksToUpdate.entrySet()) {
-//                    String stockTicker = entry.getKey();
-//
-//                    for (Map.Entry<String, PortfolioStock> innerEntry : entry.getValue().entrySet()) {
-//                        String indexAsString = innerEntry.getKey();
-//                        int index = Integer.parseInt(indexAsString);
-//
-//                        PortfolioStock stock = innerEntry.getValue();
-//                        portfolioStockService.updateStock(index, portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), entry.getKey(), stock, request);
-//                    }
-//                }
-//            }
-//
-//            if(stocksToDelete != null) {
-//                portfolioStockService.deleteStock(portfolioStocksRequest.getPortfolioId(), portfolioStocksRequest.getUserId(), stocksToDelete, request);
-//            }
-//
-//            portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "public", portfolioStocksRequest.getIsPublic());
-//
-//            // recalculate portfolio value
-//            if(stocksToUpdate!=null | stocksToAdd!=null | stocksToDelete!=null) {
-//                float newPortfolioValue = portfolioRepo.calculatePortfolioValue(portfolioStocksRequest.getPortfolioId());
-//                portfolioRepo.updatePortfolioField(portfolioStocksRequest.getPortfolioId(), "portfolioValue", newPortfolioValue);
-//            }
-//
-//            return ResponseEntity.ok("Portfolio updated successfully.");
-//
-//        } catch (InterruptedException | ExecutionException | FirestoreException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting portfolio.");
-//        }
-//
-//    }
-
     // get all portfolios of a customer
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
@@ -268,15 +203,12 @@ public class PortfolioService {
         rebalanceValue(newYearMonth, portMap,portfolio,remoteAddress);
 
         return portfolio;
-
-
     }
 
     public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
         YearMonth createdTime = stockTime;     // Initialize the list
         YearMonth currentYearMonth = YearMonth.now();
         int counter = -1;
-
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         while (createdTime.isBefore(currentYearMonth) || createdTime.equals(currentYearMonth)) {
@@ -393,13 +325,6 @@ public class PortfolioService {
 
 
     }
-
-
-
-
-
-
-
 
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.calculatePortfolioValue(portfolioId);

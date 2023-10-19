@@ -34,7 +34,6 @@ public class Portfolio {
     private String dateCreated;
     private int capital;
     private boolean rebalancing = false;
-//    private boolean isPublic = true;
 
     private boolean isPublic = true;
 
@@ -123,15 +122,6 @@ public class Portfolio {
     public void setCapital(int capital) {
         this.capital = capital;
     }
-
-//    public boolean getIsPublic() {
-//        return isPublic;
-//    }
-//
-//    public void setIsPublic(boolean isPublic) {
-//        this.isPublic = isPublic;
-//    }
-
 
     public boolean isPublic() {
         return isPublic;
