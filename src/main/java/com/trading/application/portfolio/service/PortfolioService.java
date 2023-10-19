@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+
 @Service
 public class PortfolioService {
 
@@ -49,6 +50,12 @@ public class PortfolioService {
 
     @Autowired
     private StockPricesService stockPricesService;
+
+
+
+
+    @Autowired
+    private ChannelTopic topic;
 
 
 
@@ -349,14 +356,20 @@ public class PortfolioService {
 
 
 
-                accessLogService.addLog(new AccessLog(portfolio.getUserId(),"ADD", remoteAddress, "Added x" + addedAmount + " " + portMapKeys.get(counter) + " to Portfolio ID:" + portfolio.getPortfolioId(), LocalDateTime.now().toString(), true));
+                AccessLog accessLog =new AccessLog(portfolio.getUserId(),"ADD", remoteAddress, "Added x" + addedAmount + " " + portMapKeys.get(counter) + " to Portfolio :" + portfolio.getPortfolioName(), LocalDateTime.now().toString(), true);
+                Gson gson = new Gson();
+                String logJson = gson.toJson(accessLog);
 
+                template.convertAndSend(topic.getTopic(), logJson);
             } else if (idealAmount<stock.getQuantity()) {
 
                 float subtractedAmount = idealAmount-stock.getQuantity();
-                accessLogService.addLog(new AccessLog(portfolio.getUserId(),"DELETE", remoteAddress, "Deleted x" + subtractedAmount + " " + portMapKeys.get(counter) + " from Portfolio ID: " + portfolio.getPortfolioId(), LocalDateTime.now().toString(), true));
+                AccessLog accessLog =new AccessLog(portfolio.getUserId(),"DELETE", remoteAddress, "Deleted x" + subtractedAmount + " " + portMapKeys.get(counter) + " from Portfolio : " + portfolio.getPortfolioName(), LocalDateTime.now().toString(), true);
 
+                Gson gson = new Gson();
+                String logJson = gson.toJson(accessLog);
 
+                template.convertAndSend(topic.getTopic(), logJson);
 
 
 
