@@ -288,7 +288,7 @@ public class PortfolioService {
 
 
 
-                AccessLog accessLog =new AccessLog(portfolio.getUserId(),"ADD", remoteAddress, "Added x" + addedAmount + " " + portMapKeys.get(counter) + " to Portfolio :" + portfolio.getPortfolioName(), LocalDateTime.now().toString(), true);
+                AccessLog accessLog =new AccessLog(portfolio.getUserId(),"ADD", remoteAddress, "Added x" + addedAmount + " " + portMapKeys.get(counter) + " to Portfolio :" + portfolio.getPortfolioName(), stock.getDateBought(), true);
                 Gson gson = new Gson();
                 String logJson = gson.toJson(accessLog);
 
@@ -296,7 +296,7 @@ public class PortfolioService {
             } else if (idealAmount<stock.getQuantity()) {
 
                 float subtractedAmount = idealAmount-stock.getQuantity();
-                AccessLog accessLog =new AccessLog(portfolio.getUserId(),"DELETE", remoteAddress, "Deleted x" + subtractedAmount + " " + portMapKeys.get(counter) + " from Portfolio : " + portfolio.getPortfolioName(), LocalDateTime.now().toString(), true);
+                AccessLog accessLog =new AccessLog(portfolio.getUserId(),"DELETE", remoteAddress, "Deleted x" + subtractedAmount + " " + portMapKeys.get(counter) + " from Portfolio : " + portfolio.getPortfolioName(), stock.getDateBought(), true);
 
                 Gson gson = new Gson();
                 String logJson = gson.toJson(accessLog);
