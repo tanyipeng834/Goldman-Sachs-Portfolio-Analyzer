@@ -8,20 +8,13 @@ import java.util.Map;
 public class PortfolioStocksRequest {
 
     private String portfolioId;
-
     private String userId;
-
     private String portfolioName;
-
     private String portfolioDescription;
-
     private Map<String, List<PortfolioStock>> add;
     private Map<String, Map<String, PortfolioStock>> update;
-
     private Map<String, List<Integer>> delete;
-
     private boolean isPublic;
-
     private int capital;
 
     public String getPortfolioId() {

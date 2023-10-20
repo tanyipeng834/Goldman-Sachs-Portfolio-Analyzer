@@ -17,7 +17,6 @@ public class AccessLogController {
     private AccessLogService accessLogService;
 
 
-    // add access log
     @PostMapping
     @RequestMapping("/add")
     public String addLog(@RequestBody AccessLog accessLog) throws ExecutionException, InterruptedException {

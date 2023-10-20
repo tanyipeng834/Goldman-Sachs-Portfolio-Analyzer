@@ -5,7 +5,6 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import com.trading.application.stock.entity.Stock;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

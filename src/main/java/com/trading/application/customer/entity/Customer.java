@@ -4,13 +4,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Customer {
-
     private String name;
     private String email;
     private String id;
     private String picture;
     private String updatedAt;
-
     private int totalCapitalAvailable;
 
     public String getName() {

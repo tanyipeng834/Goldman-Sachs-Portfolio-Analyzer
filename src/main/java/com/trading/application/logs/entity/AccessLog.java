@@ -1,14 +1,12 @@
 package com.trading.application.logs.entity;
 
 public class AccessLog {
-
     private String userId;
     private String action;
     private String ipAddress;
     private String info;
     private String dateTime;
     private boolean success;
-
 
     public AccessLog(){
 

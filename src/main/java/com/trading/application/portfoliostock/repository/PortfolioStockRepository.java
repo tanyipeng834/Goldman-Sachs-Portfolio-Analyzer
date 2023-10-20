@@ -1,6 +1,5 @@
 package com.trading.application.portfoliostock.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Repository;
@@ -43,8 +41,7 @@ public class PortfolioStockRepository {
     @Autowired
     private AccessLogService accessLogService = new AccessLogService();
 
-    // NEW
-    // add new stock to portStock
+
     public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
@@ -68,7 +65,6 @@ public class PortfolioStockRepository {
 
                 Map<String, Object> newItem = new HashMap<>();
 
-                // Check if stockTicker exists in portStock
                 if (portStockMap.containsKey(stockTicker)) {
                     List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
 
@@ -79,13 +75,11 @@ public class PortfolioStockRepository {
 
                     portStockMap.put(stockTicker, stockList);
                 } else {
-                    // If stock doesnt exist, add to array
                     List<Map<String, Object>> stockList = new ArrayList<>();
                     newItem.put("stockBoughtPrice", portfolioStock.getStockBoughtPrice());
                     newItem.put("quantity", portfolioStock.getQuantity());
                     newItem.put("dateBought", portfolioStock.getDateBought());
                     stockList.add(newItem);
-
                     portStockMap.put(stockTicker, stockList);
                 }
 
@@ -99,8 +93,6 @@ public class PortfolioStockRepository {
 
                     template.convertAndSend(topic.getTopic(), logJson);
 
-                //accessLogService.addLog(accessLog);
-
                 return "Added to " + stockTicker + " array";
             } else {
                 return "Document data is null";
@@ -110,7 +102,6 @@ public class PortfolioStockRepository {
         }
     }
 
-    // NEW
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -127,15 +118,12 @@ public class PortfolioStockRepository {
                     portStockMap = (Map<String, Object>) data.get("portStock");
                     Map<String, Object> updatedStock = new HashMap<>();
 
-                    // Check if stockTicker exists in portStock
                     if (portStockMap.containsKey(stockTicker)) {
                         List<Map<String, Object>> stockList = (List<Map<String, Object>>) portStockMap.get(stockTicker);
 
-                        // If stock exists, update
                         float quantity = portfolioStock.getQuantity();
 
                         if (quantity == 0) {
-                            // delete specific stock based on the index
                             stockList.remove(indexToUpdate);
 
                             if (stockList.size() == 0) {
@@ -151,7 +139,6 @@ public class PortfolioStockRepository {
                             logger.info(logJson);
 
                             template.convertAndSend(topic.getTopic(), logJson);
-                            //accessLogService.addLog(accessLog);
 
                             return "Updated " + stockTicker + " array";
                         } else {
@@ -175,20 +162,15 @@ public class PortfolioStockRepository {
                             logger.info(logJson);
 
                             template.convertAndSend(topic.getTopic(), logJson);
-                            //accessLogService.addLog(accessLog);
 
                             return "Updated " + stockTicker + " array";
                         }
                     } else {
-                        // If stock doesnt exist, add to array
-                        // throw error
                         return stockTicker + " does not exist in the portfolio";
                     }
                 } else {
-                    // portstock has to exist. or not throw error cuz nth to update!
                     return "Port stock does not exist";
                 }
-
             } else {
                 return "Document data is null";
             }

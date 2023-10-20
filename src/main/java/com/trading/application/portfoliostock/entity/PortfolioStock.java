@@ -2,15 +2,12 @@ package com.trading.application.portfoliostock.entity;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
 public class PortfolioStock {
 
     private float quantity;
     private String dateBought;
     private float stockBoughtPrice;
-
     private float allocation;
 
     public PortfolioStock(int quantity, String dateBought, float stockBoughtPrice, float allocation) {
@@ -27,7 +24,6 @@ public class PortfolioStock {
         this.allocation = other.allocation;
     }
     public PortfolioStock() {
-        // Default constructor
     }
 
     public float getAllocation() {

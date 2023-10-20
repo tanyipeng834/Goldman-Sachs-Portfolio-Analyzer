@@ -12,7 +12,6 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class AccessLogRepository {
-
     private Firestore firestore = FirestoreClient.getFirestore();
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     private ApiFuture<WriteResult> writeResultApiFuture;
@@ -37,7 +36,5 @@ public class AccessLogRepository {
         return accessLogs;
 
     }
-
-
 
 }

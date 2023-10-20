@@ -2,6 +2,7 @@ package com.trading.application.customer.repository;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import com.google.common.util.concurrent.ExecutionError;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.customer.entity.Customer;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,8 @@ public class CustomerRepository {
     public DocumentReference getReferenceById(String documentId){
 
         return firestore.collection("customer").document(documentId);
-
     }
 
-    // add new customer
     public String addCustomer(Customer customer) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = firestore.collection("customer").document(customer.getId());
@@ -30,7 +29,6 @@ public class CustomerRepository {
 
     }
 
-    // Get document by documentId
     public Customer getById(String documentId) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -50,33 +48,36 @@ public class CustomerRepository {
 
     }
 
-    // Update a document's field
     public String updateDocumentField(String documentId, String field, String fieldValue) throws InterruptedException, ExecutionException{
 
         DocumentReference docReference = getReferenceById(documentId);
         writeResultApiFuture = docReference.update(field, fieldValue);
         return "Result: " + writeResultApiFuture.get();
+
     }
 
-    // Update int field
     public String updateTotalCapitalAvailable(String documentId, String field, int fieldValue) throws InterruptedException, ExecutionException {
+
         DocumentReference docReference = getReferenceById(documentId);
         writeResultApiFuture = docReference.update(field, fieldValue);
         return "Result: " + writeResultApiFuture.get();
+
     }
 
 
     public String deleteCustomerAccount(String documentId){
+
         try {
             writeResultApiFuture = getReferenceById(documentId).delete();
             return "Successfully deleted " + documentId;
         } catch (FirestoreException e) {
-            e.printStackTrace();
             return "Error deleting " + documentId;
         }
+
     }
 
-    public float getTotalCapitalAvailable(String documentId) throws InterruptedException, ExecutionException {
+    public int getTotalCapitalAvailable(String documentId) throws InterruptedException, ExecutionException {
+
         DocumentReference docRef = getReferenceById(documentId);
         try {
             ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -93,12 +94,13 @@ public class CustomerRepository {
             } else {
                 return 0;
             }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            return 0;
+            } catch (InterruptedException e) {
+                throw new InterruptedException("Failed to retrieve customer capital: " + e.getMessage());
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
         }
-
     }
+
+}
 
 

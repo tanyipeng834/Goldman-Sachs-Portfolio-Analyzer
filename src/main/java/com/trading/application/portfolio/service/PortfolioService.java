@@ -51,25 +51,19 @@ public class PortfolioService {
     @Autowired
     private StockPricesService stockPricesService;
 
-
-
-
     @Autowired
     private ChannelTopic topic;
-
-
 
     public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request)  {
         try {
 
-            // add to access log after portfolio successfully created in firebase
             accessLogService.addLog(new AccessLog(portfolio.getUserId(), "CREATE", request.getRemoteAddr(), "Created Portfolio", LocalDateTime.now().toString(), true));
             // May need to add some rebalancing logic
 
             if (portfolio.isRebalancing()) {
                 rebalance(portfolio,request.getRemoteAddr());
             }
-//
+
             String result = portfolioRepo.createPortfolio(portfolio);
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException | FirestoreException |JsonProcessingException e) {
@@ -77,14 +71,11 @@ public class PortfolioService {
         }
     }
 
-    // get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getPortfolio(portfolioId);
     }
 
-    // delete a portfolio
     public ResponseEntity<String> deletePortfolio(String portfolioId) {
-//        return portfolioRepo.deletePortfolio(portfolioId);
         try {
             String result = portfolioRepo.deletePortfolio(portfolioId);
             return ResponseEntity.ok(result);
@@ -95,7 +86,6 @@ public class PortfolioService {
 
     public ResponseEntity<String> updatePortfolio(Portfolio portfolio, HttpServletRequest request) throws ExecutionException,
             InterruptedException {
-//        return portfolioRepo.updatePortfolio(portfolio);
         try {
             String result = portfolioRepo.updatePortfolio(portfolio);
 
@@ -112,17 +102,14 @@ public class PortfolioService {
         }
     }
 
-    // get all portfolios of a customer
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
     }
 
-    // get sectors of all stocks in a portfolio
     public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
 
         Portfolio portfolio = portfolioRepo.getPortfolio(portfolioId);
 
-//        CollectionReference stockColRef = firestore.collection("stock");
 
         Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
 
@@ -146,7 +133,6 @@ public class PortfolioService {
                     Stock stock = (Stock) value;
                     String sector = stock.getSector();
 
-                    // Update the sector counts in the map
                     sectorCounts.put(sector, sectorCounts.getOrDefault(sector, 0) + 1);
 
                 }
@@ -157,7 +143,6 @@ public class PortfolioService {
 
     }
 
-    // get sectors of all stocks a user has
     public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
 
         List<Portfolio> allPortfolios = portfolioRepo.getAllPortfolios(userId);
@@ -198,29 +183,23 @@ public class PortfolioService {
 
         Map<String, List<PortfolioStock>> portMap = portfolio.getPortStock();
 
-
-        // You can access the value associated with the key using map.get(key)
         rebalanceValue(newYearMonth, portMap,portfolio,remoteAddress);
 
         return portfolio;
     }
 
     public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
-        YearMonth createdTime = stockTime;     // Initialize the list
+        YearMonth createdTime = stockTime;
         YearMonth currentYearMonth = YearMonth.now();
         int counter = -1;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         while (createdTime.isBefore(currentYearMonth) || createdTime.equals(currentYearMonth)) {
-            // Add logic here to process PortfolioStock and add to newPortfolioStock        // For example, if PortfolioStock is retrieved from some source:
-            // have to create a new list with the 1st object to take care of update
             float portValue = 0.0f;
             List<PortfolioStock> portAllocation = new ArrayList<>();
             for (Map.Entry<String, List<PortfolioStock>> entry : portMap.entrySet()) {
                 String key = entry.getKey();
-                // Get the previous quantity of the stock from the last rebalancing
                 if (counter>=0) {
-                    // Get the previous quantity
                     PortfolioStock stock = entry.getValue().get(counter);
                     Object currentStockPrice = stockPricesService.getMonthlyPriceFromDate(key, String.format("%02d", createdTime.getMonthValue()), String.valueOf(createdTime.getYear()));
                     if (currentStockPrice instanceof StockPrice) {
@@ -235,33 +214,19 @@ public class PortfolioService {
                         portValue += currentPrice*rebalancedStock.getQuantity();
                         portAllocation.add(rebalancedStock);
 
-
-
-
-
-
-
-
                     }
 
-
                 }
-
 
             }
 
             float newPortValue =rebalanceStock(portAllocation,portValue,portfolio,remoteAddress);
             portfolio.setPortfolioValue(newPortValue);
 
-
             createdTime = createdTime.plusMonths(3);
             counter += 1;
 
-            // Process the value here
         }
-
-
-
 
     }
 
@@ -272,21 +237,14 @@ public class PortfolioService {
         int counter =0;
         for (PortfolioStock stock : portStock)
         {
-            // Calculate the ideal amount
             float idealAmount = stock.getAllocation() * currentPortValue / stock.getStockBoughtPrice();
-
-            // Create a DecimalFormat object to format the float to 2 decimal places
             DecimalFormat df = new DecimalFormat("0.00");
 
-
-            // Format the idealAmount to a string with 2 decimal places
             String formattedIdealAmount = df.format(idealAmount);
             float formattedIdealAmountFloat = Float.parseFloat(formattedIdealAmount);
 
             if(stock.getQuantity()<idealAmount){
                 float addedAmount = idealAmount-stock.getQuantity();
-
-
 
                 AccessLog accessLog =new AccessLog(portfolio.getUserId(),"ADD", remoteAddress, "Added x" + addedAmount + " " + portMapKeys.get(counter) + " to Portfolio :" + portfolio.getPortfolioName(), stock.getDateBought(), true);
                 Gson gson = new Gson();
@@ -303,15 +261,7 @@ public class PortfolioService {
 
                 template.convertAndSend(topic.getTopic(), logJson);
 
-
-
             }
-
-            // Parse the formatted string back to a float if needed
-
-
-            // Set the stock quantity to the formatted idealAmount
-            System.out.println(formattedIdealAmountFloat);
 
             stock.setQuantity(formattedIdealAmountFloat);
             newPortValue += formattedIdealAmountFloat*stock.getStockBoughtPrice();
@@ -321,9 +271,6 @@ public class PortfolioService {
 
         }
         return newPortValue;
-
-
-
     }
 
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {

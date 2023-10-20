@@ -21,20 +21,16 @@ public class LogSubsciber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         logger.info(String.valueOf(message));
         String jsonMessage = message.toString();
-        logger.info(jsonMessage);// Assuming message contains JSON data
+        logger.info(jsonMessage);
         jsonMessage = extractJsonFromMessage(jsonMessage);
 
-        // Use an ObjectMapper to deserialize the JSON into an AccessLog object
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             AccessLog accessLog = objectMapper.readValue(jsonMessage, AccessLog.class);
             logger.info("Event Processed");
             accessLogService.addLog(accessLog);
 
-            // Now 'accessLog' contains the deserialized object
-            // You can use the 'accessLog' object as needed
         } catch (JsonProcessingException e) {
-            // Handle deserialization error
             logger.error("Error deserializing AccessLog from message: " + e.getMessage());
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
@@ -55,7 +51,7 @@ public class LogSubsciber implements MessageListener {
         if (startIndex != -1 && endIndex != -1) {
             return messageContent.substring(startIndex, endIndex + 1);
         } else {
-            return null; // No valid JSON found in the message content
+            return null;
         }
     }
 

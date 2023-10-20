@@ -24,11 +24,10 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    // create new customer
     @PostMapping
     @RequestMapping("/")
-    public ResponseEntity<Object> createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException,UnirestException {
-        String accessToken ="";
+    public ResponseEntity<Object> createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException, UnirestException {
+        String accessToken = "";
 //        String accessToken = generateJWT();
         Map<String, Object> customerResponseBody = new HashMap<>();
         customerResponseBody.put("customerData", customerService.createCustomer(customer));
@@ -36,30 +35,21 @@ public class CustomerController {
 
         return new ResponseEntity<>(customerResponseBody, HttpStatus.OK);
 
-
-
     }
 
-    // get customer by id
     @GetMapping
     @RequestMapping("/{id}")
     public ResponseEntity<Object> getCustomerById(@PathVariable String id) throws ExecutionException, InterruptedException {
-
 
         try {
             if (customerService.getCustomer(id) == null) {
                 return new ResponseEntity<>(new CustomError(404, "Customer not found"), HttpStatus.NOT_FOUND);
             }
 
-            String accessToken ="";
+            String accessToken = "";
 
 //            String accessToken = generateJWT();
 
-
-// Extract the access_token from the JSON response
-
-
-            // Create a response object containing the customer data and the token
             Map<String, Object> customerResponseBody = new HashMap<>();
             customerResponseBody.put("customerData", customerService.getCustomer(id));
             customerResponseBody.put("token", accessToken);
@@ -70,14 +60,12 @@ public class CustomerController {
         }
     }
 
-    // update customer name
     @PutMapping
     @RequestMapping("/updatename")
     public String updateCustomerName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.updateCustomerName(customer.getId(), customer.getName());
     }
 
-    // update customer email
     @PutMapping
     @RequestMapping("/updateemail")
     public String customerUpdateEmail(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
@@ -98,10 +86,9 @@ public class CustomerController {
 
     @GetMapping
     @RequestMapping("/getcapital/{userId}")
-    public float getCapital(@PathVariable String userId) throws ExecutionException, InterruptedException {
+    public int getCapital(@PathVariable String userId) throws ExecutionException, InterruptedException {
         return customerService.getCustomerCapital(userId);
     }
-
 
     public String generateJWT() throws UnirestException {
         HttpResponse<String> response = Unirest.post("https://dev-4pxn4zbtcuoww57l.us.auth0.com/oauth/token")
@@ -112,7 +99,6 @@ public class CustomerController {
         JSONObject json = new JSONObject(responseBody);
         String accessToken = json.getString("access_token");
         return accessToken;
-
     }
 
 }
