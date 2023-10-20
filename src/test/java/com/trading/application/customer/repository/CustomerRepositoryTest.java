@@ -1,106 +1,92 @@
 package com.trading.application.customer.repository;
-
 import com.google.api.core.ApiFuture;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.mock;  // Added this import
+
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
+import java.util.concurrent.ExecutionException;
+import static org.junit.jupiter.api.Assertions.*;
+import com.trading.application.customer.entity.Customer;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.WriteResult;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.cloud.FirestoreClient;
+import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.util.ResourceUtils;
-import com.trading.application.customer.entity.Customer;
-
-import java.io.*;
-
-import com.google.cloud.firestore.Firestore;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileInputStream;
-
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
-import com.google.firebase.cloud.FirestoreClient;
-import com.trading.application.customer.entity.Customer;
-import org.springframework.stereotype.Repository;
-import java.util.concurrent.ExecutionException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+@ExtendWith(MockitoExtension.class)
+public class CustomerRepositoryTest {
 
-public class CustomerRepositoryTest extends CustomerRepository {
+    @Mock
+    private CollectionReference collectionReference;
+    @Mock
+    private DocumentReference docReference; // Mock DocumentReference
+    @Mock
+    private DocumentSnapshot document;      // Mock DocumentSnapshot
 
-    private Firestore firestore = FirestoreClient.getFirestore();
-    private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
-    private ApiFuture<WriteResult> writeResultApiFuture;
+    @InjectMocks
+    private CustomerRepository customerRepository;
 
-    public DocumentReference getReferenceById(String documentId){
+    @Mock
+    private FirebaseApp firebaseApp;
 
-        return firestore.collection("customer").document(documentId);
+    @Mock
+    private Firestore firestore;
+    @Mock
+    private ApiFuture<DocumentSnapshot> apiFuture;
 
-    }
-    public CustomerRepositoryTest() throws IOException, FileNotFoundException {
-        // Configure Firebase for the test environment
-        File file = ResourceUtils.getFile("classpath:config/is442-testenv-firebase-adminsdk-43sft-7a371fe33d.json");
-        FileInputStream serviceAccount =
-                new FileInputStream(file);
+    @Mock
+    private DocumentSnapshot documentSnapshot;
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
+    @BeforeEach
+    void setup() {
 
-        FirebaseApp.initializeApp(options);
+        when(docReference.get()).thenReturn(apiFuture); // Mock the behavior of Firestore methods
+        try {
+            when(apiFuture.get()).thenReturn(documentSnapshot);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @Override
-    public String addCustomer(Customer customer) {
-        // Simulate adding a customer in memory (no database interaction)
-        return "Customer created successfully";
+    @Test
+    void testGetById() throws ExecutionException, InterruptedException {
+        // Arrange
+        String documentId = "your_document_id";
+        when(document.exists()).thenReturn(true);
+
+        // Create a sample customer to simulate the expected result
+        Customer expectedCustomer = new Customer();
+        // Set properties on the expectedCustomer as needed
+
+        when(document.toObject(Customer.class)).thenReturn(expectedCustomer);
+
+        // Act
+        Customer result = customerRepository.getById(documentId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(expectedCustomer, result);
     }
 }
-
-
-//    @Test
-//    void getReferenceById() {
-//    }
-//
-//    @Test
-//    void addCustomer() {
-//    }
-//
-//    @Test
-//    void getById() {
-//    }
-//
-//    @Test
-//    void updateDocumentField() {
-//    }
-//
-//    @Test
-//    void updateTotalCapitalAvailable() {
-//    }
-//
-//    @Test
-//    void deleteCustomerAccount() {
-//    }
-//
-//    @Test
-//    void getTotalCapitalAvailable() {
-//    }
-//}

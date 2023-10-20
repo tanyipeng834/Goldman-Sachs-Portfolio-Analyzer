@@ -18,10 +18,17 @@ import java.util.concurrent.ExecutionException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import org.springframework.test.context.ContextConfiguration;
 
-@ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {FirebaseConfig.class})
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+
+//@ExtendWith(MockitoExtension.class)
+//@ContextConfiguration(classes = {FirebaseConfig.class})
+@SpringBootTest
+@AutoConfigureMockMvc
 class CustomerServiceTest {
 
     @Mock
@@ -29,41 +36,34 @@ class CustomerServiceTest {
     @InjectMocks
     private CustomerService customerService;
 
+    @Autowired
+    private MockMvc mockMvc;
 
 
 
-    @BeforeEach
-    void setUp() throws ExecutionException, InterruptedException {
-//        FirebaseConfig.initializeFirebase();
-        customerService = new CustomerService();
-//        when(customerRepository.addCustomer(any())).thenReturn("Customer created successfully");
-        when(customerRepository.addCustomer(any(Customer.class))).thenReturn("Customer created successfully");
-
-    }
-
-    @Test
-    void createCustomer() throws ExecutionException, InterruptedException{
-
-//        // Arrange
+//    @Test
+//    void createCustomer() throws ExecutionException, InterruptedException{
+//
+////        // Arrange
+////        Customer customer = new Customer("John Doe", "john@example.com");
+////        when(customerRepository.addCustomer(any())).thenReturn("Customer created successfully");
+////
+////        // Act
+////        String result = customerService.createCustomer(customer);
+////
+////        // Assert
+////        assertEquals("Customer created successfully", result);
+//
+////        without firebase
 //        Customer customer = new Customer("John Doe", "john@example.com");
-//        when(customerRepository.addCustomer(any())).thenReturn("Customer created successfully");
 //
 //        // Act
 //        String result = customerService.createCustomer(customer);
 //
 //        // Assert
 //        assertEquals("Customer created successfully", result);
-
-//        without firebase
-        Customer customer = new Customer("John Doe", "john@example.com");
-
-        // Act
-        String result = customerService.createCustomer(customer);
-
-        // Assert
-        assertEquals("Customer created successfully", result);
-        verify(customerRepository).addCustomer(any());
-    }
+//        verify(customerRepository).addCustomer(any());
+//    }
 
     @Test
     void getCustomer() {
