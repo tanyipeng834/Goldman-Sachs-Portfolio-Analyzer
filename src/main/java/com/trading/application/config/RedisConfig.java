@@ -66,7 +66,7 @@ public class RedisConfig {
                 .entryTtl(Duration.ofDays(30)); //
 
         CacheManager cacheManager = RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(cacheConfiguration1)
+                .cacheDefaults(cacheConfiguration3)
                 .withCacheConfiguration("weeklyStockPrice", cacheConfiguration1)
                 .withCacheConfiguration("dailyStockPrice", cacheConfiguration2)
                 .withCacheConfiguration("monthlyStockPrice",cacheConfiguration3)
