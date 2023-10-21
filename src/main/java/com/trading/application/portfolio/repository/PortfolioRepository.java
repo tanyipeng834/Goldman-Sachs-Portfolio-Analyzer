@@ -10,20 +10,46 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Portfolio repository.
+ */
 @Repository
 public class PortfolioRepository {
 
+    /**
+     * The Firestore.
+     */
     private Firestore firestore = FirestoreClient.getFirestore();
+    /**
+     * The Document snapshot api future.
+     */
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
+    /**
+     * The Write result api future.
+     */
     private ApiFuture<WriteResult> writeResultApiFuture;
 
+    /**
+     * Get reference by id document reference.
+     *
+     * @param documentId the document id
+     * @return the document reference
+     */
     public DocumentReference getReferenceById(String documentId){
 
         return firestore.collection("portfolio").document(documentId);
 
     }
 
-    // create Portfolio
+    /**
+     * Create portfolio string.
+     *
+     * @param portfolio the portfolio
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// create Portfolio
     public String createPortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = firestore.collection("portfolio").document();
@@ -39,7 +65,13 @@ public class PortfolioRepository {
         return "Portfolio successfully created on: " + writeResultApiFuture.get().getUpdateTime().toDate().toString();
     }
 
-    // calculatePortfolioValue
+    /**
+     * Calculate portfolio value float.
+     *
+     * @param portfolioPortStocks the portfolio port stocks
+     * @return the float
+     */
+// calculatePortfolioValue
     public float calculatePortfolioValue(Map<String, List<PortfolioStock>> portfolioPortStocks){
         float portfolioValue = 0;
         if (portfolioPortStocks != null) {
@@ -56,6 +88,14 @@ public class PortfolioRepository {
         return portfolioValue;
     }
 
+    /**
+     * Update portfolio string.
+     *
+     * @param portfolio the portfolio
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public String updatePortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolio.getPortfolioId());
 
@@ -66,21 +106,49 @@ public class PortfolioRepository {
         return "Updated document with ID: " + writeResultApiFuture.get().toString();
     }
 
-    // delete a portfolio
+    /**
+     * Delete portfolio string.
+     *
+     * @param portfolioId the portfolio id
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// delete a portfolio
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).delete();
         return "Portfolio successfully deleted on: " + writeResultApiFuture.get().getUpdateTime();
     }
 
-    // Update a portfolio's field
+    /**
+     * Update portfolio field string.
+     *
+     * @param portfolioId the portfolio id
+     * @param field       the field
+     * @param fieldValue  the field value
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// Update a portfolio's field
     public String updatePortfolioField(String portfolioId, String field, String fieldValue) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
         return "Result: " + writeResultApiFuture.get();
     }
 
-    // Overloading
+    /**
+     * Update portfolio field string.
+     *
+     * @param portfolioId the portfolio id
+     * @param field       the field
+     * @param fieldValue  the field value
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// Overloading
     // Update a portfolio's field
     public String updatePortfolioField(String portfolioId, String field, float fieldValue) throws ExecutionException, InterruptedException {
 
@@ -88,7 +156,17 @@ public class PortfolioRepository {
         return "Result: " + writeResultApiFuture.get();
     }
 
-    // Overloading
+    /**
+     * Update portfolio field string.
+     *
+     * @param portfolioId the portfolio id
+     * @param field       the field
+     * @param fieldValue  the field value
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// Overloading
     // Update a portfolio's field
     public String updatePortfolioField(String portfolioId, String field, boolean fieldValue) throws ExecutionException, InterruptedException {
 
@@ -96,7 +174,15 @@ public class PortfolioRepository {
         return "Result: " + writeResultApiFuture.get();
     }
 
-    // get a portfolio
+    /**
+     * Gets portfolio.
+     *
+     * @param portfolioId the portfolio id
+     * @return the portfolio
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -116,7 +202,15 @@ public class PortfolioRepository {
 
     }
 
-    // Get all Portfolios of a customer
+    /**
+     * Gets all portfolios.
+     *
+     * @param userId the user id
+     * @return the all portfolios
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// Get all Portfolios of a customer
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
 
         ApiFuture<QuerySnapshot> future = firestore.collection("portfolio").whereEqualTo("userId", userId).get();
@@ -132,7 +226,15 @@ public class PortfolioRepository {
 
     }
 
-    //get each portfolio value
+    /**
+     * Calculate portfolio value float.
+     *
+     * @param portfolioId the portfolio id
+     * @return the float
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+//get each portfolio value
     public float calculatePortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
 
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -152,6 +254,13 @@ public class PortfolioRepository {
         return portfolioValue;
     }
 
+    /**
+     * Gets all public portfolios.
+     *
+     * @return the all public portfolios
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
+     */
     public ArrayList<Portfolio> getAllPublicPortfolios() throws InterruptedException, ExecutionException {
 
         ArrayList<Portfolio> portfolios = new ArrayList<>();

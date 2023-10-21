@@ -14,16 +14,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Stock prices service.
+ */
 @Service
 public class StockPricesService {
 
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String,Object> template;
+    /**
+     * The Stock price service.
+     */
     @Autowired
     private StockPriceService stockPriceService;
 
 
-    // get monthly price from date
+    /**
+     * Gets monthly price from date.
+     *
+     * @param stockTicker the stock ticker
+     * @param month       the month
+     * @param year        the year
+     * @return the monthly price from date
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
+// get monthly price from date
     public Object getMonthlyPriceFromDate(String stockTicker, String month, String year) throws ExecutionException, InterruptedException , JsonProcessingException {
 
         SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -64,6 +84,17 @@ public class StockPricesService {
 //        return null;
     }
 
+    /**
+     * Gets prices from date bought.
+     *
+     * @param stockTicker the stock ticker
+     * @param dateBought  the date bought
+     * @return the prices from date bought
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     * @throws ParseException          the parse exception
+     */
     public Object getPricesFromDateBought(String stockTicker, String dateBought) throws ExecutionException, InterruptedException, JsonProcessingException, ParseException {
 
         SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");

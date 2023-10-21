@@ -16,14 +16,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Customer controller.
+ */
 @RestController
 @RequestMapping("/customer")
 @CrossOrigin(origins = "http://localhost:8080")
 public class CustomerController {
 
+    /**
+     * The Customer service.
+     */
     @Autowired
     private CustomerService customerService;
 
+    /**
+     * Create customer response entity.
+     *
+     * @param customer the customer
+     * @return the response entity
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     * @throws UnirestException     the unirest exception
+     */
     @PostMapping
     @RequestMapping("/")
     public ResponseEntity<Object> createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException, UnirestException {
@@ -37,6 +52,14 @@ public class CustomerController {
 
     }
 
+    /**
+     * Gets customer by id.
+     *
+     * @param id the id
+     * @return the customer by id
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @GetMapping
     @RequestMapping("/{id}")
     public ResponseEntity<Object> getCustomerById(@PathVariable String id) throws ExecutionException, InterruptedException {
@@ -60,36 +83,82 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Update customer name string.
+     *
+     * @param customer the customer
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @PutMapping
     @RequestMapping("/updatename")
     public String updateCustomerName(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.updateCustomerName(customer.getId(), customer.getName());
     }
 
+    /**
+     * Customer update email string.
+     *
+     * @param customer the customer
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @PutMapping
     @RequestMapping("/updateemail")
     public String customerUpdateEmail(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.customerUpdateEmail(customer.getId(), customer.getEmail());
     }
 
+    /**
+     * Customer update capital string.
+     *
+     * @param customer the customer
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @PutMapping
     @RequestMapping(value = "/updatecapital", method = {RequestMethod.OPTIONS, RequestMethod.PUT})
     public String customerUpdateCapital(@RequestBody Customer customer) throws ExecutionException, InterruptedException {
         return customerService.customerUpdateCapital(customer.getId(), customer.getTotalCapitalAvailable());
     }
 
+    /**
+     * Delete customer account string.
+     *
+     * @param id the id
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @DeleteMapping
     @RequestMapping("/deletecustomer/{id}")
     public String deleteCustomerAccount(@PathVariable String id) throws ExecutionException, InterruptedException {
         return customerService.deleteCustomerAccount(id);
     }
 
+    /**
+     * Gets capital.
+     *
+     * @param userId the user id
+     * @return the capital
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @GetMapping
     @RequestMapping("/getcapital/{userId}")
     public int getCapital(@PathVariable String userId) throws ExecutionException, InterruptedException {
         return customerService.getCustomerCapital(userId);
     }
 
+    /**
+     * Generate jwt string.
+     *
+     * @return the string
+     * @throws UnirestException the unirest exception
+     */
     public String generateJWT() throws UnirestException {
         HttpResponse<String> response = Unirest.post("https://dev-4pxn4zbtcuoww57l.us.auth0.com/oauth/token")
                 .header("content-type", "application/json")

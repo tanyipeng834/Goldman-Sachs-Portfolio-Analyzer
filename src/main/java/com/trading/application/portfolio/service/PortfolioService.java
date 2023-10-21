@@ -32,28 +32,59 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
+/**
+ * The type Portfolio service.
+ */
 @Service
 public class PortfolioService {
 
+    /**
+     * The Portfolio repo.
+     */
     private PortfolioRepository portfolioRepo = new PortfolioRepository();
+    /**
+     * The Portfolio stock service.
+     */
     @Autowired
     private PortfolioStockService portfolioStockService = new PortfolioStockService();
 
+    /**
+     * The Access log service.
+     */
     @Autowired
     private AccessLogService accessLogService = new AccessLogService();
 
+    /**
+     * The Stock service.
+     */
     @Autowired
     private StockService stockService;
 
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String, Object> template;
 
+    /**
+     * The Stock prices service.
+     */
     @Autowired
     private StockPricesService stockPricesService;
 
+    /**
+     * The Topic.
+     */
     @Autowired
     private ChannelTopic topic;
 
+    /**
+     * Create portfolio response entity.
+     *
+     * @param portfolio the portfolio
+     * @param request   the request
+     * @return the response entity
+     */
     public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request)  {
         try {
 
@@ -71,10 +102,24 @@ public class PortfolioService {
         }
     }
 
+    /**
+     * Gets portfolio.
+     *
+     * @param portfolioId the portfolio id
+     * @return the portfolio
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getPortfolio(portfolioId);
     }
 
+    /**
+     * Delete portfolio response entity.
+     *
+     * @param portfolioId the portfolio id
+     * @return the response entity
+     */
     public ResponseEntity<String> deletePortfolio(String portfolioId) {
         try {
             String result = portfolioRepo.deletePortfolio(portfolioId);
@@ -84,6 +129,15 @@ public class PortfolioService {
         }
     }
 
+    /**
+     * Update portfolio response entity.
+     *
+     * @param portfolio the portfolio
+     * @param request   the request
+     * @return the response entity
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public ResponseEntity<String> updatePortfolio(Portfolio portfolio, HttpServletRequest request) throws ExecutionException,
             InterruptedException {
         try {
@@ -102,10 +156,26 @@ public class PortfolioService {
         }
     }
 
+    /**
+     * Gets all portfolios.
+     *
+     * @param userId the user id
+     * @return the all portfolios
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
     }
 
+    /**
+     * Gets sectors by portfolio id.
+     *
+     * @param portfolioId the portfolio id
+     * @return the sectors by portfolio id
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
 
         Portfolio portfolio = portfolioRepo.getPortfolio(portfolioId);
@@ -134,6 +204,14 @@ public class PortfolioService {
 
     }
 
+    /**
+     * Gets sectors by user id.
+     *
+     * @param userId the user id
+     * @return the sectors by user id
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
 
         List<Portfolio> allPortfolios = portfolioRepo.getAllPortfolios(userId);
@@ -161,6 +239,16 @@ public class PortfolioService {
 
     }
 
+    /**
+     * Rebalance portfolio.
+     *
+     * @param portfolio     the portfolio
+     * @param remoteAddress the remote address
+     * @return the portfolio
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     public Portfolio rebalance(Portfolio portfolio ,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
         String startDate = portfolio.getDateCreated();
 
@@ -179,6 +267,17 @@ public class PortfolioService {
         return portfolio;
     }
 
+    /**
+     * Rebalance value.
+     *
+     * @param stockTime     the stock time
+     * @param portMap       the port map
+     * @param portfolio     the portfolio
+     * @param remoteAddress the remote address
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
         YearMonth createdTime = stockTime;
         YearMonth currentYearMonth = YearMonth.now();
@@ -222,6 +321,17 @@ public class PortfolioService {
     }
 
 
+    /**
+     * Rebalance stock float.
+     *
+     * @param portStock        the port stock
+     * @param currentPortValue the current port value
+     * @param portfolio        the portfolio
+     * @param remoteAddress    the remote address
+     * @return the float
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public float rebalanceStock(List<PortfolioStock> portStock,float currentPortValue,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException {
         float newPortValue = 0.0f;
         List<String> portMapKeys = new ArrayList<>(portfolio.getPortStock().keySet());
@@ -264,10 +374,25 @@ public class PortfolioService {
         return newPortValue;
     }
 
+    /**
+     * Gets total portfolio value.
+     *
+     * @param portfolioId the portfolio id
+     * @return the total portfolio value
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.calculatePortfolioValue(portfolioId);
     }
 
+    /**
+     * Gets all public portfolios.
+     *
+     * @return the all public portfolios
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public ArrayList<Portfolio> getAllPublicPortfolios() throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPublicPortfolios();
     }

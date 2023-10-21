@@ -13,31 +13,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * The type Customer controller test.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class CustomerControllerTest {
 
+    /**
+     * The Mock mvc.
+     */
     @Autowired
     private MockMvc mockMvc;
+    /**
+     * The Token.
+     */
     String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InpiQ09XZjV6WkZYanZ1YUxBcDNGSiJ9" +
         ".eyJpc3MiOiJodHRwczovL2Rldi00cHhuNHpidGN1b3d3NTdsLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiI1QkxFU1AwNVJKOUlKMzl0WDVHQ0tZTWpDcGFHZmNCWkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9nb2xkbWFuLmNvbSIsImlhdCI6MTY5NzI2MzI3MSwiZXhwIjoxNjk3MzQ5NjcxLCJhenAiOiI1QkxFU1AwNVJKOUlKMzl0WDVHQ0tZTWpDcGFHZmNCWiIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.YaNqWvEjip13dDKBTNpqLO7emDnKk0GiXgQdvUDHAkt7A5d658WxehkzsgHPOjtNqGYOBJJ3zVKyToz5uzg05qivSFdyXO61-KXGqoojJ9xQON7k2EMUcIF-mHa3cbTbARIZhUYerH3wFTclVXGUFX-qpLmF1Lm43sgkWB0OWkDnDOg1gpTPvcU9XFn7VKyws-2hGthmFPIeVXbbIVFKiTmOefV0HRDMQBd6AdvEUEXAGSeoOhVJ0QfnkoaZtKm5fJRGsnlMA5lplfn_idAUHHe3WLtmuWryYrXkEtzCMQmrQb_aTIvq7YdtXUjvP_KZScfP6oh4AQYSQRyR2bk_9A";
 
 
-    @Test
-    public void shouldReturnCustomer() throws Exception {
-
-//        String userId = "5cJ0NI3WpPLi9hCQKZG0";
-//
-//        this.mockMvc.perform(get("/customer/" + userId)).andDo(print()).andExpect(status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(userId))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("dooshik"))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("kim"))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.dateJoined").value("14/9/2023"))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.totalCapitalAvailable").value(999999))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("moonsan@gmail.com"));
-//
-    }
-
+    /**
+     * Should create customer.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void shouldCreateCustomer() throws Exception {
         String email = "test@gmail.com";
@@ -55,6 +54,11 @@ class CustomerControllerTest {
         mockMvc.perform(post("/customer/").header("authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).content(customerJson)).andDo(print()).andExpect(status().isOk());
     }
 
+    /**
+     * Should get customer by id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void shouldGetCustomerById() throws Exception {
         String id = "testid";
@@ -66,6 +70,11 @@ class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.customerData.totalCapitalAvailable").value(10000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.customerData.updatedAt").value("2023-10-01T08:19:57.640Z"));}
 
+    /**
+     * Should update customer name.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void shouldUpdateCustomerName() throws Exception {
 
@@ -86,6 +95,11 @@ class CustomerControllerTest {
 
     }
 
+    /**
+     * Should update customer email.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void shouldUpdateCustomerEmail() throws Exception {
 
@@ -106,6 +120,11 @@ class CustomerControllerTest {
 
     }
 
+    /**
+     * Should update customer capital.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void shouldUpdateCustomerCapital() throws Exception {
         String id = "testid";
@@ -125,6 +144,11 @@ class CustomerControllerTest {
 
     }
 
+    /**
+     * Should delete customer account.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void shouldDeleteCustomerAccount() throws Exception {
 
@@ -133,6 +157,11 @@ class CustomerControllerTest {
 
     }
 
+    /**
+     * Should get capital.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void shouldGetCapital() throws Exception {
         String id = "testid";

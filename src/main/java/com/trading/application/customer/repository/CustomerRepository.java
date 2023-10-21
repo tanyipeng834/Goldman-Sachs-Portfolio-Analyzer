@@ -8,18 +8,44 @@ import com.trading.application.customer.entity.Customer;
 import org.springframework.stereotype.Repository;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Customer repository.
+ */
 @Repository
 public class CustomerRepository {
 
+    /**
+     * The Firestore.
+     */
     private Firestore firestore = FirestoreClient.getFirestore();
+    /**
+     * The Document snapshot api future.
+     */
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
+    /**
+     * The Write result api future.
+     */
     private ApiFuture<WriteResult> writeResultApiFuture;
 
+    /**
+     * Get reference by id document reference.
+     *
+     * @param documentId the document id
+     * @return the document reference
+     */
     public DocumentReference getReferenceById(String documentId){
 
         return firestore.collection("customer").document(documentId);
     }
 
+    /**
+     * Add customer string.
+     *
+     * @param customer the customer
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public String addCustomer(Customer customer) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = firestore.collection("customer").document(customer.getId());
@@ -29,6 +55,14 @@ public class CustomerRepository {
 
     }
 
+    /**
+     * Gets by id.
+     *
+     * @param documentId the document id
+     * @return the by id
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public Customer getById(String documentId) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -48,6 +82,16 @@ public class CustomerRepository {
 
     }
 
+    /**
+     * Update document field string.
+     *
+     * @param documentId the document id
+     * @param field      the field
+     * @param fieldValue the field value
+     * @return the string
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
+     */
     public String updateDocumentField(String documentId, String field, String fieldValue) throws InterruptedException, ExecutionException{
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -56,6 +100,16 @@ public class CustomerRepository {
 
     }
 
+    /**
+     * Update total capital available string.
+     *
+     * @param documentId the document id
+     * @param field      the field
+     * @param fieldValue the field value
+     * @return the string
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
+     */
     public String updateTotalCapitalAvailable(String documentId, String field, int fieldValue) throws InterruptedException, ExecutionException {
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -65,6 +119,12 @@ public class CustomerRepository {
     }
 
 
+    /**
+     * Delete customer account string.
+     *
+     * @param documentId the document id
+     * @return the string
+     */
     public String deleteCustomerAccount(String documentId){
 
         try {
@@ -76,6 +136,14 @@ public class CustomerRepository {
 
     }
 
+    /**
+     * Gets total capital available.
+     *
+     * @param documentId the document id
+     * @return the total capital available
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
+     */
     public int getTotalCapitalAvailable(String documentId) throws InterruptedException, ExecutionException {
 
         DocumentReference docRef = getReferenceById(documentId);

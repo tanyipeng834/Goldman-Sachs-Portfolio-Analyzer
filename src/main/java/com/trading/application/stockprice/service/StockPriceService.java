@@ -26,17 +26,42 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+/**
+ * The type Stock price service.
+ */
 @Service
 public class StockPriceService {
+    /**
+     * The Object mapper.
+     */
     private final ObjectMapper objectMapper;
+    /**
+     * The Stock price repo.
+     */
     @Autowired
     private StockPriceRepository stockPriceRepo;
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String,Object> template;
 
+    /**
+     * The Web client.
+     */
     private final WebClient webClient;
+    /**
+     * The Api key.
+     */
     @Value("${api.key}")
     private  String apiKey;
+
+    /**
+     * Instantiates a new Stock price service.
+     *
+     * @param webClientBuilder the web client builder
+     * @param objectMapper     the object mapper
+     */
     @Autowired
     public StockPriceService(WebClient.Builder webClientBuilder ,ObjectMapper objectMapper){
         this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
@@ -47,6 +72,15 @@ public class StockPriceService {
 
     // from api
 
+    /**
+     * Gets stock daily price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the stock daily price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     public StockPrices getStockDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_DAILY_ADJUSTED");
@@ -95,7 +129,16 @@ public class StockPriceService {
 
     }
 
-    // get balance sheet
+    /**
+     * Gets balance sheet.
+     *
+     * @param stockTicker the stock ticker
+     * @return the balance sheet
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
+// get balance sheet
     public JsonNode getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"BALANCE_SHEET");
@@ -112,7 +155,16 @@ public class StockPriceService {
         }
     }
 
-    // get income statement
+    /**
+     * Gets income statement.
+     *
+     * @param stockTicker the stock ticker
+     * @return the income statement
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
+// get income statement
     public JsonNode getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
@@ -128,6 +180,15 @@ public class StockPriceService {
         }
     }
 
+    /**
+     * Gets stock weekly price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the stock weekly price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
@@ -176,6 +237,15 @@ public class StockPriceService {
 
     }
 
+    /**
+     * Gets stock monthly price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the stock monthly price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
         System.out.println("Invoked API");
@@ -226,8 +296,17 @@ public class StockPriceService {
     }
 
 
-
-
+    /**
+     * Gets stock quarterly return.
+     *
+     * @param stockTicker the stock ticker
+     * @param startDate   the start date
+     * @param endDate     the end date
+     * @return the stock quarterly return
+     * @throws IOException          the io exception
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public float getStockQuarterlyReturn(String stockTicker, LocalDate startDate, LocalDate endDate)
             throws IOException, ExecutionException, InterruptedException {
         String key = "monthlyStockPrice::" + stockTicker;
@@ -255,6 +334,14 @@ public class StockPriceService {
 
     }
 
+    /**
+     * Calculate quarterly return float.
+     *
+     * @param monthlyStockPrices the monthly stock prices
+     * @param startDate          the start date
+     * @param endDate            the end date
+     * @return the float
+     */
     private float calculateQuarterlyReturn(List<StockPrice> monthlyStockPrices, LocalDate startDate, LocalDate endDate) {
         // Filter the monthly stock prices for the specified date range
         List<StockPrice> filteredPrices = monthlyStockPrices.stream()
@@ -277,6 +364,13 @@ public class StockPriceService {
     }
 
 
+    /**
+     * Parse api response string.
+     *
+     * @param stockTicker the stock ticker
+     * @param priceType   the price type
+     * @return the string
+     */
     private String parseApiResponse(String stockTicker, String priceType) {
         String jsonString =this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -298,6 +392,13 @@ public class StockPriceService {
 
 
     }
+
+    /**
+     * Convert date to local date local date.
+     *
+     * @param date the date
+     * @return the local date
+     */
     private LocalDate convertDateToLocalDate(Date date) {
         return Instant.ofEpochMilli(date.getTime())
                 .atZone(ZoneId.systemDefault())

@@ -20,9 +20,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * The type Firebase config.
+ */
 @Service
 public class FirebaseConfig {
 
+    /**
+     * Configure firebase connection.
+     *
+     * @throws IOException the io exception
+     */
     @PostConstruct
     public void configureFirebaseConnection() throws IOException {
 
@@ -38,10 +46,18 @@ public class FirebaseConfig {
 
     }
 
+    /**
+     * The type Redis config.
+     */
     @Configuration
     @EnableRedisRepositories
     public static class RedisConfig {
 
+        /**
+         * Connection factory jedis connection factory.
+         *
+         * @return the jedis connection factory
+         */
         @Bean
         JedisConnectionFactory connectionFactory() {
             RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
@@ -50,7 +66,13 @@ public class FirebaseConfig {
             return new JedisConnectionFactory(configuration);
         }
 
-            @Bean
+        /**
+         * Template redis template.
+         *
+         * @param redisConnectionFactory the redis connection factory
+         * @return the redis template
+         */
+        @Bean
             RedisTemplate<String, Object> template(RedisConnectionFactory redisConnectionFactory) {
             RedisTemplate<String, Object> template = new RedisTemplate<>();
             template.setConnectionFactory(redisConnectionFactory);

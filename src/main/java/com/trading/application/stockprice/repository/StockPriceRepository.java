@@ -20,22 +20,58 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The type Stock price repository.
+ */
 @Repository
 public class StockPriceRepository {
 
+    /**
+     * The Firestore.
+     */
     private Firestore firestore = FirestoreClient.getFirestore();
+    /**
+     * The Document snapshot api future.
+     */
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
+    /**
+     * The Write result api future.
+     */
     private ApiFuture<WriteResult> writeResultApiFuture;
+    /**
+     * The constant HASH_KEY.
+     */
     public static final String HASH_KEY = "StockPrice";
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String,Object> template;
 
+    /**
+     * Gets reference by id.
+     *
+     * @param stockTicker the stock ticker
+     * @return the reference by id
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public DocumentReference getReferenceById(String stockTicker) throws ExecutionException, InterruptedException {
 
         return firestore.collection("stockPrice").document(stockTicker);
 
     }
-    // create StockPrice, get from api
+
+    /**
+     * Save stock daily price stock prices.
+     *
+     * @param stockPrices the stock prices
+     * @param stockTicker the stock ticker
+     * @return the stock prices
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// create StockPrice, get from api
     public StockPrices saveStockDailyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
         template.opsForHash().put("eodPrice",stockTicker, stockPrices.getStockPriceList().get(0));
         template.expire("eodPrice", 24, TimeUnit.HOURS);
@@ -71,6 +107,15 @@ public class StockPriceRepository {
         }
     }
 
+    /**
+     * Save stock weekly price stock prices.
+     *
+     * @param stockPrices the stock prices
+     * @param stockTicker the stock ticker
+     * @return the stock prices
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public StockPrices saveStockWeeklyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
 
 
@@ -105,6 +150,15 @@ public class StockPriceRepository {
         }
     }
 
+    /**
+     * Save stock monthly price stock prices.
+     *
+     * @param stockPrices the stock prices
+     * @param stockTicker the stock ticker
+     * @return the stock prices
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public StockPrices saveStockMonthlyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
 
 
@@ -140,7 +194,15 @@ public class StockPriceRepository {
     }
 
 
-    // retrieve value from firebase
+    /**
+     * Gets stock.
+     *
+     * @param stockTicker the stock ticker
+     * @return the stock
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+// retrieve value from firebase
     public StockPrice getStock(String stockTicker) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = getReferenceById(stockTicker);

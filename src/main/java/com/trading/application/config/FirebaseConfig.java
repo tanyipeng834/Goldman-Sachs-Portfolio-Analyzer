@@ -12,9 +12,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * The type Firebase config.
+ */
 @Service
 public class FirebaseConfig {
 
+    /**
+     * Configure firebase connection.
+     *
+     * @throws IOException the io exception
+     */
     @PostConstruct
     public void configureFirebaseConnection() throws IOException {
 

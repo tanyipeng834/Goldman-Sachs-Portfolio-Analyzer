@@ -27,13 +27,22 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+/**
+ * The type Portfolio repository test.
+ */
 @ContextConfiguration(classes = {Portfolio.class})
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class PortfolioRepositoryTest {
+    /**
+     * The Portfolio.
+     */
     @Autowired
     private Portfolio portfolio;
 
+    /**
+     * The Portfolio repository.
+     */
     @MockBean
     private PortfolioRepository portfolioRepository;
 
@@ -49,6 +58,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#createPortfolio(Portfolio)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testCreatePortfolio() throws InterruptedException, ExecutionException {
@@ -59,6 +71,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#calculatePortfolioValue(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testCalculatePortfolioValue() throws InterruptedException, ExecutionException {
@@ -80,6 +95,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#updatePortfolio(Portfolio)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testUpdatePortfolio() throws InterruptedException, ExecutionException {
@@ -90,6 +108,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#getAllPublicPortfolios()}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetAllPublicPortfolios() throws InterruptedException, ExecutionException {
@@ -103,6 +124,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#deletePortfolio(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testDeletePortfolio() throws InterruptedException, ExecutionException {
@@ -113,6 +137,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#updatePortfolioField(String, String, float)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testUpdatePortfolioField() throws InterruptedException, ExecutionException {
@@ -124,6 +151,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#updatePortfolioField(String, String, String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testUpdatePortfolioField2() throws InterruptedException, ExecutionException {
@@ -137,6 +167,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#updatePortfolioField(String, String, boolean)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testUpdatePortfolioField3() throws InterruptedException, ExecutionException {
@@ -148,6 +181,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#getPortfolio(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetPortfolio() throws InterruptedException, ExecutionException {
@@ -159,6 +195,9 @@ class PortfolioRepositoryTest {
 
     /**
      * Method under test: {@link PortfolioRepository#getAllPortfolios(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetAllPortfolios() throws InterruptedException, ExecutionException {

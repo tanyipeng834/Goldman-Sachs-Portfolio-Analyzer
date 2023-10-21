@@ -11,14 +11,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Stock controller.
+ */
 @RestController
 @EnableCaching
 @RequestMapping("/stock")
 @CrossOrigin(origins = "http://localhost:8080")
 public class StockController {
+    /**
+     * The Stock service.
+     */
     @Autowired
     private StockService stockService;
 
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String,Object> template;
     // create new stock
@@ -37,6 +46,16 @@ public class StockController {
 //        return stockService.(stockTicker);
 //    }
 
+    /**
+     * Gets stock overview by id.
+     *
+     * @param stockTicker the stock ticker
+     * @return the stock overview by id
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     * @throws RuntimeException        the runtime exception
+     */
     @GetMapping
     @RequestMapping("/{stockTicker}/companyOverview")
     @Cacheable(key="#stockTicker",cacheNames = "companyOverview")

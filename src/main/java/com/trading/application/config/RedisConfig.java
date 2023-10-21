@@ -21,10 +21,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+/**
+ * The type Redis config.
+ */
 @Configuration
 @EnableRedisRepositories
 public class RedisConfig {
 
+    /**
+     * Connection factory jedis connection factory.
+     *
+     * @return the jedis connection factory
+     */
     @Bean
     JedisConnectionFactory connectionFactory() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
@@ -33,6 +41,12 @@ public class RedisConfig {
         return new JedisConnectionFactory(configuration);
     }
 
+    /**
+     * Template redis template.
+     *
+     * @param redisConnectionFactory the redis connection factory
+     * @return the redis template
+     */
     @Bean
     RedisTemplate<String, Object> template(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -45,6 +59,13 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+
+    /**
+     * Publish template redis template.
+     *
+     * @param redisConnectionFactory the redis connection factory
+     * @return the redis template
+     */
     @Bean
     RedisTemplate<String, Object> publishTemplate(RedisConnectionFactory redisConnectionFactory) {
 
@@ -55,6 +76,12 @@ public class RedisConfig {
         return template;
     }
 
+    /**
+     * Cache manager cache manager.
+     *
+     * @param redisConnectionFactory the redis connection factory
+     * @return the cache manager
+     */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration cacheConfiguration1 = RedisCacheConfiguration.defaultCacheConfig()
@@ -76,17 +103,34 @@ public class RedisConfig {
         return cacheManager;
     }
 
+    /**
+     * Topic channel topic.
+     *
+     * @return the channel topic
+     */
     @Bean
     public ChannelTopic topic(){
 
         return new ChannelTopic("Logs");
 
     }
+
+    /**
+     * Message listener adapter message listener adapter.
+     *
+     * @return the message listener adapter
+     */
     @Bean
     public MessageListenerAdapter messageListenerAdapter(){
         // Have to put the new receiver class inside the listener adapter
         return new MessageListenerAdapter(new LogSubsciber());
     }
+
+    /**
+     * Redis message listener container redis message listener container.
+     *
+     * @return the redis message listener container
+     */
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(){
 

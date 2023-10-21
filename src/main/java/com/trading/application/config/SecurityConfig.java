@@ -22,24 +22,31 @@ import java.util.Arrays;
 /**
  * Configures our application with Spring Security to restrict access to our API endpoints.
  */
-
 @Configuration
 @EnableWebSecurity
 
 public class SecurityConfig {
 
+    /**
+     * The Audience.
+     */
     @Value("${auth0.audience}")
     private String audience;
 
+    /**
+     * The Issuer.
+     */
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
 
 
-
-
-
-
-
+    /**
+     * Filter chain security filter chain.
+     *
+     * @param http the http
+     * @return the security filter chain
+     * @throws Exception the exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -69,6 +76,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Jwt decoder jwt decoder.
+     *
+     * @return the jwt decoder
+     */
     @Bean
     JwtDecoder jwtDecoder() {
         /*

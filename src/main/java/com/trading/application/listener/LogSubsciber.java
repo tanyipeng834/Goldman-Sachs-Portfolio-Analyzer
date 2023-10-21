@@ -12,8 +12,17 @@ import org.springframework.data.redis.connection.MessageListener;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Log subsciber.
+ */
 public class LogSubsciber implements MessageListener {
+    /**
+     * The Logger.
+     */
     Logger logger = LoggerFactory.getLogger(AccessLogService.class);
+    /**
+     * The Access log service.
+     */
     @Autowired
     AccessLogService accessLogService = new AccessLogService();
 
@@ -39,6 +48,12 @@ public class LogSubsciber implements MessageListener {
         }
     }
 
+    /**
+     * Extract json from message string.
+     *
+     * @param messageContent the message content
+     * @return the string
+     */
     private String extractJsonFromMessage(String messageContent) {
         // You can implement custom logic here to extract the JSON portion
         // For example, you can use regular expressions or other techniques

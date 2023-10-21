@@ -37,24 +37,45 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+/**
+ * The type Portfolio service test.
+ */
 @ContextConfiguration(classes = {Portfolio.class, RedisTemplate.class, ChannelTopic.class})
 @ExtendWith(SpringExtension.class)
 class PortfolioServiceTest {
+    /**
+     * The Access log service.
+     */
     @MockBean
     private AccessLogService accessLogService;
 
+    /**
+     * The Portfolio.
+     */
     @Autowired
     private Portfolio portfolio;
 
+    /**
+     * The Portfolio service.
+     */
     @Autowired
     private PortfolioService portfolioService;
 
+    /**
+     * The Portfolio stock service.
+     */
     @MockBean
     private PortfolioStockService portfolioStockService;
 
+    /**
+     * The Stock prices service.
+     */
     @MockBean
     private StockPricesService stockPricesService;
 
+    /**
+     * The Stock service.
+     */
     @MockBean
     private StockService stockService;
 
@@ -120,6 +141,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#getPortfolio(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetPortfolio() throws InterruptedException, ExecutionException {
@@ -141,6 +165,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#updatePortfolio(Portfolio, HttpServletRequest)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     @Disabled("TODO: Complete this test")
@@ -201,6 +228,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#getAllPortfolios(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetAllPortfolios() throws InterruptedException, ExecutionException {
@@ -214,6 +244,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#getSectorsByPortfolioId(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetSectorsByPortfolioId() throws InterruptedException, ExecutionException {
@@ -227,6 +260,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#getSectorsByUserId(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetSectorsByUserId() throws InterruptedException, ExecutionException {
@@ -240,6 +276,10 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#rebalance(Portfolio, String)}
+     *
+     * @throws JsonProcessingException the json processing exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws ExecutionException      the execution exception
      */
     @Test
     @Disabled("TODO: Complete this test")
@@ -300,6 +340,10 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#rebalanceValue(YearMonth, Map, Portfolio, String)}
+     *
+     * @throws JsonProcessingException the json processing exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws ExecutionException      the execution exception
      */
     @Test
     @Disabled("TODO: Complete this test")
@@ -362,6 +406,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#rebalanceStock(List, float, Portfolio, String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     @Disabled("TODO: Complete this test")
@@ -423,6 +470,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#getTotalPortfolioValue(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetTotalPortfolioValue() throws InterruptedException, ExecutionException {
@@ -433,6 +483,9 @@ class PortfolioServiceTest {
 
     /**
      * Method under test: {@link PortfolioService#getAllPublicPortfolios()}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
     void testGetAllPublicPortfolios() throws InterruptedException, ExecutionException {

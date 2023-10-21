@@ -22,19 +22,40 @@ import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import java.time.LocalDate;
 
+/**
+ * The type Stock price controller.
+ */
 @RestController
 @RequestMapping("/stockprice")
 @CrossOrigin(origins = "http://localhost:8080")
 public class StockPriceController {
+    /**
+     * The Stock price service.
+     */
     @Autowired
     private StockPriceService stockPriceService;
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String,Object> template;
+    /**
+     * The Stock prices service.
+     */
     @Autowired
     private StockPricesService stockPricesService;
 
 
-    // still need to create in firebase. this is the first call to api
+    /**
+     * Gets latest stock price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the latest stock price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
+// still need to create in firebase. this is the first call to api
     @GetMapping
     @RequestMapping("/eodprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "eodPrice")
@@ -51,6 +72,16 @@ public class StockPriceController {
         }
 
     }
+
+    /**
+     * Gets daily stock price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the daily stock price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @GetMapping
     @RequestMapping("/dailyprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "dailyStockPrice")
@@ -59,6 +90,15 @@ public class StockPriceController {
 
     }
 
+    /**
+     * Gets balance sheet.
+     *
+     * @param stockTicker the stock ticker
+     * @return the balance sheet
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @GetMapping
     @RequestMapping("/balancesheet/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "balanceSheet")
@@ -66,6 +106,15 @@ public class StockPriceController {
         return stockPriceService.getBalanceSheet(stockTicker);
     }
 
+    /**
+     * Gets income statement.
+     *
+     * @param stockTicker the stock ticker
+     * @return the income statement
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @GetMapping
     @RequestMapping("/incomestatement/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "incomeStatement")
@@ -73,6 +122,15 @@ public class StockPriceController {
         return stockPriceService.getIncomeStatement(stockTicker);
     }
 
+    /**
+     * Gets weekly stock price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the weekly stock price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @GetMapping
     @RequestMapping("/weeklyprice/{stockTicker}")
     @Cacheable(key="#stockTicker",cacheNames = "weeklyStockPrice")
@@ -81,6 +139,15 @@ public class StockPriceController {
 
     }
 
+    /**
+     * Gets monthly stock price.
+     *
+     * @param stockTicker the stock ticker
+     * @return the monthly stock price
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @GetMapping
     @RequestMapping("/monthlyprice/{stockTicker}")
 //    @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
@@ -89,6 +156,17 @@ public class StockPriceController {
 
     }
 
+    /**
+     * Gets quarterly stock price.
+     *
+     * @param stockTicker the stock ticker
+     * @param year        the year
+     * @param quarter     the quarter
+     * @return the quarterly stock price
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException          the io exception
+     */
     @GetMapping
     @RequestMapping("/quarterlyreturn/{stockTicker}/{year}/{quarter}")
     @Cacheable(key = "{#stockTicker, #year, #quarter}", cacheNames = "quaterlyReturns")
@@ -127,12 +205,34 @@ public class StockPriceController {
         return stockPriceService.getStockQuarterlyReturn(stockTicker, startDate, endDate);
     }
 
+    /**
+     * Gets monthly price from date.
+     *
+     * @param stockTicker the stock ticker
+     * @param month       the month
+     * @param year        the year
+     * @return the monthly price from date
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     */
     @RequestMapping("/getmonthlypricebydate/{stockTicker}")
     public Object getMonthlyPriceFromDate(@PathVariable String stockTicker, @RequestParam String month, @RequestParam String year) throws ExecutionException, InterruptedException, JsonProcessingException {
         return stockPricesService.getMonthlyPriceFromDate(stockTicker, month, year);
 
     }
 
+    /**
+     * Gets prices from date bought.
+     *
+     * @param stockTicker the stock ticker
+     * @param dateBought  the date bought
+     * @return the prices from date bought
+     * @throws ExecutionException      the execution exception
+     * @throws InterruptedException    the interrupted exception
+     * @throws JsonProcessingException the json processing exception
+     * @throws ParseException          the parse exception
+     */
     @GetMapping
     @RequestMapping("/getpricesfromdatebought/{stockTicker}")
     public Object getPricesFromDateBought(@PathVariable String stockTicker, @RequestParam String dateBought) throws ExecutionException, InterruptedException, JsonProcessingException, ParseException {

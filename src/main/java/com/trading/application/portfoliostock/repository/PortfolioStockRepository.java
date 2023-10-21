@@ -23,25 +23,67 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The type Portfolio stock repository.
+ */
 @Repository
 public class PortfolioStockRepository {
 
+    /**
+     * The Firestore.
+     */
     private Firestore firestore = FirestoreClient.getFirestore();
+    /**
+     * The Document snapshot api future.
+     */
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
+    /**
+     * The Write result api future.
+     */
     private ApiFuture<WriteResult> writeResultApiFuture;
+    /**
+     * The Query snapshot.
+     */
     private ApiFuture<QuerySnapshot> querySnapshot;
+    /**
+     * The Col ref.
+     */
     private CollectionReference colRef = firestore.collection("portfolioStock");
+    /**
+     * The Template.
+     */
     @Autowired
     private RedisTemplate<String,Object> template;
+    /**
+     * The Logger.
+     */
     Logger logger = LoggerFactory.getLogger(AccessLogService.class);
 
+    /**
+     * The Topic.
+     */
     @Autowired
     private ChannelTopic topic;
 
+    /**
+     * The Access log service.
+     */
     @Autowired
     private AccessLogService accessLogService = new AccessLogService();
 
 
+    /**
+     * Add new stock string.
+     *
+     * @param portfolioId    the portfolio id
+     * @param userId         the user id
+     * @param stockTicker    the stock ticker
+     * @param portfolioStock the portfolio stock
+     * @param request        the request
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
@@ -102,6 +144,19 @@ public class PortfolioStockRepository {
         }
     }
 
+    /**
+     * Update stock string.
+     *
+     * @param indexToUpdate  the index to update
+     * @param portfolioId    the portfolio id
+     * @param userId         the user id
+     * @param stockTicker    the stock ticker
+     * @param portfolioStock the portfolio stock
+     * @param request        the request
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -179,6 +234,17 @@ public class PortfolioStockRepository {
         }
     }
 
+    /**
+     * Delete stock string.
+     *
+     * @param portfolioId    the portfolio id
+     * @param userId         the user id
+     * @param stocksToDelete the stocks to delete
+     * @param request        the request
+     * @return the string
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     public String deleteStock(String portfolioId, String userId, Map<String, List<Integer>> stocksToDelete, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();

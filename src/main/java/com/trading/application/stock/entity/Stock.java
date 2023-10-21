@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The type Stock.
+ */
 @RequiredArgsConstructor
 //@Data
 //
@@ -16,18 +19,62 @@ import java.util.Date;
 @Component
 public class Stock implements Serializable {
 
+    /**
+     * The Stock ticker.
+     */
     private String stockTicker;
+    /**
+     * The Stock current price.
+     */
     private float stockCurrentPrice;
+    /**
+     * The Historical stock price.
+     */
     private ArrayList<StockPrice> historicalStockPrice;
+    /**
+     * The Last refreshed.
+     */
     private Date lastRefreshed;
+    /**
+     * The Description.
+     */
     private String description;
+    /**
+     * The Exchange.
+     */
     private String exchange;
+    /**
+     * The Currency.
+     */
     private String currency;
+    /**
+     * The Country.
+     */
     private String country;
+    /**
+     * The Sector.
+     */
     private String sector;
+    /**
+     * The Industry.
+     */
     private String industry;
+    /**
+     * The Market capitalization.
+     */
     private String marketCapitalization;
 
+    /**
+     * Instantiates a new Stock.
+     *
+     * @param description          the description
+     * @param exchange             the exchange
+     * @param currency             the currency
+     * @param country              the country
+     * @param sector               the sector
+     * @param industry             the industry
+     * @param marketCapitalization the market capitalization
+     */
     public Stock(String description, String exchange, String currency, String country, String sector, String industry, String marketCapitalization) {
         this.description = description;
         this.exchange = exchange;
@@ -38,6 +85,14 @@ public class Stock implements Serializable {
         this.marketCapitalization = marketCapitalization;
     }
 
+    /**
+     * Instantiates a new Stock.
+     *
+     * @param stockTicker          the stock ticker
+     * @param stockCurrentPrice    the stock current price
+     * @param historicalStockPrice the historical stock price
+     * @param lastRefreshed        the last refreshed
+     */
     public Stock(String stockTicker, float stockCurrentPrice, ArrayList<StockPrice> historicalStockPrice, Date lastRefreshed) {
         this.stockTicker = stockTicker;
         //this.stockName = stockName;
@@ -47,18 +102,38 @@ public class Stock implements Serializable {
     }
 
 
+    /**
+     * Gets historical stock price.
+     *
+     * @return the historical stock price
+     */
     public ArrayList<StockPrice> getHistoricalStockPrice() {
         return historicalStockPrice;
     }
 
+    /**
+     * Sets historical stock price.
+     *
+     * @param historicalStockPrice the historical stock price
+     */
     public void setHistoricalStockPrice(ArrayList<StockPrice> historicalStockPrice) {
         this.historicalStockPrice = historicalStockPrice;
     }
 
+    /**
+     * Gets last refreshed.
+     *
+     * @return the last refreshed
+     */
     public Date getLastRefreshed() {
         return lastRefreshed;
     }
 
+    /**
+     * Sets last refreshed.
+     *
+     * @param lastRefreshed the last refreshed
+     */
     public void setLastRefreshed(Date lastRefreshed) {
         this.lastRefreshed = lastRefreshed;
     }
@@ -72,74 +147,166 @@ public class Stock implements Serializable {
 //    private String industry;
 //    to put daily, weekly, and monthly
 
-;    public String getStockTicker() {
+;
+
+    /**
+     * Gets stock ticker.
+     *
+     * @return the stock ticker
+     */
+    public String getStockTicker() {
         return stockTicker;
     }
 
+    /**
+     * Sets stock ticker.
+     *
+     * @param stockTicker the stock ticker
+     */
     public void setStockTicker(String stockTicker) {
         this.stockTicker = stockTicker;
     }
 
+    /**
+     * Gets stock current price.
+     *
+     * @return the stock current price
+     */
     public float getStockCurrentPrice() {
         return stockCurrentPrice;
     }
 
+    /**
+     * Sets stock current price.
+     *
+     * @param stockCurrentPrice the stock current price
+     */
     public void setStockCurrentPrice(float stockCurrentPrice) {
         this.stockCurrentPrice = stockCurrentPrice;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets exchange.
+     *
+     * @return the exchange
+     */
     public String getExchange() {
         return exchange;
     }
 
+    /**
+     * Sets exchange.
+     *
+     * @param exchange the exchange
+     */
     public void setExchange(String exchange) {
         this.exchange = exchange;
     }
 
+    /**
+     * Gets currency.
+     *
+     * @return the currency
+     */
     public String getCurrency() {
         return currency;
     }
 
+    /**
+     * Sets currency.
+     *
+     * @param currency the currency
+     */
     public void setCurrency(String currency) {
         this.currency = currency;
     }
 
+    /**
+     * Gets country.
+     *
+     * @return the country
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * Sets country.
+     *
+     * @param country the country
+     */
     public void setCountry(String country) {
         this.country = country;
     }
 
+    /**
+     * Gets sector.
+     *
+     * @return the sector
+     */
     public String getSector() {
         return sector;
     }
 
+    /**
+     * Sets sector.
+     *
+     * @param sector the sector
+     */
     public void setSector(String sector) {
         this.sector = sector;
     }
 
+    /**
+     * Gets industry.
+     *
+     * @return the industry
+     */
     public String getIndustry() {
         return industry;
     }
 
+    /**
+     * Sets industry.
+     *
+     * @param industry the industry
+     */
     public void setIndustry(String industry) {
         this.industry = industry;
     }
 
+    /**
+     * Gets market capitalization.
+     *
+     * @return the market capitalization
+     */
     public String getMarketCapitalization() {
         return marketCapitalization;
     }
 
+    /**
+     * Sets market capitalization.
+     *
+     * @param marketCapitalization the market capitalization
+     */
     public void setMarketCapitalization(String marketCapitalization) {
         this.marketCapitalization = marketCapitalization;
     }

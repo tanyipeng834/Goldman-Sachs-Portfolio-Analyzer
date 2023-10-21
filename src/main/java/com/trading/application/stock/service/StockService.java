@@ -9,13 +9,31 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * The type Stock service.
+ */
 @Service
 public class StockService {
+    /**
+     * The Web client.
+     */
     private final WebClient webClient;
+    /**
+     * The Object mapper.
+     */
     private final ObjectMapper objectMapper;
+    /**
+     * The Api key.
+     */
     @Value("${api.key}")
     private String apiKey;
 
+    /**
+     * Instantiates a new Stock service.
+     *
+     * @param webClientBuilder the web client builder
+     * @param objectMapper     the object mapper
+     */
     public StockService(WebClient.Builder webClientBuilder,ObjectMapper objectMapper){
 
         this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
@@ -23,6 +41,12 @@ public class StockService {
 
     }
 
+    /**
+     * Parse api response string.
+     *
+     * @param stockTicker the stock ticker
+     * @return the string
+     */
     private String parseApiResponse(String stockTicker) {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -35,7 +59,13 @@ public class StockService {
                 .bodyToMono(String.class).block();
     }
 
-    //GET STOCK OVERVIEW
+    /**
+     * Gets stock overview.
+     *
+     * @param stockTicker the stock ticker
+     * @return the stock overview
+     */
+//GET STOCK OVERVIEW
     @Cacheable(key="#stockTicker",cacheNames = "companyOverview")
     public Stock getStockOverview(String stockTicker) {
 
