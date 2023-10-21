@@ -110,7 +110,6 @@ public class PortfolioService {
 
         Portfolio portfolio = portfolioRepo.getPortfolio(portfolioId);
 
-
         Map<String, Integer> sectorCounts = new HashMap<>(); // Map to store sector counts
 
         if (portfolio != null) {
@@ -123,16 +122,8 @@ public class PortfolioService {
 
                     String key = "companyOverview::" + stockTicker;
 
-                    Object value = template.opsForValue().get(key);
-
-                    if (value == null) {
-                        stockService.getStockOverview(stockTicker);
-                        value = template.opsForValue().get(key);
-                    }
-
-                    Stock stock = (Stock) value;
-                    String sector = stock.getSector();
-
+                    String sector = stockService.getStockOverview(stockTicker).getSector();
+                    // Update the sector counts in the map
                     sectorCounts.put(sector, sectorCounts.getOrDefault(sector, 0) + 1);
 
                 }
