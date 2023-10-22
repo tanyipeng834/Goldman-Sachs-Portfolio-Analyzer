@@ -9,6 +9,9 @@ import static org.mockito.Mockito.anyFloat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
 
@@ -22,11 +25,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+/**
+ * The type Portfolio repository test.
+ */
 /**
  * The type Portfolio repository test.
  */
