@@ -25,18 +25,12 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 class CustomerControllerTest {
 
-    /**
-     * The Mock mvc.
-     */
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Mock
-    private Customer customer;
-
     @InjectMocks
     private CustomerController customerController;
 
+    /**
+     * The Customer service.
+     */
     @Mock
     private CustomerService customerService;
 
@@ -67,8 +61,6 @@ class CustomerControllerTest {
         ResponseEntity<Object> actualResponse = customerController.createCustomer(customer);
 
         assertEquals(expectedResponse.getStatusCode(), actualResponse.getStatusCode());
-
-
     }
 
     /**
@@ -86,8 +78,8 @@ class CustomerControllerTest {
         ResponseEntity<Object> actualResponse = customerController.getCustomerById(id);
 
         assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
-
     }
+
     /**
      * Should update customer name.
      *
@@ -118,15 +110,11 @@ class CustomerControllerTest {
     void shouldDeleteCustomerAccount() throws Exception {
 
         String userId = "testid";
-        // Mock the behavior of customerService.deleteCustomerAccount
         when(customerService.deleteCustomerAccount(userId)).thenReturn("AccountDeleted");
 
-        // Call the controller method
         String actualResponse = customerController.deleteCustomerAccount(userId);
 
-        // Assert
         assertEquals("AccountDeleted", actualResponse);
-
     }
 
     /**
@@ -141,12 +129,9 @@ class CustomerControllerTest {
         int expectedCapital = 12000;
 
         when(customerService.getCustomerCapital(userId)).thenReturn(expectedCapital);
-
         int actualCapital = customerController.getCapital(userId);
 
-        // Assert
         assertEquals(expectedCapital, actualCapital);
-
-}
+    }
 
 }

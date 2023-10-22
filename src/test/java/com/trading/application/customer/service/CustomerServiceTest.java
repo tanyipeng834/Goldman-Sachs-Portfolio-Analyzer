@@ -2,39 +2,38 @@ package com.trading.application.customer.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.trading.application.customer.entity.Customer;
-
 import java.util.concurrent.ExecutionException;
-
+import com.trading.application.customer.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * The type Customer service test.
  */
-@ContextConfiguration(classes = {Customer.class})
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class CustomerServiceTest {
-    /**
-     * The Customer.
-     */
-    @Autowired
-    private Customer customer;
 
     /**
      * The Customer service.
      */
-    @MockBean
-    private CustomerService customerService;
+    @InjectMocks
+    CustomerService customerService;
+
+    /**
+     * The Customer repository.
+     */
+    @Mock
+    private CustomerRepository customerRepo;
 
     /**
      * Method under test: {@link CustomerService#createCustomer(Customer)}
@@ -44,9 +43,13 @@ class CustomerServiceTest {
      */
     @Test
     void testCreateCustomer() throws InterruptedException, ExecutionException {
-        when(customerService.createCustomer(Mockito.<Customer>any())).thenReturn("Create Customer");
-        assertEquals("Create Customer", customerService.createCustomer(customer));
-        verify(customerService).createCustomer(Mockito.<Customer>any());
+        when(customerRepo.addCustomer(Mockito.any(Customer.class))).thenReturn("CustomerAdded");
+        Customer customer = new Customer();
+
+        String actualResponse = customerService.createCustomer(customer);
+
+        assertEquals("CustomerAdded", actualResponse);
+        verify(customerRepo).addCustomer(customer);
     }
 
     /**
@@ -57,10 +60,14 @@ class CustomerServiceTest {
      */
     @Test
     void testGetCustomer() throws InterruptedException, ExecutionException {
-        Customer customer = new Customer();
-        when(customerService.getCustomer(Mockito.<String>any())).thenReturn(customer);
-        assertSame(customer, customerService.getCustomer("42"));
-        verify(customerService).getCustomer(Mockito.<String>any());
+        String customerId = "42";
+        Customer expectedCustomer = new Customer();
+        when(customerRepo.getById(customerId)).thenReturn(expectedCustomer);
+
+        Customer actualCustomer = customerService.getCustomer(customerId);
+
+        assertSame(expectedCustomer, actualCustomer);
+        verify(customerRepo).getById(customerId);
     }
 
     /**
@@ -71,9 +78,14 @@ class CustomerServiceTest {
      */
     @Test
     void testUpdateCustomerName() throws InterruptedException, ExecutionException {
-        when(customerService.updateCustomerName(Mockito.<String>any(), Mockito.<String>any())).thenReturn("2020-03-01");
-        assertEquals("2020-03-01", customerService.updateCustomerName("42", "Name"));
-        verify(customerService).updateCustomerName(Mockito.<String>any(), Mockito.<String>any());
+        String customerId = "42";
+        String newName = "New Name";
+
+        when(customerRepo.updateDocumentField(customerId, "name", newName)).thenReturn("2020-03-01");
+        String updatedDate = customerService.updateCustomerName(customerId, newName);
+
+        assertEquals("2020-03-01", updatedDate);
+        verify(customerRepo).updateDocumentField(customerId, "name", newName);
     }
 
     /**
@@ -84,22 +96,16 @@ class CustomerServiceTest {
      */
     @Test
     void testCustomerUpdateEmail() throws InterruptedException, ExecutionException {
-        when(customerService.customerUpdateEmail(Mockito.<String>any(), Mockito.<String>any())).thenReturn("2020-03-01");
-        assertEquals("2020-03-01", customerService.customerUpdateEmail("42", "jane.doe@example.org"));
-        verify(customerService).customerUpdateEmail(Mockito.<String>any(), Mockito.<String>any());
-    }
+        String customerId = "42";
+        String newEmail = "new.email@example.com";
+        when(customerRepo.updateDocumentField(customerId, "email", newEmail)).thenReturn("2020-03-01");
 
-    /**
-     * Method under test: {@link CustomerService#customerUpdateCapital(String, int)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
-    @Test
-    void testCustomerUpdateCapital() throws InterruptedException, ExecutionException {
-        when(customerService.customerUpdateCapital(Mockito.<String>any(), anyInt())).thenReturn("2020-03-01");
-        assertEquals("2020-03-01", customerService.customerUpdateCapital("42", 1));
-        verify(customerService).customerUpdateCapital(Mockito.<String>any(), anyInt());
+        String updatedDate = customerService.customerUpdateEmail(customerId, newEmail);
+
+        assertEquals("2020-03-01", updatedDate);
+
+        verify(customerRepo).updateDocumentField(customerId, "email", newEmail);
+
     }
 
     /**
@@ -107,19 +113,64 @@ class CustomerServiceTest {
      */
     @Test
     void testDeleteCustomerAccount() {
-        when(customerService.deleteCustomerAccount(Mockito.<String>any())).thenReturn("3");
-        assertEquals("3", customerService.deleteCustomerAccount("42"));
-        verify(customerService).deleteCustomerAccount(Mockito.<String>any());
+        String customerId = "42";
+        when(customerRepo.deleteCustomerAccount(customerId)).thenReturn("Account Deleted");
+
+        String result = customerService.deleteCustomerAccount(customerId);
+
+        assertEquals("Account Deleted", result);
+
+        verify(customerRepo).deleteCustomerAccount(customerId);
     }
 
     /**
      * Method under test: {@link CustomerService#getCustomerCapital(String)}
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
      */
     @Test
-    void testGetCustomerCapital() {
-        when(customerService.getCustomerCapital(Mockito.<String>any())).thenReturn(1);
-        assertEquals(1, customerService.getCustomerCapital("42"));
-        verify(customerService).getCustomerCapital(Mockito.<String>any());
+    void testGetCustomerCapital() throws InterruptedException, ExecutionException {
+        String customerId = "42";
+        when(customerRepo.getTotalCapitalAvailable(customerId)).thenReturn(12000);
+
+        int capital = customerService.getCustomerCapital(customerId);
+
+        assertEquals(12000, capital);
+
+        verify(customerRepo).getTotalCapitalAvailable(customerId);
+    }
+
+    /**
+     * Test get customer capital execution exception.
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
+     */
+    @Test
+    void testGetCustomerCapitalExecutionException() throws InterruptedException, ExecutionException {
+        String customerId = "42";
+        when(customerRepo.getTotalCapitalAvailable(customerId)).thenThrow(new ExecutionException("Execution Exception", null));
+
+        int capital = customerService.getCustomerCapital(customerId);
+
+        assertEquals(-1, capital);
+    }
+
+    /**
+     * Test get customer capital interrupted exception.
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException   the execution exception
+     */
+    @Test
+    void testGetCustomerCapitalInterruptedException() throws InterruptedException, ExecutionException {
+        String customerId = "42";
+        when(customerRepo.getTotalCapitalAvailable(customerId)).thenThrow(new InterruptedException("Interrupted Exception"));
+
+        int capital = customerService.getCustomerCapital(customerId);
+
+        assertEquals(-2, capital);
     }
 }
 
