@@ -3,9 +3,12 @@ package com.trading.application.logs.controller;
 import com.trading.application.logs.entity.AccessLog;
 import com.trading.application.logs.service.AccessLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -33,8 +36,15 @@ public class AccessLogController {
      */
     @PostMapping
     @RequestMapping("/add")
-    public String addLog(@RequestBody AccessLog accessLog) throws ExecutionException, InterruptedException {
-        return accessLogService.addLog(accessLog);
+    public ResponseEntity<String> addLog(@RequestBody AccessLog accessLog) throws ExecutionException, InterruptedException {
+
+        String output = accessLogService.addLog(accessLog);
+
+        if(output.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
@@ -47,7 +57,16 @@ public class AccessLogController {
      */
     @GetMapping
     @RequestMapping("/getlogs/{userId}")
-    public ArrayList<AccessLog> getLogs(@PathVariable String userId) throws ExecutionException, InterruptedException {
-        return accessLogService.getLogs(userId);
+    public ResponseEntity<ArrayList<AccessLog>> getLogs(@PathVariable String userId) throws ExecutionException, InterruptedException {
+
+        ArrayList<AccessLog> userAccessLogs = accessLogService.getLogs(userId);
+
+        System.out.println(userAccessLogs.isEmpty());
+
+        if (userAccessLogs.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(userAccessLogs, HttpStatus.OK);
     }
 }

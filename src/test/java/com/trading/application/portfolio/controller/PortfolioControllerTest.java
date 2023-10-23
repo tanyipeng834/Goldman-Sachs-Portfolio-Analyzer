@@ -30,13 +30,13 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class PortfolioControllerTest {
 
-    @Autowired
+    @InjectMocks
     private PortfolioController portfolioController;
 
-    @MockBean
+    @Mock
     private PortfolioService portfolioService;
 
-    @MockBean
+    @Mock
     private HttpServletRequest request;
 
     @Test
