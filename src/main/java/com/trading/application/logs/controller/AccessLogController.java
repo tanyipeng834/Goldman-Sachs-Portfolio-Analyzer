@@ -61,8 +61,6 @@ public class AccessLogController {
 
         ArrayList<AccessLog> userAccessLogs = accessLogService.getLogs(userId);
 
-        System.out.println(userAccessLogs.isEmpty());
-
         if (userAccessLogs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
