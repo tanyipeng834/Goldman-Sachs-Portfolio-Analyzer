@@ -49,7 +49,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-// create Portfolio
     public String createPortfolio(Portfolio portfolio) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = firestore.collection("portfolio").document();
@@ -71,7 +70,6 @@ public class PortfolioRepository {
      * @param portfolioPortStocks the portfolio port stocks
      * @return the float
      */
-// calculatePortfolioValue
     public float calculatePortfolioValue(Map<String, List<PortfolioStock>> portfolioPortStocks){
         float portfolioValue = 0;
         if (portfolioPortStocks != null) {
@@ -114,7 +112,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-// delete a portfolio
     public String deletePortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).delete();
@@ -131,7 +128,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-// Update a portfolio's field
     public String updatePortfolioField(String portfolioId, String field, String fieldValue) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
@@ -148,8 +144,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-// Overloading
-    // Update a portfolio's field
     public String updatePortfolioField(String portfolioId, String field, float fieldValue) throws ExecutionException, InterruptedException {
 
         writeResultApiFuture = firestore.collection("portfolio").document(portfolioId).update(field, fieldValue);
@@ -182,7 +176,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-// get a portfolio
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
 
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -191,7 +184,6 @@ public class PortfolioRepository {
         Portfolio portfolio = null;
         if(document.exists()){
             portfolio = document.toObject(Portfolio.class);
-//            portfolio.setIsPublic(document.getBoolean("public"));
             portfolio.setPublic(document.getBoolean("public"));
             return portfolio;
         }
@@ -210,7 +202,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-// Get all Portfolios of a customer
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
 
         ApiFuture<QuerySnapshot> future = firestore.collection("portfolio").whereEqualTo("userId", userId).get();
@@ -220,7 +211,6 @@ public class PortfolioRepository {
         for (QueryDocumentSnapshot document : documents) {
             Portfolio portfolio = document.toObject(Portfolio.class);
             allportfolios.add(portfolio);
-//            return document.toObject(Portfolio.class));
         }
         return allportfolios;
 
@@ -234,7 +224,6 @@ public class PortfolioRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
-//get each portfolio value
     public float calculatePortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
 
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();

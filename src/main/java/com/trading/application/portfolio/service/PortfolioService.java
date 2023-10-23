@@ -1,6 +1,5 @@
 package com.trading.application.portfolio.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.firestore.FirestoreException;
 import com.google.gson.Gson;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;
-import com.trading.application.stock.entity.Stock;
 
 
 import java.text.DecimalFormat;
@@ -42,11 +40,6 @@ public class PortfolioService {
      * The Portfolio repo.
      */
     private PortfolioRepository portfolioRepo = new PortfolioRepository();
-    /**
-     * The Portfolio stock service.
-     */
-    @Autowired
-    private PortfolioStockService portfolioStockService = new PortfolioStockService();
 
     /**
      * The Access log service.
@@ -89,7 +82,6 @@ public class PortfolioService {
         try {
 
             accessLogService.addLog(new AccessLog(portfolio.getUserId(), "CREATE", request.getRemoteAddr(), "Created Portfolio", LocalDateTime.now().toString(), true));
-            // May need to add some rebalancing logic
 
             if (portfolio.isRebalancing()) {
                 rebalance(portfolio,request.getRemoteAddr());

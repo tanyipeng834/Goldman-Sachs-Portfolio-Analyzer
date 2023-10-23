@@ -35,11 +35,7 @@ public class StockPriceService {
      * The Object mapper.
      */
     private final ObjectMapper objectMapper;
-    /**
-     * The Stock price repo.
-     */
-    @Autowired
-    private StockPriceRepository stockPriceRepo;
+
     /**
      * The Template.
      */
@@ -68,9 +64,6 @@ public class StockPriceService {
         this.objectMapper = objectMapper;
     }
 
-
-
-    // from api
 
     /**
      * Gets stock daily price.
@@ -112,18 +105,11 @@ public class StockPriceService {
            StockPrices stockPrices = new StockPrices(stockPriceList);
 
 
-            // Convert LocalDate to Date
-
-
-
-
             return stockPrices;
         }
         catch(Exception e){
             e.printStackTrace();
             throw new RuntimeException("Stock Ticker does not exist");
-
-
         }
 
 
@@ -142,10 +128,8 @@ public class StockPriceService {
     public JsonNode getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"BALANCE_SHEET");
-        System.out.println("Invoked API");
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
-            System.out.println("HERE " + rootNode);
             return rootNode;
 
         }
@@ -164,11 +148,9 @@ public class StockPriceService {
      * @throws InterruptedException    the interrupted exception
      * @throws JsonProcessingException the json processing exception
      */
-// get income statement
     public JsonNode getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
-        System.out.println("Invoked API");
         try {
             JsonNode rootNode = objectMapper.readTree(jsonString);
             return rootNode;
@@ -220,11 +202,6 @@ public class StockPriceService {
             StockPrices stockPrices = new StockPrices(stockPriceList);
 
 
-            // Convert LocalDate to Date
-
-
-
-
             return stockPrices;
         }
         catch(Exception e){
@@ -248,7 +225,6 @@ public class StockPriceService {
      */
     @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
-        System.out.println("Invoked API");
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
 
         try {
@@ -276,12 +252,6 @@ public class StockPriceService {
                 stockPriceList.add(stockPrice);
             }
             StockPrices stockPrices = new StockPrices(stockPriceList);
-
-
-            // Convert LocalDate to Date
-
-
-
 
             return stockPrices;
         }
@@ -314,10 +284,8 @@ public class StockPriceService {
 
 
         if (value == null) {
-            // If data is not available in the cache, fetch it and store it in the cache
             StockPrices stockPrices = getStockMonthlyPrice(stockTicker);
 
-            // Store the data in the cache
             template.opsForValue().set(key, stockPrices);
             List<StockPrice> stockPriceList = stockPrices.getStockPriceList();
             return calculateQuarterlyReturn(stockPriceList, startDate, endDate);
@@ -330,7 +298,6 @@ public class StockPriceService {
 
         }
 
-        // Calculate the quarterly return based on the start and end date
 
     }
 
@@ -343,7 +310,6 @@ public class StockPriceService {
      * @return the float
      */
     private float calculateQuarterlyReturn(List<StockPrice> monthlyStockPrices, LocalDate startDate, LocalDate endDate) {
-        // Filter the monthly stock prices for the specified date range
         List<StockPrice> filteredPrices = monthlyStockPrices.stream()
                 .filter(price -> {
                     LocalDate stockDate = convertDateToLocalDate(price.getStockDate());
@@ -351,10 +317,8 @@ public class StockPriceService {
                 })
                 .collect(Collectors.toList());
 
-        // Calculate quarterly return using the filtered data
         if (filteredPrices.size() == 0) {
-            // Handle the case where there is no data for the specified date range
-            return 0.0f; // You can change this to an appropriate default value or handle it as needed
+            return 0.0f;
         }
 
         float quarterlyReturn = ((filteredPrices.get(filteredPrices.size() - 1).getClosePrice() -
@@ -382,14 +346,7 @@ public class StockPriceService {
                 .retrieve()
                 .bodyToMono(String.class).block();
 
-
         return jsonString;
-
-
-
-
-
-
 
     }
 
