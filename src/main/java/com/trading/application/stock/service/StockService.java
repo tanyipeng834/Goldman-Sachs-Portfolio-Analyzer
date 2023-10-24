@@ -65,13 +65,11 @@ public class StockService {
      * @param stockTicker the stock ticker
      * @return the stock overview
      */
-//GET STOCK OVERVIEW
     @Cacheable(key="#stockTicker",cacheNames = "companyOverview")
     public Stock getStockOverview(String stockTicker) {
 
         String jsonString =parseApiResponse(stockTicker);
         try {
-            System.out.println(jsonString);
             JsonNode rootNode = objectMapper.readTree(jsonString);
             String description = rootNode.get("Description").asText();
             String exchange = rootNode.get("Exchange").asText();

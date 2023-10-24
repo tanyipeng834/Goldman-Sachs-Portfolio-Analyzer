@@ -30,21 +30,6 @@ public class StockController {
      */
     @Autowired
     private RedisTemplate<String,Object> template;
-    // create new stock
-//    @PostMapping
-//    @RequestMapping("/create")
-//    public String createStock(@RequestBody Stock stock) throws ExecutionException, InterruptedException {
-//        return stockService.createStock(stock);
-//    }
-
-    // get stock by stockticker
-//    @Cacheable(key="#stockTicker",value = "stockCache")
-//    @GetMapping
-//    @RequestMapping("/{stockTicker}")
-//    public Stock getStockById(@PathVariable String stockTicker) throws ExecutionException, InterruptedException, JsonProcessingException {
-//        System.out.println("Invoked cache");
-//        return stockService.(stockTicker);
-//    }
 
     /**
      * Gets stock overview by id.
