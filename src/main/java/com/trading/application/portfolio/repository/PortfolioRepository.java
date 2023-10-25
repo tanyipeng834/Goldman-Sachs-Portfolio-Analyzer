@@ -76,15 +76,41 @@ public class PortfolioRepository {
             for (Map.Entry<String, List<PortfolioStock>> entry : portfolioPortStocks.entrySet()) {
                 List<PortfolioStock> portfolioStockList = entry.getValue();
 
-                for (PortfolioStock portfolioStock : portfolioStockList) {
-                    float quantity = portfolioStock.getQuantity();
-                    float boughtPrice = portfolioStock.getStockBoughtPrice();
-                    portfolioValue += (boughtPrice * quantity);
-                }
+                PortfolioStock lastStock = portfolioStockList.get(portfolioStockList.size()-1);
+                float quantity = lastStock.getQuantity();
+                float boughtPrice = lastStock.getStockBoughtPrice();
+                portfolioValue += (boughtPrice * quantity);
             }
         }
         return portfolioValue;
     }
+
+    /**
+     * Calculate portfolio value float.
+     *
+     * @param portfolioId the portfolio id
+     * @return the float
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public float calculatePortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
+
+        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
+        DocumentSnapshot document = future.get();
+
+        float portfolioValue = 0;
+
+        Portfolio portfolio = null;
+        if(document.exists()){
+            portfolio = document.toObject(Portfolio.class);
+            portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
+
+        }else{
+            return portfolioValue;
+        }
+        return portfolioValue;
+    }
+
 
     /**
      * Update portfolio string.
@@ -216,32 +242,6 @@ public class PortfolioRepository {
 
     }
 
-    /**
-     * Calculate portfolio value float.
-     *
-     * @param portfolioId the portfolio id
-     * @return the float
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
-     */
-    public float calculatePortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
-
-        ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
-        DocumentSnapshot document = future.get();
-
-        float portfolioValue = 0;
-
-        Portfolio portfolio = null;
-        if(document.exists()){
-            portfolio = document.toObject(Portfolio.class);
-            Map<String, List<PortfolioStock>> portfolioPortStocks = portfolio.getPortStock();
-
-            portfolioValue = calculatePortfolioValue(portfolio.getPortStock());
-        }else{
-            return portfolioValue;
-        }
-        return portfolioValue;
-    }
 
     /**
      * Gets all public portfolios.
