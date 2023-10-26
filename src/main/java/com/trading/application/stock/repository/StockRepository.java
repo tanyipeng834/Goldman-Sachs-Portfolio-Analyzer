@@ -12,6 +12,8 @@ import com.trading.application.stock.entity.Stock;
 import com.trading.application.stockprice.entity.StockPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class StockRepository {
      * @throws InterruptedException the interrupted exception
      */
 // get stock with overview if already created in firebase
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public Stock getStockOverview(String stockTicker) throws ExecutionException, InterruptedException {
 
         ApiFuture<DocumentSnapshot> future = firestore.collection("stock").document(stockTicker).get();
@@ -107,6 +111,8 @@ public class StockRepository {
      * @throws InterruptedException the interrupted exception
      */
 // create Stock with overview
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String createStockWithOverview(String stockTicker, String description, String exchange, String currency, String country, String sector, String industry, String marketCapitalization ) throws ExecutionException, InterruptedException {
         DocumentReference docReference = firestore.collection("stock").document(stockTicker.toUpperCase());
 
@@ -153,6 +159,8 @@ public class StockRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public Stock getStock(String stockTicker) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = getReferenceById(stockTicker);

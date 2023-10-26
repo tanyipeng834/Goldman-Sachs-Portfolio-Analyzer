@@ -12,6 +12,8 @@ import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -72,6 +74,8 @@ public class StockPriceRepository {
      * @throws InterruptedException the interrupted exception
      */
 // create StockPrice, get from api
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public StockPrices saveStockDailyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
         template.opsForHash().put("eodPrice",stockTicker, stockPrices.getStockPriceList().get(0));
         template.expire("eodPrice", 24, TimeUnit.HOURS);
@@ -116,6 +120,8 @@ public class StockPriceRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public StockPrices saveStockWeeklyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
 
 
@@ -159,6 +165,8 @@ public class StockPriceRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public StockPrices saveStockMonthlyPrice(StockPrices stockPrices,String stockTicker) throws ExecutionException, InterruptedException {
 
 
@@ -202,6 +210,8 @@ public class StockPriceRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
 // retrieve value from firebase
     public StockPrice getStock(String stockTicker) throws ExecutionException, InterruptedException {
 

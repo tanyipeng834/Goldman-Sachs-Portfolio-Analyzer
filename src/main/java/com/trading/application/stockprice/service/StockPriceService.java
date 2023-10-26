@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -74,6 +76,8 @@ public class StockPriceService {
      * @throws InterruptedException    the interrupted exception
      * @throws JsonProcessingException the json processing exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public StockPrices getStockDailyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
        String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_DAILY_ADJUSTED");
@@ -125,6 +129,8 @@ public class StockPriceService {
      * @throws JsonProcessingException the json processing exception
      */
 // get balance sheet
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public JsonNode getBalanceSheet(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"BALANCE_SHEET");
@@ -148,6 +154,8 @@ public class StockPriceService {
      * @throws InterruptedException    the interrupted exception
      * @throws JsonProcessingException the json processing exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public JsonNode getIncomeStatement(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"INCOME_STATEMENT");
@@ -171,6 +179,8 @@ public class StockPriceService {
      * @throws InterruptedException    the interrupted exception
      * @throws JsonProcessingException the json processing exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public StockPrices getStockWeeklyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
 
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_WEEKLY");
@@ -223,6 +233,8 @@ public class StockPriceService {
      * @throws InterruptedException    the interrupted exception
      * @throws JsonProcessingException the json processing exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     @Cacheable(key="#stockTicker",cacheNames = "monthlyStockPrice")
     public StockPrices getStockMonthlyPrice(String stockTicker) throws  ExecutionException, InterruptedException , JsonProcessingException {
         String jsonString =parseApiResponse(stockTicker,"TIME_SERIES_MONTHLY");
@@ -277,6 +289,8 @@ public class StockPriceService {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public float getStockQuarterlyReturn(String stockTicker, LocalDate startDate, LocalDate endDate)
             throws IOException, ExecutionException, InterruptedException {
         String key = "monthlyStockPrice::" + stockTicker;
@@ -309,6 +323,8 @@ public class StockPriceService {
      * @param endDate            the end date
      * @return the float
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     private float calculateQuarterlyReturn(List<StockPrice> monthlyStockPrices, LocalDate startDate, LocalDate endDate) {
         List<StockPrice> filteredPrices = monthlyStockPrices.stream()
                 .filter(price -> {
@@ -335,6 +351,8 @@ public class StockPriceService {
      * @param priceType   the price type
      * @return the string
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     private String parseApiResponse(String stockTicker, String priceType) {
         String jsonString =this.webClient.get()
                 .uri(uriBuilder -> uriBuilder

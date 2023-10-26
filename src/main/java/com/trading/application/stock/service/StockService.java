@@ -6,8 +6,12 @@ import com.trading.application.stock.entity.Stock;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * The type Stock service.
@@ -34,6 +38,7 @@ public class StockService {
      * @param webClientBuilder the web client builder
      * @param objectMapper     the object mapper
      */
+
     public StockService(WebClient.Builder webClientBuilder,ObjectMapper objectMapper){
 
         this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
@@ -47,6 +52,8 @@ public class StockService {
      * @param stockTicker the stock ticker
      * @return the string
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     private String parseApiResponse(String stockTicker) {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -65,6 +72,8 @@ public class StockService {
      * @param stockTicker the stock ticker
      * @return the stock overview
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     @Cacheable(key="#stockTicker",cacheNames = "companyOverview")
     public Stock getStockOverview(String stockTicker) {
 
