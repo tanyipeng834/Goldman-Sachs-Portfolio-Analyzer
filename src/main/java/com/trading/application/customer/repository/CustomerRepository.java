@@ -5,6 +5,8 @@ import com.google.cloud.firestore.*;
 import com.google.common.util.concurrent.ExecutionError;
 import com.google.firebase.cloud.FirestoreClient;
 import com.trading.application.customer.entity.Customer;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
 import java.util.concurrent.ExecutionException;
 
@@ -46,6 +48,8 @@ public class CustomerRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String addCustomer(Customer customer) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = firestore.collection("customer").document(customer.getId());
@@ -63,6 +67,8 @@ public class CustomerRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public Customer getById(String documentId) throws ExecutionException, InterruptedException {
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -92,6 +98,8 @@ public class CustomerRepository {
      * @throws InterruptedException the interrupted exception
      * @throws ExecutionException   the execution exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String updateDocumentField(String documentId, String field, String fieldValue) throws InterruptedException, ExecutionException{
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -110,6 +118,8 @@ public class CustomerRepository {
      * @throws InterruptedException the interrupted exception
      * @throws ExecutionException   the execution exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String updateTotalCapitalAvailable(String documentId, String field, int fieldValue) throws InterruptedException, ExecutionException {
 
         DocumentReference docReference = getReferenceById(documentId);
@@ -125,6 +135,8 @@ public class CustomerRepository {
      * @param documentId the document id
      * @return the string
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String deleteCustomerAccount(String documentId){
 
         try {
@@ -144,6 +156,8 @@ public class CustomerRepository {
      * @throws InterruptedException the interrupted exception
      * @throws ExecutionException   the execution exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public int getTotalCapitalAvailable(String documentId) throws InterruptedException, ExecutionException {
 
         DocumentReference docRef = getReferenceById(documentId);

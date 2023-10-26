@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -84,6 +86,8 @@ public class PortfolioStockRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String addNewStock(String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
@@ -157,6 +161,8 @@ public class PortfolioStockRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String updateStock(int indexToUpdate, String portfolioId, String userId, String stockTicker, PortfolioStock portfolioStock, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
@@ -245,6 +251,8 @@ public class PortfolioStockRepository {
      * @throws ExecutionException   the execution exception
      * @throws InterruptedException the interrupted exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public String deleteStock(String portfolioId, String userId, Map<String, List<Integer>> stocksToDelete, HttpServletRequest request) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection("portfolio").document(portfolioId);
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();

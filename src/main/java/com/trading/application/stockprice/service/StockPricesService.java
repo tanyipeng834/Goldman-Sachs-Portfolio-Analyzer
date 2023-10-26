@@ -7,6 +7,8 @@ import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.entity.StockPrices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +45,8 @@ public class StockPricesService {
      * @throws InterruptedException    the interrupted exception
      * @throws JsonProcessingException the json processing exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
 // get monthly price from date
     public Object getMonthlyPriceFromDate(String stockTicker, String month, String year) throws ExecutionException, InterruptedException , JsonProcessingException {
 
@@ -74,6 +78,8 @@ public class StockPricesService {
      * @throws JsonProcessingException the json processing exception
      * @throws ParseException          the parse exception
      */
+    @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public Object getPricesFromDateBought(String stockTicker, String dateBought) throws ExecutionException, InterruptedException, JsonProcessingException, ParseException {
 
         SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
