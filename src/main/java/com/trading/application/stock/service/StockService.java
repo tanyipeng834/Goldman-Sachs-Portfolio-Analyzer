@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.concurrent.ExecutionException;
 
 /**
- * The type Stock service.
+ * Stock Service class for handling stock-related operations.
  */
 @Service
 public class StockService {
@@ -33,10 +33,10 @@ public class StockService {
     private String apiKey;
 
     /**
-     * Instantiates a new Stock service.
+     * Constructs a new StockService with a WebClient and an ObjectMapper.
      *
-     * @param webClientBuilder the web client builder
-     * @param objectMapper     the object mapper
+     * @param webClientBuilder The WebClient.Builder for making HTTP requests.
+     * @param objectMapper     The ObjectMapper for parsing JSON responses.
      */
 
     public StockService(WebClient.Builder webClientBuilder,ObjectMapper objectMapper){
@@ -47,10 +47,10 @@ public class StockService {
     }
 
     /**
-     * Parse api response string.
+     * Sends a request to an external API to retrieve stock information and parses the response.
      *
-     * @param stockTicker the stock ticker
-     * @return the string
+     * @param stockTicker The stock ticker for which information is to be retrieved.
+     * @return The JSON response from the external API.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -67,10 +67,10 @@ public class StockService {
     }
 
     /**
-     * Gets stock overview.
+     * Retrieves stock overview information for a given stock ticker.
      *
-     * @param stockTicker the stock ticker
-     * @return the stock overview
+     * @param stockTicker The stock ticker for which overview information is to be retrieved.
+     * @return A Stock object containing overview details.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))

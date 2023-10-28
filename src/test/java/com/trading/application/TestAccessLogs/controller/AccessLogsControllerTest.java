@@ -21,25 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 public class AccessLogsControllerTest {
 
-    /**
-     * The Access Log Controller.
-     */
     @InjectMocks
     private AccessLogController accessLogController;
 
-    /**
-     * The Access Log Service.
-     */
     @Mock
     private AccessLogService accessLogService;
 
 
-    /**
-     * Method under test: {@link AccessLogController#addLog(AccessLog)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
     @Test
     public void shouldCreateAccessLog() throws ExecutionException, InterruptedException {
 
@@ -56,12 +44,6 @@ public class AccessLogsControllerTest {
     }
 
 
-    /**
-     * Method under test: {@link AccessLogController#getLogs(String)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
     @Test
     public void shouldReturnAllAccessLogsByUserId() throws ExecutionException, InterruptedException {
 

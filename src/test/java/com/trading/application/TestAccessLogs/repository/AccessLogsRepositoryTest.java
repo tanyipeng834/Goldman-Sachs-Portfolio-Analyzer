@@ -23,24 +23,13 @@ import static org.mockito.Mockito.when;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AccessLogsRepositoryTest {
     
-    /**
-     * The Access Log.
-     */
+
     @Autowired
     private AccessLog accessLog;
-    
-    /**
-     * The AccessLog repository.
-     */
+
     @MockBean
     private AccessLogRepository accessLogRepository;
-    
-    /**
-     * Method under test: {@link AccessLogRepository#addLog(AccessLog)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
+
     @Test
     public void shouldCreateAccessLog() throws InterruptedException, ExecutionException {
         when(accessLogRepository.addLog(Mockito.<AccessLog>any())).thenReturn("Create Access Log");
@@ -49,12 +38,6 @@ public class AccessLogsRepositoryTest {
     }
 
 
-    /**
-     * Method under test: {@link AccessLogRepository#getLogs(String)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
     @Test
     void shouldReturnAllAccessLogsByUserId() throws InterruptedException, ExecutionException {
         ArrayList<AccessLog> accessLogsList = new ArrayList<>();

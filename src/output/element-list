@@ -20,7 +20,6 @@ com.trading.application.portfoliostock.repository
 com.trading.application.portfoliostock.service
 com.trading.application.stock.controller
 com.trading.application.stock.entity
-com.trading.application.stock.repository
 com.trading.application.stock.service
 com.trading.application.stockprice.controller
 com.trading.application.stockprice.entity

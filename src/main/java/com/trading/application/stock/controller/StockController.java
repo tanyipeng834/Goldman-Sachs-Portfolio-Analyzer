@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ExecutionException;
 
 /**
- * The type Stock controller.
+ * Stock Controller class for handling stock-related HTTP requests.
  */
 @RestController
 @EnableCaching
@@ -34,12 +34,12 @@ public class StockController {
     /**
      * Gets stock overview by id.
      *
-     * @param stockTicker the stock ticker
-     * @return the stock overview by id
-     * @throws ExecutionException      the execution exception
-     * @throws InterruptedException    the interrupted exception
-     * @throws JsonProcessingException the json processing exception
-     * @throws RuntimeException        the runtime exception
+     * @param stockTicker The stock ticker for which overview information is to be retrieved.
+     * @return A Stock object containing overview details.
+     * @throws ExecutionException      If an error occurs during execution.
+     * @throws InterruptedException    If the operation is interrupted.
+     * @throws JsonProcessingException If there is an issue with JSON processing.
+     * @throws RuntimeException        If there is a runtime exception.
      */
     @GetMapping
     @RequestMapping("/{stockTicker}/companyOverview")

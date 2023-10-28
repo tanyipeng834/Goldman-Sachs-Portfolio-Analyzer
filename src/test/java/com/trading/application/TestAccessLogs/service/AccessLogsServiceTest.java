@@ -20,29 +20,15 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 public class AccessLogsServiceTest {
 
-    /**
-     * The Access Log Service.
-     */
     @InjectMocks
     @Spy
     private AccessLogService accessLogService;
 
-    /**
-     * The Access Log Repository.
-     */
     @Mock
     private AccessLogRepository accessLogRepository;
 
-
-    /**
-     * Method under test: {@link AccessLogService#addLog(AccessLog)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
     @Test
     public void shouldCreateAccessLog() throws ExecutionException, InterruptedException {
-
 
         AccessLog accessLog = new AccessLog(); // Create an AccessLog object
         when(accessLogRepository.addLog(accessLog))
@@ -57,13 +43,6 @@ public class AccessLogsServiceTest {
 
     }
 
-
-    /**
-     * Method under test: {@link AccessLogService#getLogs(String)}
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
-     */
     @Test
     public void shouldReturnAllAccessLogsByUserId() throws ExecutionException, InterruptedException {
 
