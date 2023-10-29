@@ -3,37 +3,41 @@ package com.trading.application.portfoliostock.entity;
 import org.springframework.stereotype.Component;
 
 /**
- * The type Portfolio stock.
+ * The {@code PortfolioStock} class represents a stock in a portfolio. It includes details such as
+ * quantity, date bought, stock bought price, and allocation.
  */
 @Component
 public class PortfolioStock {
 
     /**
-     * The Quantity.
+     * The {@code quantity} of the stock in the portfolio.
      */
     private float quantity;
+
     /**
-     * The Date bought.
+     * The {@code dateBought} represents the date when the stock was bought.
      */
     private String dateBought;
+
     /**
-     * The Stock bought price.
+     * The {@code stockBoughtPrice} indicates the price at which the stock was bought.
      */
     private float stockBoughtPrice;
+
     /**
-     * The Allocation.
+     * The {@code allocation} signifies the allocation of this stock in the portfolio.
      */
     private float allocation;
 
     /**
-     * Instantiates a new Portfolio stock.
+     * Constructs a new {@code PortfolioStock} with the provided details.
      *
-     * @param quantity         the quantity
-     * @param dateBought       the date bought
-     * @param stockBoughtPrice the stock bought price
-     * @param allocation       the allocation
+     * @param quantity         The quantity of the stock.
+     * @param dateBought       The date when the stock was bought.
+     * @param stockBoughtPrice The price at which the stock was bought.
+     * @param allocation       The allocation of this stock.
      */
-    public PortfolioStock(int quantity, String dateBought, float stockBoughtPrice, float allocation) {
+    public PortfolioStock(float quantity, String dateBought, float stockBoughtPrice, float allocation) {
         this.quantity = quantity;
         this.dateBought = dateBought;
         this.stockBoughtPrice = stockBoughtPrice;
@@ -41,9 +45,9 @@ public class PortfolioStock {
     }
 
     /**
-     * Instantiates a new Portfolio stock.
+     * Constructs a new {@code PortfolioStock} by copying the details from another {@code PortfolioStock} object.
      *
-     * @param other the other
+     * @param other Another {@code PortfolioStock} object to copy details from.
      */
     public PortfolioStock(PortfolioStock other) {
         this.quantity = other.quantity;
@@ -53,78 +57,78 @@ public class PortfolioStock {
     }
 
     /**
-     * Instantiates a new Portfolio stock.
+     * Constructs an empty {@code PortfolioStock} object with default values.
      */
     public PortfolioStock() {
     }
 
     /**
-     * Gets allocation.
+     * Gets the allocation of this stock in the portfolio.
      *
-     * @return the allocation
+     * @return The allocation value.
      */
     public float getAllocation() {
         return allocation;
     }
 
     /**
-     * Sets allocation.
+     * Sets the allocation of this stock in the portfolio.
      *
-     * @param allocation the allocation
+     * @param allocation The allocation value to set.
      */
     public void setAllocation(float allocation) {
         this.allocation = allocation;
     }
 
     /**
-     * Gets quantity.
+     * Gets the quantity of the stock in the portfolio.
      *
-     * @return the quantity
+     * @return The {@code quantity} value.
      */
     public float getQuantity() {
         return quantity;
     }
 
     /**
-     * Sets quantity.
+     * Sets the quantity of the stock in the portfolio.
      *
-     * @param quantity the quantity
+     * @param quantity The quantity value to set.
      */
     public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
     /**
-     * Gets stock bought price.
+     * Gets the price at which the stock was bought.
      *
-     * @return the stock bought price
+     * @return The {@code stockBoughtPrice} value.
      */
     public float getStockBoughtPrice() {
         return stockBoughtPrice;
     }
 
     /**
-     * Sets stock bought price.
+     * Sets the price at which the stock was bought.
      *
-     * @param stockBoughtPrice the stock bought price
+     * @param stockBoughtPrice The stock bought price value to set.
      */
     public void setStockBoughtPrice(float stockBoughtPrice) {
         this.stockBoughtPrice = stockBoughtPrice;
     }
 
     /**
-     * Gets date bought.
+     * Gets the date when the stock was bought.
      *
-     * @return the date bought
+     * @return The {@code dateBought} value.
      */
     public String getDateBought() {
         return dateBought;
     }
 
     /**
-     * Sets date bought.
+     * Sets the date when the stock was bought.
      *
-     * @param dateBought the date bought
+     * @param dateBought The date bought value to set.
      */
     public void setDateBought(String dateBought) {
         this.dateBought = dateBought;

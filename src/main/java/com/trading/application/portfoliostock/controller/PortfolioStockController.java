@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * The type Portfolio stock controller.
+ * The {@code PortfolioStockController} class handles HTTP requests related to portfolio stocks.
  */
 @RestController
 @RequestMapping("/portfoliostock")
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class PortfolioStockController {
 
     /**
-     * The Portfolio stock service.
+     * The {@code PortfolioStockService} is responsible for providing services related to portfolio stocks.
      */
     @Autowired
     private PortfolioStockService portfolioStockService;

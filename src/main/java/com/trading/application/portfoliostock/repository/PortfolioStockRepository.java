@@ -26,65 +26,73 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * The type Portfolio stock repository.
+ * The {@code PortfolioStockRepository} class provides functionality to interact with
+ * a Firestore database and manage portfolio stock data, along with Redis-based
+ * logging and retry mechanisms.
  */
 @Repository
 public class PortfolioStockRepository {
 
     /**
-     * The Firestore.
+     * The {@code Firestore} instance for accessing the Firestore database.
      */
     private Firestore firestore = FirestoreClient.getFirestore();
-    /**
-     * The Document snapshot api future.
-     */
-    private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
-    /**
-     * The Write result api future.
-     */
-    private ApiFuture<WriteResult> writeResultApiFuture;
-    /**
-     * The Query snapshot.
-     */
-    private ApiFuture<QuerySnapshot> querySnapshot;
-    /**
-     * The Col ref.
-     */
-    private CollectionReference colRef = firestore.collection("portfolioStock");
-    /**
-     * The Template.
-     */
-    @Autowired
-    private RedisTemplate<String,Object> template;
-    /**
-     * The Logger.
-     */
-    Logger logger = LoggerFactory.getLogger(AccessLogService.class);
 
     /**
-     * The Topic.
+     * {@code ApiFuture} for retrieving a document snapshot.
+     */
+    private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
+
+    /**
+     * {@code ApiFuture} for write results.
+     */
+    private ApiFuture<WriteResult> writeResultApiFuture;
+
+    /**
+     * {@code ApiFuture} for query snapshots.
+     */
+    private ApiFuture<QuerySnapshot> querySnapshot;
+
+    /**
+     * Collection reference for Firestore, indicating the "portfolioStock" collection.
+     */
+    private CollectionReference colRef = firestore.collection("portfolioStock");
+
+    /**
+     * The {@code RedisTemplate} for interacting with Redis.
+     */
+    @Autowired
+    private RedisTemplate<String, Object> template;
+
+    /**
+     * The {@code Logger} for logging events.
+     */
+    private Logger logger = LoggerFactory.getLogger(AccessLogService.class);
+
+    /**
+     * The {@code ChannelTopic} for Redis pub/sub.
      */
     @Autowired
     private ChannelTopic topic;
 
     /**
-     * The Access log service.
+     * The {@code AccessLogService} for logging access events.
      */
     @Autowired
     private AccessLogService accessLogService = new AccessLogService();
 
 
     /**
-     * Add new stock string.
+     * Adds a new stock to the portfolio.
      *
-     * @param portfolioId    the portfolio id
-     * @param userId         the user id
-     * @param stockTicker    the stock ticker
-     * @param portfolioStock the portfolio stock
-     * @param request        the request
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId    The portfolio ID.
+     * @param userId         The user ID.
+     * @param stockTicker    The stock ticker symbol.
+     * @param portfolioStock The portfolio stock object to add.
+     * @param request        The HTTP request.
+     * @return A message indicating the result of the operation.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -149,17 +157,17 @@ public class PortfolioStockRepository {
     }
 
     /**
-     * Update stock string.
+     * Updates an existing stock in the portfolio.
      *
-     * @param indexToUpdate  the index to update
-     * @param portfolioId    the portfolio id
-     * @param userId         the user id
-     * @param stockTicker    the stock ticker
-     * @param portfolioStock the portfolio stock
-     * @param request        the request
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param indexToUpdate  The index of the stock to update.
+     * @param portfolioId    The portfolio ID.
+     * @param userId         The user ID.
+     * @param stockTicker    The stock ticker symbol.
+     * @param portfolioStock The updated portfolio stock information.
+     * @param request        The HTTP request.
+     * @return A message indicating the result of the operation.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -241,15 +249,15 @@ public class PortfolioStockRepository {
     }
 
     /**
-     * Delete stock string.
+     * Deletes one or more stocks from the portfolio.
      *
-     * @param portfolioId    the portfolio id
-     * @param userId         the user id
-     * @param stocksToDelete the stocks to delete
-     * @param request        the request
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId    The portfolio ID.
+     * @param userId         The user ID.
+     * @param stocksToDelete A map specifying the stocks to delete.
+     * @param request        The HTTP request.
+     * @return A message indicating the result of the operation.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
