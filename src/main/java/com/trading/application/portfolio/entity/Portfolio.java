@@ -7,10 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The type Portfolio.
+ * Entity class representing portfolio information.
  */
 @Component
 public class Portfolio {
+
+    /**
+     * Returns a string representation of the Portfolio object.
+     * @return A string representation of the Portfolio object.
+     */
     @Override
     public String toString() {
         return "Portfolio{" +
@@ -58,28 +63,28 @@ public class Portfolio {
      */
     private int capital;
     /**
-     * The Rebalancing.
+     * The Rebalancing field.
      */
     private boolean rebalancing = false;
 
     /**
-     * The Is public.
+     * The Is publicf field.
      */
     private boolean isPublic = true;
 
     /**
-     * Is rebalancing boolean.
+     * This is a getter method that gets the {@code Portfolio} rebalancing field.
      *
-     * @return the boolean
+     * @return the {@code Portfolio} rebalancing field.
      */
     public boolean isRebalancing() {
         return rebalancing;
     }
 
     /**
-     * Sets rebalancing.
+     * This is a setter method that sets the {@code Portfolio} rebalancing field.
      *
-     * @param rebalancing the rebalancing
+     * @param rebalancing the rebalancing field.
      */
     public void setRebalancing(boolean rebalancing) {
         this.rebalancing = rebalancing;
@@ -96,18 +101,18 @@ public class Portfolio {
     private Map<String, List<PortfolioStock>> portStock;
 
     /**
-     * Gets port stock.
+     * This is a getter method that gets the {@code Portfolio} port stock.
      *
-     * @return the port stock
+     * @return the {@code Portfolio} port stock.
      */
     public Map<String, List<PortfolioStock>> getPortStock() {
         return portStock;
     }
 
     /**
-     * Sets port stock.
+     * This is a setter method that sets the {@code Portfolio} port stock.
      *
-     * @param portStock the port stock
+     * @param portStock the port stock.
      */
     public void setPortStock(Map<String, List<PortfolioStock>> portStock) {
         this.portStock = portStock;
@@ -119,124 +124,124 @@ public class Portfolio {
     private String userId;
 
     /**
-     * Get user id string.
+     * This is a getter method that gets the {@code Portfolio} user id.
      *
-     * @return the string
+     * @return the {@code Portfolio} user id.
      */
     public String getUserId(){
         return userId;
     }
 
     /**
-     * Set user id.
+     * This is a setter method that sets the {@code Portfolio} user id.
      *
-     * @param userId the user id
+     * @param userId the user id.
      */
     public void setUserId(String userId){
         this.userId = userId;
     }
 
     /**
-     * Gets portfolio id.
+     * This is a getter method that gets the {@code Portfolio} portfolio id.
      *
-     * @return the portfolio id
+     * @return the {@code Portfolio} portfolio id.
      */
     public String getPortfolioId() {
         return portfolioId;
     }
 
     /**
-     * Sets portfolio id.
+     * This is a setter method that sets the {@code Portfolio} portfolio id.
      *
-     * @param portfolioId the portfolio id
+     * @param portfolioId the portfolio id.
      */
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
 
     /**
-     * Gets portfolio name.
+     * This is a getter method that gets the {@code Portfolio} portfolio name.
      *
-     * @return the portfolio name
+     * @return the {@code Portfolio} portfolio name.
      */
     public String getPortfolioName() {
         return portfolioName;
     }
 
     /**
-     * Sets portfolio name.
+     * This is a setter method that sets the {@code Portfolio} portfolio name.
      *
-     * @param portfolioName the portfolio name
+     * @param portfolioName the portfolio name.
      */
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
 
     /**
-     * Gets portfolio description.
+     * This is a getter method that gets the {@code Portfolio} description.
      *
-     * @return the portfolio description
+     * @return the {@code Portfolio} description.
      */
     public String getPortfolioDescription() {
         return portfolioDescription;
     }
 
     /**
-     * Sets portfolio description.
+     * This is a setter method that sets the {@code Portfolio} portfolio description.
      *
-     * @param portfolioDescription the portfolio description
+     * @param portfolioDescription the portfolio description.
      */
     public void setPortfolioDescription(String portfolioDescription) {
         this.portfolioDescription = portfolioDescription;
     }
 
     /**
-     * Gets portfolio value.
+     * This is a getter method that gets the {@code Portfolio} portfolio value.
      *
-     * @return the portfolio value
+     * @return the {@code Portfolio} portfolio value.
      */
     public float getPortfolioValue() {
         return portfolioValue;
     }
 
     /**
-     * Sets portfolio value.
+     * This is a setter method that sets the {@code Portfolio} portfolio value.
      *
-     * @param portfolioValue the portfolio value
+     * @param portfolioValue the portfolio value.
      */
     public void setPortfolioValue(float portfolioValue) {
         this.portfolioValue = portfolioValue;
     }
 
     /**
-     * Gets unrealised pn l.
+     * This is a getter method that gets the {@code Portfolio} unrealised pnl.
      *
-     * @return the unrealised pn l
+     * @return the {@code Portfolio} unrealised pnl.
      */
     public float getUnrealisedPnL() {
         return unrealisedPnL;
     }
 
     /**
-     * Sets unrealised pn l.
+     * This is a setter method that sets the {@code Portfolio} unrealised pnl.
      *
-     * @param unrealisedPnL the unrealised pn l
+     * @param unrealisedPnL the unrealised pnl.
      */
     public void setUnrealisedPnL(float unrealisedPnL) {
         this.unrealisedPnL = unrealisedPnL;
     }
 
     /**
-     * Gets date created.
+     * This is a getter method that gets the {@code Portfolio} date created.
      *
-     * @return the date created
+     * @return the {@code Portfolio} date created.
      */
     public String getDateCreated() {
         return dateCreated;
     }
 
     /**
-     * Sets date created.
+     * This is a setter method that sets the {@code Portfolio} date created.
      *
      * @param dateCreated the date created
      */
@@ -245,16 +250,16 @@ public class Portfolio {
     }
 
     /**
-     * Gets capital.
+     * This is a getter method that gets the {@code Portfolio} capital.
      *
-     * @return the capital
+     * @return the {@code Portfolio} capital.
      */
     public int getCapital() {
         return capital;
     }
 
     /**
-     * Sets capital.
+     * This is a setter method that sets the {@code Portfolio} capital.
      *
      * @param capital the capital
      */
@@ -263,25 +268,25 @@ public class Portfolio {
     }
 
     /**
-     * Is public boolean.
+     * This is a getter method that gets the {@code Portfolio} IsPublic.
      *
-     * @return the boolean
+     * @return the {@code Portfolio} IsPublic
      */
     public boolean isPublic() {
         return isPublic;
     }
 
     /**
-     * Sets public.
+     * This is a setter method that sets the {@code Portfolio} isPublic.
      *
-     * @param aPublic the a public
+     * @param aPublic the isPublic field
      */
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
 
     /**
-     * Gets country exposure.
+     * This is a getter method that gets the {@code Portfolio} country exposure.
      *
      * @return the country exposure
      */
@@ -290,7 +295,7 @@ public class Portfolio {
     }
 
     /**
-     * Sets country exposure.
+     * This is a setter method that sets the {@code Portfolio} country exposure.
      *
      * @param countryExposure the country exposure
      */

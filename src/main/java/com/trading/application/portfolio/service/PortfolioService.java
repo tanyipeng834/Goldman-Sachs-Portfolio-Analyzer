@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 
 
 /**
- * The type Portfolio service.
+ * Portfolio Service class for handling portfolio-related operations
  */
 @Service
 public class PortfolioService {
@@ -71,13 +71,14 @@ public class PortfolioService {
     private ChannelTopic topic;
 
     /**
-     * Create portfolio response entity.
+     * Creates a new portfolio.
      *
-     * @param portfolio the portfolio
-     * @param request   the request
-     * @return the response entity
+     * @param portfolio The portfolio object containing the data for the new portfolio.
+     * @param request the request to retrieve the IP address of the client that makes the HTTP request
+     * @return a `ResponseEntity` containing a `String` response, typically indicating the result
+     *         of the portfolio creation operation.
      */
-    public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request)  {
+    public ResponseEntity<String> createPortfolio(Portfolio portfolio, HttpServletRequest request) {
         try {
 
             accessLogService.addLog(new AccessLog(portfolio.getUserId(), "CREATE", request.getRemoteAddr(), "Created Portfolio", LocalDateTime.now().toString(), true));
@@ -94,22 +95,23 @@ public class PortfolioService {
     }
 
     /**
-     * Gets portfolio.
+     * Get portfolio by portfolioId.
      *
-     * @param portfolioId the portfolio id
-     * @return the portfolio
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId the portfolio id of the portfolio to be retrieved.
+     * @return the portfolio object associated with the given portfolio id.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getPortfolio(portfolioId);
     }
 
     /**
-     * Delete portfolio response entity.
+     * Delete a portfolio based on a given portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the response entity
+     * @param portfolioId The portfolio id of the portfolio to delete.
+     * @return a `ResponseEntity` containing a `String` response, indicating the result
+     *         of the portfolio deletion operation.
      */
     public ResponseEntity<String> deletePortfolio(String portfolioId) {
         try {
@@ -121,13 +123,14 @@ public class PortfolioService {
     }
 
     /**
-     * Update portfolio response entity.
+     * Update portfolio based on portfolio object.
      *
-     * @param portfolio the portfolio
-     * @param request   the request
-     * @return the response entity
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolio The Portfolio object containing the updated information for the portfolio.
+     * @param request the request to retrieve the IP address of the client that makes the HTTP request.
+     * @return A `ResponseEntity` containing a `String` response, indicating the result
+     *         of the portfolio update operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public ResponseEntity<String> updatePortfolio(Portfolio portfolio, HttpServletRequest request) throws ExecutionException,
             InterruptedException {
@@ -148,12 +151,12 @@ public class PortfolioService {
     }
 
     /**
-     * Gets all portfolios.
+     * Retrieves a list of portfolios based on the given user id.
      *
-     * @param userId the user id
-     * @return the all portfolios
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param userId The user id of the user for whom the portfolios are to be retrieved.
+     * @return A list of portfolio objects associated with the given user id.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public List<Portfolio> getAllPortfolios(String userId) throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPortfolios(userId);
@@ -162,10 +165,11 @@ public class PortfolioService {
     /**
      * Gets sectors by portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the sectors by portfolio id
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio for which sector information is to be retrieved.
+     * @return A map where keys represent sector names and values represent the counts of stocks in each sector.
+     *         Returns `null` if no data is available or the portfolio does not exist.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public Map<String, Integer> getSectorsByPortfolioId(String portfolioId) throws ExecutionException, InterruptedException {
 
@@ -198,10 +202,11 @@ public class PortfolioService {
     /**
      * Gets sectors by user id.
      *
-     * @param userId the user id
-     * @return the sectors by user id
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param userId The user id of the user for whom sector information is to be retrieved.
+     * @return A map where keys represent sector names and values represent the counts of stocks in each sector across all portfolios.
+     *         Returns `null` if no data is available.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public Map<String, Integer> getSectorsByUserId(String userId) throws ExecutionException, InterruptedException {
 
@@ -231,13 +236,13 @@ public class PortfolioService {
     }
 
     /**
-     * Rebalance portfolio.
+     * Rebalances a portfolio based on its creation date and stock data.
      *
-     * @param portfolio     the portfolio
-     * @param remoteAddress the remote address
-     * @return the portfolio
-     * @throws ExecutionException      the execution exception
-     * @throws InterruptedException    the interrupted exception
+     * @param portfolio The portfolio object representing the portfolio to be rebalanced.
+     * @param remoteAddress The remote address of the client initiating the rebalance.
+     * @return The rebalanced portfolio object.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      * @throws JsonProcessingException the json processing exception
      */
     public Portfolio rebalance(Portfolio portfolio ,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
@@ -259,14 +264,13 @@ public class PortfolioService {
     }
 
     /**
-     * Rebalance value.
+     * Rebalances a portfolio based on its creation date and stock data.
      *
-     * @param stockTime     the stock time
-     * @param portMap       the port map
-     * @param portfolio     the portfolio
-     * @param remoteAddress the remote address
-     * @throws ExecutionException      the execution exception
-     * @throws InterruptedException    the interrupted exception
+     * @param portfolio The portfolio object representing the portfolio to be rebalanced.
+     * @param remoteAddress The remote address of the client initiating the rebalance.
+     * @return The rebalanced portfolio object.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      * @throws JsonProcessingException the json processing exception
      */
     public void rebalanceValue(YearMonth stockTime, Map<String, List<PortfolioStock>> portMap,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException, JsonProcessingException {
@@ -313,15 +317,15 @@ public class PortfolioService {
 
 
     /**
-     * Rebalance stock float.
+     * Rebalances individual stocks within a portfolio based on their allocation and current value.
      *
-     * @param portStock        the port stock
-     * @param currentPortValue the current port value
-     * @param portfolio        the portfolio
-     * @param remoteAddress    the remote address
-     * @return the float
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portStock A list of portfolio stock objects representing the stocks to be rebalanced.
+     * @param currentPortValue The current total value of the portfolio.
+     * @param portfolio The portfolio object representing the portfolio containing the stocks.
+     * @param remoteAddress The remote address of the client initiating the rebalance.
+     * @return The new total value of the portfolio after rebalancing.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public float rebalanceStock(List<PortfolioStock> portStock,float currentPortValue,Portfolio portfolio,String remoteAddress) throws ExecutionException, InterruptedException {
         float newPortValue = 0.0f;
@@ -366,23 +370,23 @@ public class PortfolioService {
     }
 
     /**
-     * Gets total portfolio value.
+     * Retrieves the total value of a portfolio based on the provided portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the total portfolio value
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio for which the total value is requested.
+     * @return The total value of the portfolio.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public float getTotalPortfolioValue(String portfolioId) throws ExecutionException, InterruptedException {
         return portfolioRepo.calculatePortfolioValue(portfolioId);
     }
 
     /**
-     * Gets all public portfolios.
+     * Retrieves a list of all public portfolios.
      *
-     * @return the all public portfolios
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @return An Arraylist of portfolio objects representing public portfolios.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     public ArrayList<Portfolio> getAllPublicPortfolios() throws ExecutionException, InterruptedException {
         return portfolioRepo.getAllPublicPortfolios();

@@ -13,29 +13,29 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 /**
- * The type Portfolio repository.
+ * The Repository class for interacting with the Firestore database to manage portfolios.
  */
 @Repository
 public class PortfolioRepository {
 
     /**
-     * The Firestore.
+     * The Firestore instance used for database operations.
      */
     private Firestore firestore = FirestoreClient.getFirestore();
     /**
-     * The Document snapshot api future.
+     * The API future for DocumentSnapshot.
      */
     private ApiFuture<DocumentSnapshot> documentSnapshotApiFuture;
     /**
-     * The Write result api future.
+     * The API future for WriteResult.
      */
     private ApiFuture<WriteResult> writeResultApiFuture;
 
     /**
-     * Get reference by id document reference.
+     * Get a document reference by portfolio id.
      *
-     * @param documentId the document id
-     * @return the document reference
+     * @param documentId the document id of the document to retrieve.
+     * @return A DocumentReference object representing the requested document.
      */
     public DocumentReference getReferenceById(String documentId){
 
@@ -44,12 +44,12 @@ public class PortfolioRepository {
     }
 
     /**
-     * Create portfolio string.
+     * Create a new portfolio in the database.
      *
-     * @param portfolio the portfolio
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolio The Portfolio object to be created.
+     * @return A String indicating the result of the creation operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -69,10 +69,10 @@ public class PortfolioRepository {
     }
 
     /**
-     * Calculate portfolio value float.
+     *  Calculate the value of a portfolio.
      *
-     * @param portfolioPortStocks the portfolio port stocks
-     * @return the float
+     * @param portfolioPortStocks A map of portfolio stock data.
+     * @return The calculated portfolio value as a float.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -92,12 +92,12 @@ public class PortfolioRepository {
     }
 
     /**
-     * Calculate portfolio value float.
+     * Calculate the value of a portfolio by portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the float
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId the portfolio id of the portfolio of which the value is to be calculated.
+     * @return The calculated portfolio value as a float.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -121,12 +121,12 @@ public class PortfolioRepository {
 
 
     /**
-     * Update portfolio string.
+     * Update a portfolio in the database.
      *
-     * @param portfolio the portfolio
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolio The Portfolio object with updated information.
+     * @return A String indicating the result of the update operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -141,12 +141,12 @@ public class PortfolioRepository {
     }
 
     /**
-     * Delete portfolio string.
+     * Delete a portfolio from the database.
      *
-     * @param portfolioId the portfolio id
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio to be deleted.
+     * @return A String indicating the result of the deletion operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -157,14 +157,14 @@ public class PortfolioRepository {
     }
 
     /**
-     * Update portfolio field string.
+     * Update a specific field of a portfolio.
      *
-     * @param portfolioId the portfolio id
-     * @param field       the field
-     * @param fieldValue  the field value
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio for which the field is to be updated.
+     * @param field       The name of the field to update.
+     * @param fieldValue  The new field value as a string.
+     * @return A String indicating the result of the update operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -175,14 +175,14 @@ public class PortfolioRepository {
     }
 
     /**
-     * Update portfolio field string.
+     * Overloaded method to update a specific field of a portfolio with a float value.
      *
-     * @param portfolioId the portfolio id
-     * @param field       the field
-     * @param fieldValue  the field value
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio for which the field is to be updated.
+     * @param field       The name of the field to update.
+     * @param fieldValue  The new field value as a float.
+     * @return A String indicating the result of the update operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -193,17 +193,15 @@ public class PortfolioRepository {
     }
 
     /**
-     * Update portfolio field string.
+     *  Overloaded method to update a specific field of a portfolio with a boolean value.
      *
-     * @param portfolioId the portfolio id
-     * @param field       the field
-     * @param fieldValue  the field value
-     * @return the string
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio for which the field is to be updated.
+     * @param field       The name of the field to update.
+     * @param fieldValue  The new field value as a boolean.
+     * @return A String indicating the result of the update operation.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
-// Overloading
-    // Update a portfolio's field
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
     public String updatePortfolioField(String portfolioId, String field, boolean fieldValue) throws ExecutionException, InterruptedException {
@@ -213,15 +211,16 @@ public class PortfolioRepository {
     }
 
     /**
-     * Gets portfolio.
+     * Get a portfolio by portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the portfolio
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId The portfolio id of the portfolio to retrieve.
+     * @return The Portfolio object representing the requested portfolio, or null if not found.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
+    @Retryable(retryFor = {InterruptedException.class}, maxAttempts = 2, backoff =
+    @Backoff(delay = 100))
     public Portfolio getPortfolio(String portfolioId) throws ExecutionException, InterruptedException {
-
         ApiFuture<DocumentSnapshot> future = firestore.collection("portfolio").document(portfolioId).get();
         DocumentSnapshot document = future.get();
 
@@ -239,12 +238,12 @@ public class PortfolioRepository {
     }
 
     /**
-     * Gets all portfolios.
+     * Get a list of all portfolios associated with a specific user.
      *
-     * @param userId the user id
-     * @return the all portfolios
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param userId The user id of the user for whom the portfolios are to be retrieved.
+     * @return A List of Portfolio objects
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))
@@ -264,11 +263,11 @@ public class PortfolioRepository {
 
 
     /**
-     * Gets all public portfolios.
+     * Retrieve a list of all public portfolios from the database.
      *
-     * @return the all public portfolios
-     * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException   the execution exception
+     * @return An ArrayList of Portfolio objects representing the public portfolios.
+     * @throws ExecutionException If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @Retryable(retryFor = {ExecutionException.class, InterruptedException.class}, maxAttempts = 2, backoff =
     @Backoff(delay = 100))

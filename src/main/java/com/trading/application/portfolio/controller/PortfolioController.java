@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * The type Portfolio controller.
+ * Portfolio Controller class for handling portfolio-related HTTP requests.
  */
 @RestController
 @RequestMapping("/portfolio")
@@ -30,9 +30,10 @@ public class PortfolioController {
     /**
      * Create portfolio response entity.
      *
-     * @param portfolio the portfolio
-     * @param request   the request
-     * @return the response entity
+     * @param portfolio the portfolio for which to be created.
+     * @param request the request to retrieve the IP address of the client that makes the HTTP request.
+     * @return a `ResponseEntity` containing a `String` response indicating the result
+     *         of the portfolio creation operation.
      */
     @PostMapping
     @RequestMapping("/create")
@@ -41,12 +42,12 @@ public class PortfolioController {
     }
 
     /**
-     * Gets portfolio.
+     * Gets portfolio by portfolio id
      *
-     * @param portfolioId the portfolio id
-     * @return the portfolio
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId the portfolio id of the portfolio to be retrieved.
+     * @return the portfolio object representing the portfolio with the given portfolioId.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @GetMapping
     @RequestMapping("/{portfolioId}")
@@ -55,10 +56,13 @@ public class PortfolioController {
     }
 
     /**
-     * Delete portfolio response entity.
+     * Delete portfolio by portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the response entity
+     * @param portfolioId the portfolio id of the portfolio to be deleted.
+     * @return a ResponseEntity containing a message indicating the result of the deletion operation.
+     *  *         - HttpStatus.OK (200) if the portfolio was successfully deleted.
+     *  *         - HttpStatus.NOT_FOUND (404) if the portfolio with the given portfolioId was not found.
+     *  *         - HttpStatus.INTERNAL_SERVER_ERROR (500) if an error occurred during the deletion.
      */
     @DeleteMapping
     @RequestMapping("/delete/{portfolioId}")
@@ -67,13 +71,16 @@ public class PortfolioController {
     }
 
     /**
-     * Update portfolio response entity.
+     * Update portfolio based on request body.
      *
-     * @param portfolio the portfolio
-     * @param request   the request
-     * @return the response entity
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolio The Portfolio object containing the updated information for the portfolio.
+     * @param request   the request to retrieve the IP address of the client that makes the HTTP request.
+     * @return a ResponseEntity containing a message indicating the result of the deletion operation.
+     *  *         - HttpStatus.OK (200) if the portfolio was successfully deleted.
+     *  *         - HttpStatus.NOT_FOUND (404) if the portfolio with the given portfolioId was not found.
+     *  *         - HttpStatus.INTERNAL_SERVER_ERROR (500) if an error occurred during the deletion.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @PutMapping
     @RequestMapping("/updateportfolio")
@@ -84,12 +91,12 @@ public class PortfolioController {
 
 
     /**
-     * Gets all portfolios.
+     * Gets all portfolios of a user by user id.
      *
-     * @param userId the user id
-     * @return the all portfolios
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param userId the user id of the user for whom the portfolios are to be retrieved.
+     * @return a List of Portfolio objects representing the portfolios associated with the user.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @GetMapping
     @RequestMapping("/getportfolios/{userId}")
@@ -100,10 +107,12 @@ public class PortfolioController {
     /**
      * Gets sectors by portfolio id.
      *
-     * @param portfolioId the portfolio id
-     * @return the sectors by portfolio id
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param portfolioId the portfolio id of the portfolio for which sector information is to be retrieved.
+     * @return A ResponseEntity containing a map of sector names and counts if found.
+     *         - HttpStatus.OK (200) if the data was successfully retrieved.
+     *         - HttpStatus.NOT_FOUND (404) if the portfolio with the given portfolioId was not found.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @GetMapping
     @RequestMapping("/getsectorsbyportfolio/{portfolioId}")
@@ -119,10 +128,12 @@ public class PortfolioController {
     /**
      * Gets sectors by user id.
      *
-     * @param userId the user id
-     * @return the sectors by user id
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @param userId the user id of the user for whom sector information is to be retrieved.
+     * @return A ResponseEntity containing a map of sector names and counts if found.
+     *         - HttpStatus.OK (200) if the data was successfully retrieved.
+     *         - HttpStatus.NOT_FOUND (404) if no data was found for the specified user.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @GetMapping
     @RequestMapping("/getsectorsbyuser/{userId}")
@@ -135,18 +146,13 @@ public class PortfolioController {
         }
     }
 
-//    @GetMapping
-//    @RequestMapping("/gettotalportfoliovalue/{portfolioId}")
-//    public int getTotalPortfolioValue(@PathVariable String portfolioId) throws ExecutionException, InterruptedException {
-//        return portfolioService.getTotalPortfolioValue(portfolioId);
-//    }
-
     /**
      * Gets all public portfolios.
      *
-     * @return the all public portfolios
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
+     * @return A ResponseEntity containing a list of public portfolios.
+     *         - HttpStatus.OK (200) if the public portfolios were successfully retrieved.
+     * @throws ExecutionException   If an error occurs during execution.
+     * @throws InterruptedException If the operation is interrupted.
      */
     @GetMapping
     @RequestMapping("/getpublicportfolios")
