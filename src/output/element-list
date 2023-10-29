@@ -14,10 +14,7 @@ com.trading.application.portfolio.controller
 com.trading.application.portfolio.entity
 com.trading.application.portfolio.repository
 com.trading.application.portfolio.service
-com.trading.application.portfoliostock.controller
 com.trading.application.portfoliostock.entity
-com.trading.application.portfoliostock.repository
-com.trading.application.portfoliostock.service
 com.trading.application.stock.controller
 com.trading.application.stock.entity
 com.trading.application.stock.service
@@ -25,3 +22,6 @@ com.trading.application.stockprice.controller
 com.trading.application.stockprice.entity
 com.trading.application.stockprice.repository
 com.trading.application.stockprice.service
+com.trading.application.TestAccessLogs.controller
+com.trading.application.TestAccessLogs.repository
+com.trading.application.TestAccessLogs.service
