@@ -8,7 +8,6 @@ import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import com.trading.application.portfoliostock.service.PortfolioStockService;
 
 import com.trading.application.stock.service.StockService;
 import com.trading.application.stockprice.entity.StockPrice;

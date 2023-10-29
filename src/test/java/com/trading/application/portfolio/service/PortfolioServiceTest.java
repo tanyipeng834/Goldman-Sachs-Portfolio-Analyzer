@@ -3,43 +3,25 @@ package com.trading.application.portfolio.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trading.application.logs.service.AccessLogService;
 import com.trading.application.portfolio.entity.Portfolio;
 import com.trading.application.portfolio.repository.PortfolioRepository;
 import com.trading.application.portfoliostock.entity.PortfolioStock;
-import com.trading.application.portfoliostock.service.PortfolioStockService;
 import com.trading.application.stock.entity.Stock;
 import com.trading.application.stock.service.StockService;
-import com.trading.application.stockprice.entity.StockPrice;
 import com.trading.application.stockprice.service.StockPricesService;
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.time.Month;
-import java.time.YearMonth;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import reactor.netty.http.server.logging.AccessLog;
-
-import javax.sound.sampled.Port;
 
 /**
  * The type Portfolio service test.
