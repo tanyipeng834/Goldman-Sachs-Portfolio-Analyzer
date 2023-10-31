@@ -1,6 +1,7 @@
 package com.trading.application.config;
 
 import com.trading.application.middleware.AudienceValidator;
+import com.trading.application.middleware.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,26 +51,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-//.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//        csrf(AbstractHttpConfigurer::disable)?
 
-//        http.authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/stockprice/**").authenticated()
-//                        .requestMatchers(new AntPathRequestMatcher("/customer/**")).permitAll()
-//                );
-
-//        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authorize) -> authorize
-//
-//                .requestMatchers("/customer/**").permitAll()
-//                .requestMatchers("/stockprice/**").authenticated()
-//
-//
-//        );
 
         http.cors().and().csrf().disable().authorizeHttpRequests().
                 requestMatchers("/customer/**")
-                .permitAll().anyRequest().permitAll()
-                .and().oauth2ResourceServer().jwt();;
+                .permitAll().anyRequest().authenticated()
+                .and().oauth2ResourceServer().jwt();
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()); // Configuring the custom entry point
 
 
 

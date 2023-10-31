@@ -42,8 +42,8 @@ public class CustomerController {
     @PostMapping
     @RequestMapping("/")
     public ResponseEntity<Object> createCustomer(@RequestBody Customer customer) throws ExecutionException, InterruptedException, UnirestException {
-        String accessToken = "";
-//        String accessToken = generateJWT();
+
+        String accessToken = generateJWT();
         Map<String, Object> customerResponseBody = new HashMap<>();
         customerResponseBody.put("customerData", customerService.createCustomer(customer));
         customerResponseBody.put("token", accessToken);
@@ -69,9 +69,9 @@ public class CustomerController {
                 return new ResponseEntity<>(new CustomError(404, "Customer not found"), HttpStatus.NOT_FOUND);
             }
 
-            String accessToken = "";
 
-//            String accessToken = generateJWT();
+
+            String accessToken = generateJWT();
 
             Map<String, Object> customerResponseBody = new HashMap<>();
             customerResponseBody.put("customerData", customerService.getCustomer(id));
@@ -154,20 +154,19 @@ public class CustomerController {
     }
 
     /**
-     * Generate jwt string.
+     * Generate jwt string for authoizatin purposes.
      *
      * @return the string
      * @throws UnirestException the unirest exception
      */
     public String generateJWT() throws UnirestException {
-        HttpResponse<String> response = Unirest.post("https://dev-4pxn4zbtcuoww57l.us.auth0.com/oauth/token")
+        HttpResponse<String> response = Unirest.post("https://dev-hzksj8468hgj4q5f.us.auth0.com/oauth/token")
                 .header("content-type", "application/json")
-                .body("{\"client_id\":\"5BLESP05RJ9IJ39tX5GCKYMjCpaGfcBZ\",\"client_secret\":\"0rGysyH68zlJjtbKm38IoZ6ZDhL8bJ-Ydpps8Uo4dKCHFieXavk5tnST_jJek1mj\",\"audience\":\"https://goldman.com\",\"grant_type\":\"client_credentials\"}")
+                .body("{\"client_id\":\"nQvMJc2AIk4aqkjGQkBtqKIRZYTg4pWD\",\"client_secret\":\"LcTs2xe1i626SADKdF2wqNsvPu_uxPOzWkiLFj0Mrns_wmilpLuOeBIll1QJjF8K\",\"audience\":\"https://goldman.com\",\"grant_type\":\"client_credentials\"}")
                 .asString();
         String responseBody = response.getBody();
         JSONObject json = new JSONObject(responseBody);
-        String accessToken = json.getString("access_token");
-        return accessToken;
+        return json.getString("access_token");
     }
 
 }
