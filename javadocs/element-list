@@ -22,6 +22,3 @@ com.trading.application.stockprice.controller
 com.trading.application.stockprice.entity
 com.trading.application.stockprice.repository
 com.trading.application.stockprice.service
-com.trading.application.TestAccessLogs.controller
-com.trading.application.TestAccessLogs.repository
-com.trading.application.TestAccessLogs.service

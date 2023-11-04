@@ -3,7 +3,6 @@ package com.trading.application.customer.controller;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.trading.application.CustomError;
 import com.trading.application.customer.entity.Customer;
 import com.trading.application.customer.service.CustomerService;
 import org.json.JSONObject;
@@ -66,7 +65,7 @@ public class CustomerController {
 
         try {
             if (customerService.getCustomer(id) == null) {
-                return new ResponseEntity<>(new CustomError(404, "Customer not found"), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Customer not found", HttpStatus.NOT_FOUND);
             }
 
 
@@ -79,7 +78,7 @@ public class CustomerController {
 
             return new ResponseEntity<>(customerResponseBody, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError(500, "Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
