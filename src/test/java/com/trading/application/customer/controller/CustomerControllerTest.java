@@ -2,6 +2,8 @@ package com.trading.application.customer.controller;
 
 import com.trading.application.customer.entity.Customer;
 import com.trading.application.customer.service.CustomerService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,8 +37,16 @@ class CustomerControllerTest {
      * The Token.
      */
     String token = "abc";
-//    String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InpiQ09XZjV6WkZYanZ1YUxBcDNGSiJ9" +
-//        ".eyJpc3MiOiJodHRwczovL2Rldi00cHhuNHpidGN1b3d3NTdsLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiI1QkxFU1AwNVJKOUlKMzl0WDVHQ0tZTWpDcGFHZmNCWkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9nb2xkbWFuLmNvbSIsImlhdCI6MTY5NzI2MzI3MSwiZXhwIjoxNjk3MzQ5NjcxLCJhenAiOiI1QkxFU1AwNVJKOUlKMzl0WDVHQ0tZTWpDcGFHZmNCWiIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.YaNqWvEjip13dDKBTNpqLO7emDnKk0GiXgQdvUDHAkt7A5d658WxehkzsgHPOjtNqGYOBJJ3zVKyToz5uzg05qivSFdyXO61-KXGqoojJ9xQON7k2EMUcIF-mHa3cbTbARIZhUYerH3wFTclVXGUFX-qpLmF1Lm43sgkWB0OWkDnDOg1gpTPvcU9XFn7VKyws-2hGthmFPIeVXbbIVFKiTmOefV0HRDMQBd6AdvEUEXAGSeoOhVJ0QfnkoaZtKm5fJRGsnlMA5lplfn_idAUHHe3WLtmuWryYrXkEtzCMQmrQb_aTIvq7YdtXUjvP_KZScfP6oh4AQYSQRyR2bk_9A";
+
+    @Mock
+    private HttpServletRequest request;
+
+    @BeforeEach
+    public void setup() {
+        String jwtToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImpER3QxOC1LQ09lM25wTWZacGhjRiJ9" +
+                ".eyJpc3MiOiJodHRwczovL2Rldi1oemtzajg0NjhoZ2o0cTVmLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJuUXZNSmMyQUlrNGFxa2pHUWtCdHFLSVJaWVRnNHBXREBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9nb2xkbWFuLmNvbSIsImlhdCI6MTY5ODc0MTExMywiZXhwIjoxNzAxMzMzMTEzLCJhenAiOiJuUXZNSmMyQUlrNGFxa2pHUWtCdHFLSVJaWVRnNHBXRCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.gJCNGKAKSrI8366jKpr24-lGjoPPbb-Ce0Q7kFQc0iTDNxuJ57g-3602dRv9bLlN9mltILAF6a1-gqmuGEepG8Ey79wdAvRgZahgCdgRoRd7yc1gYTaSlmSvWrPm41XJOxAtB23d3H4yT38RdAn6CqX3V7vp5KR1t3nUu4-Gk_eel5N6a1cckYk70Fh5OahaYT__-rUPxNcoWzs_FgQefUsAwwZaEzCSlVnk4ZRivx5ph4Ygu8-jp36m_nKwo7g0Es3da_2p_wFSXMKF88Wf35bqicFMVR7L-cCWLyx9ITjx41hUxoXKCVh3hNj3lsky-E9cxqFx555x7_s_l8jnAg";
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+    }
 
     /**
      * Should create customer.
