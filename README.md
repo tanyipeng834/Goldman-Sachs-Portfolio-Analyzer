@@ -15,6 +15,9 @@
         <a href="#features">Features</a>
     </li>
     <li>
+        <a href="#uml-diagram">UML Diagram</a>
+    </li>
+    <li>
         <a href="#built-with">Built with</a>
         <ul>
             <li>
@@ -88,6 +91,12 @@ https://github.com/xuanli286/IS442-FRONTEND
     </li>
 </ol>
 
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+
+## UML Diagram
+<div align="center">
+	<img src="./images/uml.jpg" alt="uml-diagram" width="600" height="300">
+</div>
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 
