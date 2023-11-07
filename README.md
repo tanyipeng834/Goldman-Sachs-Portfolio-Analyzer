@@ -2,11 +2,11 @@
   <img src="https://raw.githubusercontent.com/xuanli286/IS442-FRONTEND/d1a854cdcf681d22a726a4a4a6a22649b4135cb8/public/gs-logo.svg" alt="Logo" width="30%">
   <p>
     This outlines the project code base for AY2023/2024 Semester 1 IS442 OOP - G1T5
-    <br>
-    Kindly refer to this <a href="./G1T5.pptx" download>slide deck</a> for more information.
   </p>
 </div>
-<br/>
+
+**Kindly refer to this [slide deck](./G1T5.pptx) for more information.**
+We have also prepared [Javadocs](./javadocs/index.html) for your convenience!
 
 <details id="table-of-contents">
     <summary>Table of Contents</summary>
