@@ -123,6 +123,7 @@ https://github.com/xuanli286/IS442-FRONTEND 👈
 </div>
 
 ### UML Diagram
+<a href="https://drive.google.com/file/d/1_DcWD0vo612p91lRy6k6_O9ijme_1JFq/view?usp=sharing">draw.io</a>
 <div align="center">
 	<img src="./images/uml.jpg" alt="uml-diagram" width="600" height="300">
 </div>
