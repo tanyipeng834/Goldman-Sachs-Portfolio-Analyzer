@@ -1,0 +1,324 @@
+[28944] 26 Sep 13:56:00.718 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 28944 ready to start.
+[28944] 26 Sep 13:56:00.720 # Server started, Redis version 3.2.100
+[28944] 26 Sep 13:56:00.721 * The server is now ready to accept connections on port 6379
+
+
+=== REDIS BUG REPORT START: Cut & paste starting from here ===
+[3804] 26 Sep 14:02:48.344 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 3804 ready to start.
+[3804] 26 Sep 14:02:48.344 # Server started, Redis version 3.2.100
+[3804] 26 Sep 14:02:48.346 * The server is now ready to accept connections on port 6379
+[3804] 26 Sep 14:17:49.083 * 1 changes in 900 seconds. Saving...
+[3804] 26 Sep 14:17:49.164 * Background saving started by pid 26876
+[3804] 26 Sep 14:17:49.667 # fork operation complete
+[3804] 26 Sep 14:17:49.669 * Background saving terminated with success
+[3804] 02 Oct 01:08:26.719 * 1 changes in 900 seconds. Saving...
+[3804] 02 Oct 01:08:26.854 * Background saving started by pid 16416
+[3804] 02 Oct 01:08:27.259 # fork operation complete
+[3804] 02 Oct 01:08:27.260 * Background saving terminated with success
+[3804] 02 Oct 01:23:28.044 * 1 changes in 900 seconds. Saving...
+[3804] 02 Oct 01:23:28.076 * Background saving started by pid 35736
+[3804] 02 Oct 01:23:28.377 # fork operation complete
+[3804] 02 Oct 01:23:28.379 * Background saving terminated with success
+[3804] 02 Oct 01:38:54.886 * 1 changes in 900 seconds. Saving...
+[3804] 02 Oct 01:38:55.080 * Background saving started by pid 33952
+[3804] 02 Oct 01:39:50.063 # fork operation complete
+[3804] 02 Oct 01:39:50.071 * Background saving terminated with success
+[3804] 02 Oct 13:30:40.237 * 1 changes in 900 seconds. Saving...
+[3804] 02 Oct 13:30:40.363 * Background saving started by pid 7120
+[3804] 02 Oct 13:30:41.169 # fork operation complete
+[3804] 02 Oct 13:30:41.170 * Background saving terminated with success
+[3804] 02 Oct 20:45:05.799 * 1 changes in 900 seconds. Saving...
+[3804] 02 Oct 20:45:05.891 * Background saving started by pid 32776
+[3804] 02 Oct 20:45:06.395 # fork operation complete
+[3804] 02 Oct 20:45:06.398 * Background saving terminated with success
+[3804] 03 Oct 01:08:29.699 * 1 changes in 900 seconds. Saving...
+[3804] 03 Oct 01:08:30.155 * Background saving started by pid 34528
+[3804] 03 Oct 01:08:30.860 # fork operation complete
+[3804] 03 Oct 01:08:30.863 * Background saving terminated with success
+[3804] 03 Oct 01:23:31.079 * 1 changes in 900 seconds. Saving...
+[3804] 03 Oct 01:23:31.218 * Background saving started by pid 15840
+[3804] 03 Oct 01:23:31.920 # fork operation complete
+[3804] 03 Oct 01:23:31.921 * Background saving terminated with success
+[3804] 03 Oct 01:45:56.358 * 1 changes in 900 seconds. Saving...
+[3804] 03 Oct 01:45:56.438 * Background saving started by pid 13928
+[3804] 03 Oct 01:47:03.602 # fork operation complete
+[3804] 03 Oct 01:47:03.609 * Background saving terminated with success
+[7564] 03 Oct 12:54:45.176 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 7564 ready to start.
+[7564] 03 Oct 12:54:45.203 # Server started, Redis version 3.2.100
+[7564] 03 Oct 12:54:45.205 * DB loaded from disk: 0.001 seconds
+[7564] 03 Oct 12:54:45.205 * The server is now ready to accept connections on port 6379
+[7564] 03 Oct 15:22:23.471 * 1 changes in 900 seconds. Saving...
+[7564] 03 Oct 15:22:23.630 * Background saving started by pid 20676
+[7564] 03 Oct 15:22:24.237 # fork operation complete
+[7564] 03 Oct 15:22:24.239 * Background saving terminated with success
+[7564] 03 Oct 15:37:25.034 * 1 changes in 900 seconds. Saving...
+[7564] 03 Oct 15:37:25.140 * Background saving started by pid 12372
+[7564] 03 Oct 15:37:26.146 # fork operation complete
+[7564] 03 Oct 15:37:26.148 * Background saving terminated with success
+[7564] 03 Oct 17:05:16.554 * 1 changes in 900 seconds. Saving...
+[7564] 03 Oct 17:05:16.632 * Background saving started by pid 21380
+[7564] 03 Oct 17:05:17.134 # fork operation complete
+[7564] 03 Oct 17:05:17.135 * Background saving terminated with success
+[7564] 03 Oct 17:20:18.062 * 1 changes in 900 seconds. Saving...
+[7564] 03 Oct 17:20:18.125 * Background saving started by pid 23448
+[7564] 03 Oct 17:20:18.529 # fork operation complete
+[7564] 03 Oct 17:20:18.530 * Background saving terminated with success
+[7564] 08 Oct 23:43:54.931 * DB saved on disk
+[7564] 08 Oct 23:48:55.026 * 10 changes in 300 seconds. Saving...
+[7564] 08 Oct 23:48:55.069 * Background saving started by pid 12708
+[7564] 08 Oct 23:48:55.574 # fork operation complete
+[7564] 08 Oct 23:48:55.574 * Background saving terminated with success
+[7564] 08 Oct 23:52:05.127 * DB saved on disk
+[7564] 08 Oct 23:57:06.055 * 10 changes in 300 seconds. Saving...
+[7564] 08 Oct 23:57:06.079 * Background saving started by pid 34512
+[7564] 08 Oct 23:57:06.481 # fork operation complete
+[7564] 08 Oct 23:57:06.487 * Background saving terminated with success
+[7564] 09 Oct 00:12:07.021 * 1 changes in 900 seconds. Saving...
+[7564] 09 Oct 00:12:07.045 * Background saving started by pid 19656
+[7564] 09 Oct 00:12:07.549 # fork operation complete
+[7564] 09 Oct 00:12:07.550 * Background saving terminated with success
+[7564] 09 Oct 00:27:08.049 * 1 changes in 900 seconds. Saving...
+[7564] 09 Oct 00:27:08.256 * Background saving started by pid 35384
+[7564] 09 Oct 00:27:09.361 # fork operation complete
+[7564] 09 Oct 00:27:09.365 * Background saving terminated with success
+[7564] 09 Oct 00:42:35.356 * 1 changes in 900 seconds. Saving...
+[7564] 09 Oct 00:43:28.677 * Background saving started by pid 31160
+[7564] 09 Oct 00:58:02.375 # fork operation complete
+[7564] 09 Oct 00:58:03.331 * Background saving terminated with success
+[7564] 10 Oct 15:41:28.243 * 1 changes in 900 seconds. Saving...
+[7564] 10 Oct 15:41:28.366 * Background saving started by pid 896
+[7564] 10 Oct 15:41:29.073 # fork operation complete
+[7564] 10 Oct 15:41:29.074 * Background saving terminated with success
+[7564] 10 Oct 15:46:30.058 * 10 changes in 300 seconds. Saving...
+[7564] 10 Oct 15:46:30.082 * Background saving started by pid 19684
+[7564] 10 Oct 15:46:30.485 # fork operation complete
+[7564] 10 Oct 15:46:30.486 * Background saving terminated with success
+[7180] 11 Oct 12:35:44.188 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 7180 ready to start.
+[7180] 11 Oct 12:35:44.206 # Server started, Redis version 3.2.100
+[7180] 11 Oct 12:35:44.223 * DB loaded from disk: 0.018 seconds
+[7180] 11 Oct 12:35:44.258 * The server is now ready to accept connections on port 6379
+[7180] 11 Oct 20:19:59.818 * 1 changes in 900 seconds. Saving...
+[7180] 11 Oct 20:20:00.048 * Background saving started by pid 25720
+[7180] 11 Oct 20:20:00.754 # fork operation complete
+[7180] 11 Oct 20:20:00.756 * Background saving terminated with success
+[7180] 11 Oct 20:25:01.032 * 10 changes in 300 seconds. Saving...
+[7180] 11 Oct 20:25:01.112 * Background saving started by pid 26572
+[7180] 11 Oct 20:25:01.617 # fork operation complete
+[7180] 11 Oct 20:25:01.618 * Background saving terminated with success
+[6360] 12 Oct 15:48:19.714 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6360 ready to start.
+[6360] 12 Oct 15:48:19.742 # Server started, Redis version 3.2.100
+[6360] 12 Oct 15:48:19.744 * DB loaded from disk: 0.001 seconds
+[6360] 12 Oct 15:48:19.744 * The server is now ready to accept connections on port 6379
+[6360] 12 Oct 20:22:08.696 * 1 changes in 900 seconds. Saving...
+[6360] 12 Oct 20:22:08.852 * Background saving started by pid 4048
+[6360] 12 Oct 20:22:09.356 # fork operation complete
+[6360] 12 Oct 20:22:09.358 * Background saving terminated with success
+[6360] 12 Oct 20:37:10.001 * 1 changes in 900 seconds. Saving...
+[6360] 12 Oct 20:37:10.028 * Background saving started by pid 23124
+[6360] 12 Oct 20:37:10.532 # fork operation complete
+[6360] 12 Oct 20:37:10.533 * Background saving terminated with success
+[6416] 13 Oct 09:45:28.386 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6416 ready to start.
+[6416] 13 Oct 09:45:28.551 # Server started, Redis version 3.2.100
+[6416] 13 Oct 09:45:28.580 * DB loaded from disk: 0.029 seconds
+[6416] 13 Oct 09:45:28.581 * The server is now ready to accept connections on port 6379
+[6416] 14 Oct 15:17:14.968 * 1 changes in 900 seconds. Saving...
+[6416] 14 Oct 15:17:15.172 * Background saving started by pid 3172
+[6416] 14 Oct 15:17:16.180 # fork operation complete
+[6416] 14 Oct 15:17:16.182 * Background saving terminated with success
+[6416] 14 Oct 16:47:33.322 * 1 changes in 900 seconds. Saving...
+[6416] 14 Oct 16:47:33.405 * Background saving started by pid 33500
+[6416] 14 Oct 16:47:33.907 # fork operation complete
+[6416] 14 Oct 16:47:33.908 * Background saving terminated with success
+[6416] 14 Oct 17:02:34.040 * 1 changes in 900 seconds. Saving...
+[6416] 14 Oct 17:02:34.079 * Background saving started by pid 12208
+[6416] 14 Oct 17:02:34.479 # fork operation complete
+[6416] 14 Oct 17:02:34.481 * Background saving terminated with success
+[6416] 14 Oct 18:38:40.813 * 1 changes in 900 seconds. Saving...
+[6416] 14 Oct 18:38:41.147 * Background saving started by pid 3780
+[6416] 14 Oct 18:38:41.749 # fork operation complete
+[6416] 14 Oct 18:38:41.753 * Background saving terminated with success
+[6416] 14 Oct 23:48:33.325 * 1 changes in 900 seconds. Saving...
+[6416] 14 Oct 23:48:33.429 * Background saving started by pid 3036
+[6416] 14 Oct 23:48:33.932 # fork operation complete
+[6416] 14 Oct 23:48:33.933 * Background saving terminated with success
+[6416] 15 Oct 20:52:30.547 * 1 changes in 900 seconds. Saving...
+[6416] 15 Oct 20:52:30.729 * Background saving started by pid 27944
+[6416] 15 Oct 20:52:31.435 # fork operation complete
+[6416] 15 Oct 20:52:31.436 * Background saving terminated with success
+[6416] 15 Oct 21:07:32.039 * 1 changes in 900 seconds. Saving...
+[6416] 15 Oct 21:07:32.208 * Background saving started by pid 21724
+[6416] 15 Oct 21:07:33.112 # fork operation complete
+[6416] 15 Oct 21:07:33.113 * Background saving terminated with success
+[6416] 16 Oct 00:29:04.087 * 1 changes in 900 seconds. Saving...
+[6416] 16 Oct 00:29:04.425 * Background saving started by pid 10916
+[6416] 16 Oct 00:29:05.030 # fork operation complete
+[6416] 16 Oct 00:29:05.031 * Background saving terminated with success
+[6416] 16 Oct 00:41:45.765 * 10 changes in 300 seconds. Saving...
+[6416] 16 Oct 00:41:45.796 * Background saving started by pid 24492
+[6416] 16 Oct 00:41:46.603 # fork operation complete
+[6416] 16 Oct 00:41:46.605 * Background saving terminated with success
+[6416] 16 Oct 12:09:29.427 * 1 changes in 900 seconds. Saving...
+[6416] 16 Oct 12:09:29.528 * Background saving started by pid 25392
+[6416] 16 Oct 12:09:30.837 # fork operation complete
+[6416] 16 Oct 12:09:30.840 * Background saving terminated with success
+[6416] 17 Oct 00:03:07.775 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 00:03:08.026 * Background saving started by pid 29328
+[6416] 17 Oct 00:03:08.933 # fork operation complete
+[6416] 17 Oct 00:03:08.937 * Background saving terminated with success
+[6416] 17 Oct 00:18:09.097 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 00:18:09.250 * Background saving started by pid 19348
+[6416] 17 Oct 00:18:10.356 # fork operation complete
+[6416] 17 Oct 00:18:10.358 * Background saving terminated with success
+[6416] 17 Oct 00:55:33.168 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 00:55:33.272 * Background saving started by pid 29024
+[6416] 17 Oct 00:55:35.086 # fork operation complete
+[6416] 17 Oct 00:55:35.090 * Background saving terminated with success
+[6416] 17 Oct 01:10:36.060 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 01:10:36.124 * Background saving started by pid 29612
+[6416] 17 Oct 01:10:37.131 # fork operation complete
+[6416] 17 Oct 01:10:37.134 * Background saving terminated with success
+[6416] 17 Oct 01:27:11.344 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 01:27:11.547 * Background saving started by pid 28496
+[6416] 17 Oct 01:27:12.857 # fork operation complete
+[6416] 17 Oct 01:27:12.860 * Background saving terminated with success
+[6416] 17 Oct 01:42:13.026 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 01:42:13.184 * Background saving started by pid 11052
+[6416] 17 Oct 01:42:17.321 # fork operation complete
+[6416] 17 Oct 01:42:17.397 * Background saving terminated with success
+[6416] 17 Oct 13:21:25.128 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 13:21:25.243 * Background saving started by pid 27120
+[6416] 17 Oct 13:21:26.046 # fork operation complete
+[6416] 17 Oct 13:21:26.047 * Background saving terminated with success
+[6416] 17 Oct 13:36:27.096 * 1 changes in 900 seconds. Saving...
+[6416] 17 Oct 13:36:27.236 * Background saving started by pid 32104
+[6416] 17 Oct 13:36:30.329 # fork operation complete
+[6416] 17 Oct 13:36:30.393 * Background saving terminated with success
+[6556] 17 Oct 16:51:01.788 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6556 ready to start.
+[6556] 17 Oct 16:51:01.843 # Server started, Redis version 3.2.100
+[6556] 17 Oct 16:51:01.884 * DB loaded from disk: 0.002 seconds
+[6556] 17 Oct 16:51:01.899 * The server is now ready to accept connections on port 6379
+[6368] 17 Oct 23:14:38.923 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6368 ready to start.
+[6368] 17 Oct 23:14:38.925 # Server started, Redis version 3.2.100
+[6368] 17 Oct 23:14:38.927 * DB loaded from disk: 0.002 seconds
+[6368] 17 Oct 23:14:38.928 * The server is now ready to accept connections on port 6379
+[6368] 18 Oct 11:55:24.803 * 1 changes in 900 seconds. Saving...
+[6368] 18 Oct 11:55:24.929 * Background saving started by pid 23212
+[6368] 18 Oct 11:55:25.431 # fork operation complete
+[6368] 18 Oct 11:55:25.433 * Background saving terminated with success
+[6368] 19 Oct 17:39:49.862 * 1 changes in 900 seconds. Saving...
+[6368] 19 Oct 17:39:49.970 * Background saving started by pid 23332
+[6368] 19 Oct 17:39:50.574 # fork operation complete
+[6368] 19 Oct 17:39:50.575 * Background saving terminated with success
+[6368] 19 Oct 17:54:51.091 * 1 changes in 900 seconds. Saving...
+[6368] 19 Oct 17:54:51.118 * Background saving started by pid 24104
+[6368] 19 Oct 17:54:51.623 # fork operation complete
+[6368] 19 Oct 17:54:51.624 * Background saving terminated with success
+[6368] 20 Oct 02:37:28.364 * 1 changes in 900 seconds. Saving...
+[6368] 20 Oct 02:37:28.433 * Background saving started by pid 18212
+[6368] 20 Oct 02:37:28.835 # fork operation complete
+[6368] 20 Oct 02:37:28.837 * Background saving terminated with success
+[6368] 20 Oct 12:54:09.178 * 1 changes in 900 seconds. Saving...
+[6368] 20 Oct 12:54:09.281 * Background saving started by pid 29016
+[6368] 20 Oct 12:54:09.784 # fork operation complete
+[6368] 20 Oct 12:54:09.785 * Background saving terminated with success
+[7036] 21 Oct 18:28:43.780 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 7036 ready to start.
+[7036] 21 Oct 18:28:43.782 # Server started, Redis version 3.2.100
+[7036] 21 Oct 18:28:43.825 * DB loaded from disk: 0.037 seconds
+[7036] 21 Oct 18:28:43.826 * The server is now ready to accept connections on port 6379
+[7036] 22 Oct 23:06:51.273 * 1 changes in 900 seconds. Saving...
+[7036] 22 Oct 23:06:51.489 * Background saving started by pid 25020
+[7036] 22 Oct 23:06:52.193 # fork operation complete
+[7036] 22 Oct 23:06:52.195 * Background saving terminated with success
+[7036] 22 Oct 23:15:27.300 * DB saved on disk
+[7036] 22 Oct 23:20:28.080 * 10 changes in 300 seconds. Saving...
+[7036] 22 Oct 23:20:28.100 * Background saving started by pid 19044
+[7036] 22 Oct 23:20:28.504 # fork operation complete
+[7036] 22 Oct 23:20:28.505 * Background saving terminated with success
+[7036] 23 Oct 12:06:39.525 * 1 changes in 900 seconds. Saving...
+[7036] 23 Oct 12:06:39.606 * Background saving started by pid 16496
+[7036] 23 Oct 12:06:40.109 # fork operation complete
+[7036] 23 Oct 12:06:40.111 * Background saving terminated with success
+[7036] 23 Oct 13:45:33.001 * 1 changes in 900 seconds. Saving...
+[7036] 23 Oct 13:45:33.102 * Background saving started by pid 27432
+[7036] 23 Oct 13:45:33.706 # fork operation complete
+[7036] 23 Oct 13:45:33.707 * Background saving terminated with success
+[7036] 23 Oct 18:46:38.002 * 1 changes in 900 seconds. Saving...
+[7036] 23 Oct 18:46:38.130 * Background saving started by pid 30948
+[7036] 23 Oct 18:46:39.034 # fork operation complete
+[7036] 23 Oct 18:46:39.036 * Background saving terminated with success
+[7036] 24 Oct 12:55:09.317 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 12:55:09.453 * Background saving started by pid 15024
+[7036] 24 Oct 12:55:10.961 # fork operation complete
+[7036] 24 Oct 12:55:10.965 * Background saving terminated with success
+[7036] 24 Oct 13:10:11.099 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 13:10:11.160 * Background saving started by pid 28704
+[7036] 24 Oct 13:10:11.663 # fork operation complete
+[7036] 24 Oct 13:10:11.664 * Background saving terminated with success
+[7036] 24 Oct 13:29:07.049 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 13:29:07.069 * Background saving started by pid 19164
+[7036] 24 Oct 13:29:07.570 # fork operation complete
+[7036] 24 Oct 13:29:07.571 * Background saving terminated with success
+[7036] 24 Oct 13:44:08.034 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 13:44:08.051 * Background saving started by pid 29380
+[7036] 24 Oct 13:44:08.452 # fork operation complete
+[7036] 24 Oct 13:44:08.453 * Background saving terminated with success
+[7036] 24 Oct 14:03:52.643 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 14:03:52.668 * Background saving started by pid 29440
+[7036] 24 Oct 14:03:53.173 # fork operation complete
+[7036] 24 Oct 14:03:53.174 * Background saving terminated with success
+[7036] 24 Oct 14:18:54.051 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 14:18:54.126 * Background saving started by pid 23144
+[7036] 24 Oct 14:18:54.529 # fork operation complete
+[7036] 24 Oct 14:18:54.529 * Background saving terminated with success
+[7036] 24 Oct 15:00:34.402 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 15:00:34.442 * Background saving started by pid 25208
+[7036] 24 Oct 15:00:34.945 # fork operation complete
+[7036] 24 Oct 15:00:34.946 * Background saving terminated with success
+[7036] 24 Oct 15:15:35.017 * 1 changes in 900 seconds. Saving...
+[7036] 24 Oct 15:15:35.081 * Background saving started by pid 24148
+[7036] 24 Oct 15:15:35.583 # fork operation complete
+[7036] 24 Oct 15:15:35.584 * Background saving terminated with success
+[6244] 25 Oct 08:30:34.403 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6244 ready to start.
+[6244] 25 Oct 08:30:34.473 # Server started, Redis version 3.2.100
+[6244] 25 Oct 08:30:34.475 * DB loaded from disk: 0.002 seconds
+[6244] 25 Oct 08:30:34.476 * The server is now ready to accept connections on port 6379
+[6220] 25 Oct 21:17:57.264 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6220 ready to start.
+[6220] 25 Oct 21:17:57.272 # Server started, Redis version 3.2.100
+[6220] 25 Oct 21:17:57.295 * DB loaded from disk: 0.022 seconds
+[6220] 25 Oct 21:17:57.320 * The server is now ready to accept connections on port 6379
+[6220] 27 Oct 23:53:43.123 * 1 changes in 900 seconds. Saving...
+[6220] 27 Oct 23:53:43.366 * Background saving started by pid 18212
+[6220] 27 Oct 23:53:44.172 # fork operation complete
+[6220] 27 Oct 23:53:44.175 * Background saving terminated with success
+[6220] 28 Oct 00:08:45.084 * 1 changes in 900 seconds. Saving...
+[6220] 28 Oct 00:08:45.170 * Background saving started by pid 17760
+[6220] 28 Oct 00:08:45.573 # fork operation complete
+[6220] 28 Oct 00:08:45.573 * Background saving terminated with success
+[6220] 30 Oct 17:18:42.926 * 1 changes in 900 seconds. Saving...
+[6220] 30 Oct 17:18:43.147 * Background saving started by pid 25156
+[6220] 30 Oct 17:18:44.358 # fork operation complete
+[6220] 30 Oct 17:18:44.362 * Background saving terminated with success
+[6220] 30 Oct 17:33:45.068 * 1 changes in 900 seconds. Saving...
+[6220] 30 Oct 17:33:45.106 * Background saving started by pid 8940
+[6220] 30 Oct 17:33:45.911 # fork operation complete
+[6220] 30 Oct 17:33:45.912 * Background saving terminated with success
+[7312] 31 Oct 14:37:10.367 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 7312 ready to start.
+[7312] 31 Oct 14:37:10.369 # Server started, Redis version 3.2.100
+[7312] 31 Oct 14:37:10.373 * DB loaded from disk: 0.004 seconds
+[7312] 31 Oct 14:37:10.374 * The server is now ready to accept connections on port 6379
+[6544] 06 Nov 18:49:18.946 * Redis 3.2.100 (00000000/0) 64 bit, standalone mode, port 6379, pid 6544 ready to start.
+[6544] 06 Nov 18:49:18.947 # Server started, Redis version 3.2.100
+[6544] 06 Nov 18:49:18.972 * DB loaded from disk: 0.026 seconds
+[6544] 06 Nov 18:49:18.973 * The server is now ready to accept connections on port 6379
+[6544] 07 Nov 16:33:37.195 * 1 changes in 900 seconds. Saving...
+[6544] 07 Nov 16:33:37.520 * Background saving started by pid 21828
+[6544] 07 Nov 16:33:38.628 # fork operation complete
+[6544] 07 Nov 16:33:38.633 * Background saving terminated with success
+[6544] 07 Nov 16:50:19.682 * 1 changes in 900 seconds. Saving...
+[6544] 07 Nov 16:50:19.715 * Background saving started by pid 10168
+[6544] 07 Nov 16:50:20.622 # fork operation complete
+[6544] 07 Nov 16:50:20.625 * Background saving terminated with success
+[6544] 07 Nov 17:05:21.018 * 1 changes in 900 seconds. Saving...
+[6544] 07 Nov 17:05:21.136 * Background saving started by pid 24920
+[6544] 07 Nov 17:05:21.758 # fork operation complete
+[6544] 07 Nov 17:05:21.760 * Background saving terminated with success
