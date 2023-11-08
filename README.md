@@ -200,9 +200,9 @@ npm run serve
 
 6. Open the IS442-REST-API folder
 7. Install the Java Dependencies
-   ```
-   mvn clean install
-   ```
+```
+mvn clean install
+```
 9. Run backend
 
 ```
