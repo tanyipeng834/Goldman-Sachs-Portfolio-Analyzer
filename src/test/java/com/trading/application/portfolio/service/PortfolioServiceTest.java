@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
@@ -27,6 +28,7 @@ import org.springframework.http.ResponseEntity;
  * The type Portfolio service test.
  */
 @SpringBootTest
+@AutoConfigureMockMvc
 class PortfolioServiceTest {
 
     @InjectMocks
