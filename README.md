@@ -196,10 +196,14 @@ npm install
 npm run serve
 ```
 4. Open the Redis folder
-5. Click on the redis-cli.exe to run the Redis server
+5. Click on the redis-server.exe to run the redis server
 
 6. Open the IS442-REST-API folder
-7. Run backend
+7. Install the Java Dependencies
+   ```
+   mvn clean install
+   ```
+9. Run backend
 
 ```
 mvn spring-boot:run
